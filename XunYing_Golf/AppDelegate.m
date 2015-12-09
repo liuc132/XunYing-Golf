@@ -1,0 +1,398 @@
+//
+//  AppDelegate.m
+//  XunYing_Golf
+//
+//  Created by LiuC on 15/8/27.
+//  Copyright (c) 2015年 LiuC. All rights reserved.
+//
+
+#import "AppDelegate.h"
+#import "DBCon.h"
+#import "DataTable.h"
+#import "XunYingPre.h"
+#import "HttpTools.h"
+#import "BLMessageProvider.h"
+#import <CoreLocation/CoreLocation.h>
+#import "HeartBeatAndDetectState.h"
+#import "ChooseCreateGroupViewController.h"
+#import "LogInViewController.h"
+
+@interface AppDelegate ()<CLLocationManagerDelegate>
+{
+    NSTimer *backgroundTimer;
+    //
+    UIBackgroundTaskIdentifier m_taskID;
+    BOOL                       m_bRun;
+}
+//@property (strong, nonatomic) DBCon *dbCon;
+//@property (strong, nonatomic) DataTable *dataTable;
+@property (nonatomic)         BOOL  changeState;
+
+
+@property (strong, nonatomic) CLLocationManager *locationManager;
+
+@end
+
+@implementation AppDelegate
+
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    [self initLocalDB];
+    // Override point for customization after application launch.
+    _window = [[WINDOW_CLASS alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    //
+//    self.dbCon = [[DBCon alloc] init];
+//    self.dataTable = [[DataTable alloc] init];
+//    //
+//    self.dataTable = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
+//    //
+//    if([self.dataTable.Rows count]){
+//        if([self.dataTable.Rows[[self.dataTable.Rows count] - 1][@"logOutOrNot"] isEqualToString:@"1"])
+//        {
+//            self.rootVC = [[ChooseCreateGroupViewController alloc] init];
+//            
+//        }
+//    }
+//    //
+//    else
+//    {
+//        self.rootVC = [[LogInViewController alloc] init];
+//    }
+    
+    self.rootVC = [[LogInViewController alloc]init];
+    self.rootVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil]instantiateInitialViewController];
+    self.window.rootViewController = self.rootVC;
+    
+    [self.window makeKeyAndVisible];
+    
+    
+    NSLog(@"%@",launchOptions);
+    self.changeState = NO;
+    
+    
+    if(ScreenHeight > 480)
+    {
+        self.autoSizeScaleX = ScreenWidth/320;
+        self.autoSizeScaleY = ScreenHeight/568;
+    }
+    else
+    {
+        self.autoSizeScaleX = 1.0;
+        self.autoSizeScaleY = 1.0;
+    }
+    
+    
+    return YES;
+}
+/*
+ //storyBoard view自动适配
+ + (void)storyBoradAutoLay:(UIView *)allView
+ {
+ for (UIView *temp in allView.subviews) {
+ temp.frame = CGRectMake1(temp.frame.origin.x, temp.frame.origin.y, temp.frame.size.width, temp.frame.size.height);
+ for (UIView *temp1 in temp.subviews) {
+ temp1.frame = CGRectMake1(temp1.frame.origin.x, temp1.frame.origin.y, temp1.frame.size.width, temp1.frame.size.height);
+ }
+ }
+ }
+ 
+ //修改CGRectMake
+ CG_INLINE CGRect
+ CGRectMake1(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
+ {
+ AppDelegate *myDelegate = [[UIApplication sharedApplication] delegate];
+ CGRect rect;
+ rect.origin.x = x * myDelegate.autoSizeScaleX; rect.origin.y = y * myDelegate.autoSizeScaleY;
+ rect.size.width = width * myDelegate.autoSizeScaleX; rect.size.height = height * myDelegate.autoSizeScaleY;
+ return rect;
+ }
+ */
+#pragma -mark Storyboard view自动适配
++(void)storyBoardAutoLay:(UIView *)allView
+{
+    for (UIView *temp in allView.subviews) {
+        temp.frame = CGRectMake1(temp.frame.origin.x, temp.frame.origin.y, temp.frame.size.width, temp.frame.size.height);
+        for (UIView *temp1 in temp.subviews) {
+            temp1.frame = CGRectMake1(temp1.frame.origin.x, temp1.frame.origin.y, temp1.frame.size.width, temp1.frame.size.height);
+        }
+    }
+}
+//修改CGRectMake
+CG_INLINE CGRect
+CGRectMake1(CGFloat x,CGFloat y,CGFloat width,CGFloat height)
+{
+    AppDelegate *myDelegate = [[UIApplication sharedApplication] delegate];
+    CGRect rect;
+    rect.origin.x = x*myDelegate.autoSizeScaleX;
+    rect.origin.y = y*myDelegate.autoSizeScaleY;
+    rect.size.width = width*myDelegate.autoSizeScaleX;
+    rect.size.height = height*myDelegate.autoSizeScaleY;
+    return rect;
+}
+
+/**
+ *  初始化本地数据库,数据库文件及列表
+ */
+-(void)initLocalDB{
+    //初始化本地数据库
+    DBCon *dbCon = [DBCon instance:@"ProDtata.db"];
+    //
+    [dbCon ExecDataTable:@"create table if not exists tbl_NamePassword(user text,password text,logOutOrNot text)"];
+    
+    //创建登录人信息列表 sex cadShowNum empcod empnam empnum empjob
+    [dbCon ExecDataTable:@"create table if not exists tbl_logPerson(code text,job text,name text,number text,sex text,caddyLogIn text)"];
+    //球洞信息
+    [dbCon ExecDataTable:@"create table if not exists tbl_holeInf(forecasttime text,gronum text,holcod text,holcue text,holfla text,holgro text,holind text,hollen text,holnam text,holenum text,holspe text,holsta text,nowgroups text,stan1 text,stan2 text,stan3 text,stan4 text,usestatus text,x text,y text)"];
+    //其他球员的信息，用于通讯
+    [dbCon ExecDataTable:@"create table if not exists tbl_otherEmployeeInf(code text,job text,name text,number text,sex text,locationTime text,online text,x text,y text)"];
+    //获取到的消费卡号
+    [dbCon ExecDataTable:@"create table if not exists tbl_CustomerNumbers(first text,second text,third text,fourth text)"];
+    //所选择的球洞的信息，上九洞，下九洞，十八洞
+    [dbCon ExecDataTable:@"create table if not exists tbl_threeTypeHoleInf(pdcod text,pdind text,pdnam text,pdpcod text,pdtag text,pdtcod text)"];
+    //建组成功之后，获取到的组信息
+    [dbCon ExecDataTable:@"create table if not exists tbl_groupInf(grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text)"];
+    //建组成功之后，获取返回的平板的信息
+    [dbCon ExecDataTable:@"create table if not exists tbl_PadsInf(isprim text,locsta text,loctim text,onlsta text,padcod text,padnum text,padtag text,revx text,revy text)"];
+    //获取到所有球童的信息
+    [dbCon ExecDataTable:@"create table if not exists tbl_caddyInf(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)"];
+    //获取到所有球车的信息
+    [dbCon ExecDataTable:@"create table if not exists tbl_cartInf(carcod text,carnum text,carsea text)"];
+    //获取心跳中的组信息
+    /*
+     grocod:小组编码
+     pladur:打球时长
+     stddur:标准完成时长
+     grosta:小组状态0正常 1较慢 2慢 3前方有慢组 4球洞较慢 5球洞慢
+     statim:下场时间
+     stahol:开始球洞编码
+     nowholcod:当前所在球洞系统编码
+     nowholnum:当前所在球洞系统编号
+     nextgrodistime
+     nowblocks:所在球洞段号：1发球台 2球道 3果岭
+     hgcod:球洞组（上九洞，下九洞，十八洞）
+     */
+    [dbCon ExecDataTable:@"create table if not exists tbl_groupHeartInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)"];
+    //心跳中显示的当前的定位位置
+    [dbCon ExecDataTable:@"create table if not exists tbl_locHole(holcod text,holnum text)"];
+    //获取到移动设备的信息
+    [dbCon ExecDataTable:@"create table if not exists tbl_padInfo(padcod text,padnum text,padtag text)"];
+    //球洞规划组对象
+    [dbCon ExecDataTable:@"create table if not exists tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)"];
+    //客户组对象
+    [dbCon ExecDataTable:@"create table if not exists tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)"];
+    
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application {
+    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+    //实现方案一（该方案的缺点是：在手机插上电源的时候可以很好的保持后台发送心跳）
+//    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+//    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:20 target:self selector:@selector(timer) userInfo:nil repeats:YES];
+//    [[NSRunLoop currentRunLoop] addTimer:backgroundTimer forMode: NSRunLoopCommonModes];
+    //实现方案二（目前还在试验中20151030）
+    
+    
+//    [self registerBackgroundTask];
+    self.changeState = YES;
+    //
+    __block UIBackgroundTaskIdentifier bgTask;
+    
+    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(bgTask != UIBackgroundTaskInvalid)
+                bgTask = UIBackgroundTaskInvalid;
+            
+            NSLog(@"background1,baIdentifier:%lu",(unsigned long)bgTask);
+            //重启心跳服务
+            HeartBeatAndDetectState *backGroundHeartbeat = [[HeartBeatAndDetectState alloc] init];
+//            [backGroundHeartbeat disableHeartBeat];
+            [HeartBeatAndDetectState disableHeartBeat];
+            [backGroundHeartbeat initHeartBeat];
+            
+        });
+        
+        NSLog(@"background2");
+        
+    }];
+    //
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+           if(bgTask != UIBackgroundTaskInvalid)
+               bgTask = UIBackgroundTaskInvalid;
+            NSLog(@"background3");
+        });
+        NSLog(@"background4");
+    });
+    
+    
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    [backgroundTimer invalidate];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    NSLog(@"已经进入前台，激活");
+    //重启心跳服务
+//    if(self.changeState)
+//    {
+//        HeartBeatAndDetectState *backGroundHeartbeat = [[HeartBeatAndDetectState alloc] init];
+//        [backGroundHeartbeat initHeartBeat];
+//    }
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    NSLog(@"app 终止");
+}
+
+
+
+
+
+
+
+
+
+
+//
+-(void)getLocation{
+    if(nil == self.locationManager)
+        self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [self.locationManager startUpdatingLocation];
+}
+
+//
+-(void)timer
+{
+    [self getLocation];
+}
+#pragma -mark CLLocation Delegate Methods
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"err:%@",error);
+}
+//
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
+{
+    CLLocation *location = [locations lastObject];
+    
+    //
+    NSString *longitude = [NSString stringWithFormat:@"%+.6f",location.coordinate.longitude];
+    NSString *latitude = [NSString stringWithFormat:@"%+.6f",location.coordinate.latitude];
+    [[BLMessageProvider sharedProvider] sendLocation:longitude latitude:latitude applicationState:@"background"];
+}
+
+//判断设备是否支持后台任务
+-(BOOL)isMultitaskingSupported{
+    BOOL bResult = NO;
+    
+    if([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)])
+    {
+        bResult = [[UIDevice currentDevice] isMultitaskingSupported];
+    }
+    return bResult;
+}
+//启动后台任务,并记录ID
+-(void)startbackgroundTask{
+    NSLog(@"startbackgroundTask");
+    
+    
+    __weak AppDelegate *weakSelf = self;
+    m_taskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [weakSelf restartbackgroundTask];
+        
+    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [weakSelf bgTask:m_taskID];
+    });
+}
+-(void)bgTask:(UIBackgroundTaskIdentifier)taskId
+{
+    while (m_bRun) {
+        if(m_taskID != taskId)
+        {
+            break;
+        }
+        NSLog(@"this is background execute, taskID:%lu",(unsigned long)taskId);
+        usleep(3 * 1000);
+    }
+}
+
+
+
+//重启后台任务，由于iOS后台任务都是有实效性的，最长时3min，然后将会被系统回收，所以需要一个函数来重启任务
+-(void)restartbackgroundTask
+{
+    NSLog(@"stop backgroundTask");
+    
+    //save old task id
+    UIBackgroundTaskIdentifier taskId = m_taskID;
+    m_taskID = UIBackgroundTaskInvalid;
+    
+    //start new task
+    [self startbackgroundTask];
+    
+    //stop old task
+    [[UIApplication sharedApplication] endBackgroundTask:taskId];
+}
+//注册后台任务，这是函数的唯一入口函数，在applicationDidEnterBackground中调用，用于app在推出时，启动后台任务
+-(void)registerBackgroundTask
+{
+    if([self isMultitaskingSupported] == NO)
+    {
+        NSLog(@"Don't support multiTask");
+        return;
+    }
+    //the background has been run,and is not allowed to run again
+    if(m_bRun)
+    {
+        NSLog(@"task has been running");
+        return;
+    }
+    
+    m_bRun = YES;
+    
+    __weak AppDelegate *weakSelf = self;
+    
+//    [[UIApplication sharedApplication] setKeepAliveTimeout:600 handler:^{
+//        [weakSelf restartbackgroundTask];
+//    }];
+    
+    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [weakSelf restartbackgroundTask];
+    }];
+    
+    [self startbackgroundTask];
+}
+//唯一的出口函数,在需要结束后台任务的时候，调用该函数来结束后台任务
+-(void)unregisterBackgroundTask
+{
+    if(m_bRun)
+    {
+        NSLog(@"task has been stoping");
+        return;
+    }
+    
+    m_bRun = NO;
+    [[UIApplication sharedApplication] endBackgroundTask:m_taskID];
+    m_taskID = UIBackgroundTaskInvalid;
+}
+
+
+
+
+
+@end
+
+

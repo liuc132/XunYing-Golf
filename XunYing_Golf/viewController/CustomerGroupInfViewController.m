@@ -1,0 +1,273 @@
+//
+//  CustomerGroupInfViewController.m
+//  XunYing_Golf
+//
+//  Created by LiuC on 15/10/9.
+//  Copyright © 2015年 LiuC. All rights reserved.
+//
+
+#import "CustomerGroupInfViewController.h"
+#import "DBCon.h"
+#import "DataTable.h"
+#import "HttpTools.h"
+#import "XunYingPre.h"
+
+@interface CustomerGroupInfViewController ()
+
+
+@property (strong, nonatomic) DBCon *cusGroupDBCon;
+@property (strong, nonatomic) DataTable *cusGroupInf;
+@property (strong, nonatomic) DataTable *padInfTable;
+@property (strong, nonatomic) DataTable *locInfTable;
+@property (strong, nonatomic) DataTable *logPerson;
+@property (strong, nonatomic) DataTable *groupInfo;
+@property (strong, nonatomic) DataTable *allHoleInfo;
+
+@property (strong, nonatomic) NSArray   *playStateArray;
+
+@property (strong, nonatomic) IBOutlet UIScrollView *cusInfScrollView;
+
+@property (strong, nonatomic) IBOutlet UILabel *firstCusName;
+@property (strong, nonatomic) IBOutlet UILabel *firstCusNumber;
+@property (strong, nonatomic) IBOutlet UILabel *secondCusName;
+@property (strong, nonatomic) IBOutlet UILabel *secondCusNumber;
+@property (strong, nonatomic) IBOutlet UILabel *thirdCusName;
+@property (strong, nonatomic) IBOutlet UILabel *thirdCusNumber;
+@property (strong, nonatomic) IBOutlet UILabel *fourthCusName;
+@property (strong, nonatomic) IBOutlet UILabel *fourthCusNumber;
+
+@property (strong, nonatomic) IBOutlet UILabel *firstCaddyName;
+@property (strong, nonatomic) IBOutlet UILabel *firstCaddyNumber;
+@property (strong, nonatomic) IBOutlet UILabel *secondCaddyName;
+@property (strong, nonatomic) IBOutlet UILabel *secondCaddyNumber;
+
+@property (strong, nonatomic) IBOutlet UILabel *firstCartNumber;
+@property (strong, nonatomic) IBOutlet UILabel *firstCartSeats;
+@property (strong, nonatomic) IBOutlet UILabel *secondCartNumber;
+@property (strong, nonatomic) IBOutlet UILabel *seconCartSeats;
+
+@property (strong, nonatomic) IBOutlet UILabel *panelNumber;
+
+@property (strong, nonatomic) IBOutlet UILabel *groupCode;
+@property (strong, nonatomic) IBOutlet UILabel *downCourtTime;
+@property (strong, nonatomic) IBOutlet UILabel *totalPlayTime;
+@property (strong, nonatomic) IBOutlet UILabel *standardFinishTime;
+@property (strong, nonatomic) IBOutlet UILabel *playState;
+@property (strong, nonatomic) IBOutlet UILabel *startHoleNumber;
+@property (strong, nonatomic) IBOutlet UILabel *currentHoleNumber;
+@property (strong, nonatomic) IBOutlet UILabel *holeType;//显示上九洞，下九洞，十八洞
+
+
+
+
+
+- (IBAction)backToField:(UIBarButtonItem *)sender;
+
+
+@end
+
+@implementation CustomerGroupInfViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    //alloc and init cusGroupDBCon and cusGroupInf
+    self.cusGroupDBCon = [[DBCon alloc] init];
+    self.cusGroupInf   = [[DataTable alloc] init];
+    self.padInfTable   = [[DataTable alloc] init];
+    self.locInfTable   = [[DataTable alloc] init];
+    self.groupInfo     = [[DataTable alloc] init];
+    self.allHoleInfo   = [[DataTable alloc] init];
+    //初始化球洞状态 0正常 1较慢 2慢 3前方有慢组 4球洞较慢 5球洞慢
+    self.playStateArray = [[NSArray alloc] initWithObjects:@"正常",@"较慢",@"慢",@"前方有慢组",@"球洞较慢",@"球洞慢", nil];
+    //setting uiscrollView
+    self.cusInfScrollView.directionalLockEnabled = YES;
+    self.cusInfScrollView.alwaysBounceVertical = YES;
+    self.cusInfScrollView.scrollEnabled = YES;
+    self.cusInfScrollView.showsHorizontalScrollIndicator = NO;
+    self.cusInfScrollView.showsVerticalScrollIndicator = YES;
+    self.cusInfScrollView.indicatorStyle = UIScrollViewIndicatorStyleDefault;
+    self.cusInfScrollView.contentInset = UIEdgeInsetsMake(0, 0, 85, 0);
+    //查询相应的信息
+    self.cusGroupInf = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_groupHeartInf"];
+    self.padInfTable = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_padInfo"];
+    self.locInfTable = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_locHole"];
+    self.logPerson   = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_logPerson"];
+    self.groupInfo   = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_groupInf"];
+    self.allHoleInfo = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_holeInf"];
+    //将相应的信息显示出来
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self constructDisInf];
+    });
+    
+    NSLog(@"finish search");
+}
+
+-(void)constructDisInf
+{
+    NSLog(@"construct DisInf");
+    //
+    if ([self.cusGroupInf.Rows count]) {
+        //下场时间
+        NSString *downTime = self.cusGroupInf.Rows[0][@"statim"];
+        self.downCourtTime.text = [downTime substringFromIndex:10];
+        //打球时长
+        NSInteger totalPlayTimeInt = [self.cusGroupInf.Rows[0][@"pladur"] integerValue];
+        NSInteger hour = totalPlayTimeInt/3600;
+        NSInteger min  = (totalPlayTimeInt%3600)/60;
+        if (hour > 0) {
+            self.totalPlayTime.text = [NSString stringWithFormat:@"%ld时%ld分",hour,min];
+        }
+        else
+        {
+            self.totalPlayTime.text = [NSString stringWithFormat:@"%ld分",min];
+        }
+        //标准时长
+        NSInteger stdPlayTimeInt = [self.cusGroupInf.Rows[0][@"stddur"] integerValue];
+        NSInteger stdhour = stdPlayTimeInt/3600;
+        NSInteger stdmin  = (stdPlayTimeInt%3600)/60;
+        if (stdhour > 0) {
+            self.standardFinishTime.text = [NSString stringWithFormat:@"%ld时%ld分",stdhour,stdmin];
+        }
+        else
+        {
+            self.standardFinishTime.text = [NSString stringWithFormat:@"%ld分",stdmin];
+        }
+        //开始球洞
+        NSString *startHoleNum = [[NSString alloc] init];//在下边的查询中赋值
+        NSString *startHoleCode = [NSString stringWithFormat:@"%@",self.cusGroupInf.Rows[0][@"stahol"]];
+        NSArray *allHolesArray = self.allHoleInfo.Rows;
+        //查询出开始球洞的code所对应的球洞号码
+        for (NSDictionary *eachHole in allHolesArray) {
+            if ([eachHole[@"holcod"] isEqualToString:startHoleCode]) {
+                startHoleNum = eachHole[@"holenum"];
+            }
+        }
+        
+        self.startHoleNumber.text    = startHoleNum;
+        //当前所在球洞
+        self.currentHoleNumber.text  = self.cusGroupInf.Rows[0][@"nowholnum"];
+        //当球的打球状态
+        self.playState.text     = self.playStateArray[[self.cusGroupInf.Rows[0][@"grosta"] intValue]];
+        
+    }
+    //
+    if ([self.padInfTable.Rows count]) {
+        self.panelNumber.text = self.padInfTable.Rows[0][@"padnum"];
+    }
+    //
+    if ([self.locInfTable.Rows count]) {
+        self.currentHoleNumber.text  = self.locInfTable.Rows[0][@"holnum"];
+    }
+    //获取球洞组，组编号
+    if ([self.groupInfo.Rows count]) {
+        //组编号
+        NSString *gropNumStr = [[NSString alloc] init];
+        gropNumStr = self.groupInfo.Rows[0][@"gronum"];
+        //将组编号显示出来
+        self.groupCode.text = [gropNumStr substringToIndex:3];
+        //显示当前所选择的球洞的类型
+        self.holeType.text  = self.groupInfo.Rows[0][@"hgcod"];
+        
+    }
+    //
+    switch ([self.logPerson.Rows count]) {
+        case 0:
+            self.firstCaddyName.hidden = YES;
+            self.firstCaddyNumber.hidden = YES;
+            self.secondCaddyName.hidden = YES;
+            self.secondCaddyNumber.hidden = YES;
+            break;
+            //
+        case 1:
+            self.firstCaddyName.text = self.logPerson.Rows[0][@"name"];
+            self.firstCaddyNumber.text = self.logPerson.Rows[0][@"number"];
+            //hide
+            self.secondCaddyName.hidden = YES;
+            self.secondCaddyNumber.hidden = YES;
+            
+            break;
+            //
+        case 2:
+            self.firstCaddyName.text = self.logPerson.Rows[0][@"name"];
+            self.firstCaddyNumber.text = self.logPerson.Rows[0][@"number"];
+            self.secondCaddyName.text = self.logPerson.Rows[0][@"name"];
+            self.secondCaddyNumber.text = self.logPerson.Rows[0][@"number"];
+            break;
+            
+            
+        default:
+            break;
+    }
+}
+
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    //初始化显示信息
+    
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+- (IBAction)backToField:(UIBarButtonItem *)sender {
+    NSLog(@"执行回场");
+    //调用回场接口所需要的参数是：mid:移动端AMEI码   grocod:小组code
+    self.cusGroupInf = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_groupInf"];
+    //先判断数据是否为空，不为空则进行下一步操作
+    if(![self.cusGroupInf.Rows count])
+    {
+        //进行提示
+        UIAlertView *errAlertView = [[UIAlertView alloc] initWithTitle:@"回场失败" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+        [errAlertView show];
+        
+        //为空，则直接退出
+        return;
+    }
+    //数据不为空，则进行数据组装
+    NSMutableDictionary *backToFieldParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.cusGroupInf.Rows[0][@"grocod"],@"grocod", nil];
+    __weak CustomerGroupInfViewController *weakSelf = self;
+    //进行网络请求
+    [HttpTools getHttp:BackToFieldURL forParams:backToFieldParam success:^(NSData *nsData){
+        
+        CustomerGroupInfViewController *strongSelf = weakSelf;
+        
+        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+        NSLog(@"back to the field msg:%@",recDic[@"Msg"]);
+        
+        
+        
+        
+        //执行跳转程序，跳转到建组方式选择界面
+        [strongSelf performSegueWithIdentifier:@"backToField" sender:nil];
+        //除能心跳功能
+        
+        
+    }failure:^(NSError *err){
+        NSLog(@"回场失败");
+        
+        
+    }];
+    
+    
+    
+    
+    
+    
+}
+@end
