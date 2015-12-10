@@ -14,12 +14,13 @@
 #import "XunYingPre.h"
 #import "HeartBeatAndDetectState.h"
 #import "AppDelegate.h"
+#import "QRCodeReaderViewController.h"
 
 extern unsigned char ucCusCounts;
 extern unsigned char ucHolePosition;
 
 
-@interface ChooseCreateGroupViewController ()
+@interface ChooseCreateGroupViewController ()<QRCodeReaderDelegate>
 
 
 @property (strong, nonatomic) DBCon *LogDbcon;
@@ -29,9 +30,15 @@ extern unsigned char ucHolePosition;
 @property (strong, nonatomic) NSDictionary *loggedPersonInf;
 @property BOOL backOrNext;  //yes:next   no:back default we go to the next interface
 
+@property (strong, nonatomic) QRCodeReaderViewController *QRCodeReader;
+//@property (strong, nonatomic) 
+
 
 - (IBAction)backToLogInFace:(UIBarButtonItem *)sender;
 - (IBAction)MannualCreateGrp:(UIButton *)sender;
+- (IBAction)QRCodeCreateGrp:(UIButton *)sender;
+
+
 
 @end
 
@@ -51,7 +58,10 @@ extern unsigned char ucHolePosition;
     self.backOrNext = YES;
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(whereToGo:) name:@"whereToGo" object:nil];
-    
+    //
+    self.QRCodeReader = [[QRCodeReaderViewController alloc] init];
+    self.QRCodeReader.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.QRCodeReader.delegate = self;
     
 }
 #pragma -mark where interface to go
@@ -238,7 +248,7 @@ extern unsigned char ucHolePosition;
                 //                }
                 
 //                if(recDic[@"Msg"][@"group"])
-                if([recDic[@"Msg"][@"group"] boolValue])
+                if([recDic[@"Msg"][@"group"] isEmpty])
                 {
                     NSMutableArray *logPersonInf = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"logemp"][@"empcod"],recDic[@"Msg"][@"logemp"][@"empjob"],recDic[@"Msg"][@"logemp"][@"empnam"],recDic[@"Msg"][@"logemp"][@"empnum"],recDic[@"Msg"][@"logemp"][@"empsex"],recDic[@"Msg"][@"logemp"][@"cadShowNum"], nil];
                     //将数据加载到创建的数据库中
@@ -278,4 +288,22 @@ extern unsigned char ucHolePosition;
     }];
     
 }
+
+- (IBAction)QRCodeCreateGrp:(UIButton *)sender {
+    NSLog(@"开始扫描二维码");
+    __weak typeof(self) weakSelf = self;
+
+    [self.QRCodeReader setCompletionWithBlock:^(NSString *resultAsString){
+        [weakSelf.QRCodeReader dismissViewControllerAnimated:YES completion:nil];
+    }];
+    //
+    [self presentViewController:self.QRCodeReader animated:YES completion:nil];
+}
+#pragma -mark QRCodeReader
+- (void)reader:(QRCodeReaderViewController *)reader didScanResult:(NSString *)result
+{
+    NSLog(@"getResult:%@",result);
+}
+
+
 @end

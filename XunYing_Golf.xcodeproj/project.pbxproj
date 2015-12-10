@@ -18,11 +18,13 @@
 		5B11C52F1B8EDD4700382C9B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B11C52E1B8EDD4700382C9B /* Images.xcassets */; };
 		5B11C5321B8EDD4700382C9B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B11C5301B8EDD4700382C9B /* LaunchScreen.xib */; };
 		5B11C53E1B8EDD4700382C9B /* XunYing_GolfTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B11C53D1B8EDD4700382C9B /* XunYing_GolfTests.m */; };
-		5B11C5491B8EDED400382C9B /* ArcGIS.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5B11C5481B8EDED400382C9B /* ArcGIS.bundle */; };
-		5B11C5581B8EE5F100382C9B /* offlineMapData.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5B11C5571B8EE5F100382C9B /* offlineMapData.bundle */; };
 		5B136ACF1BDA15BF003BA918 /* SlowBallTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */; };
 		5B3468171BCDF80700CB2E73 /* HeartBeatAndDetectState.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3468161BCDF80700CB2E73 /* HeartBeatAndDetectState.m */; };
 		5B3A14D91BB2486B008AA668 /* PlayProcessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3A14D81BB2486B008AA668 /* PlayProcessViewController.m */; };
+		5B3B66A31C197D4000C4D557 /* QRCameraSwitchButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B669D1C197D4000C4D557 /* QRCameraSwitchButton.m */; };
+		5B3B66A41C197D4000C4D557 /* QRCodeReaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B66A01C197D4000C4D557 /* QRCodeReaderView.m */; };
+		5B3B66A51C197D4000C4D557 /* QRCodeReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B66A21C197D4000C4D557 /* QRCodeReaderViewController.m */; };
+		5B3B66A71C19819600C4D557 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B66A61C19819600C4D557 /* beep.wav */; };
 		5B4481051BFB25B10085A2E7 /* ChangeCaddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4481041BFB25B10085A2E7 /* ChangeCaddyViewController.m */; };
 		5B4E33E11BAFE415000693B3 /* ic_launcher.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4E33E01BAFE415000693B3 /* ic_launcher.png */; };
 		5B4E33E81BAFE76C000693B3 /* WaitToPlayTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4E33E71BAFE76C000693B3 /* WaitToPlayTableViewController.m */; };
@@ -87,6 +89,8 @@
 		5BEA92711BB1077200EAC9BE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEA926E1BB1077200EAC9BE /* FontAwesome.ttf */; };
 		5BEA92721BB1077200EAC9BE /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEA92701BB1077200EAC9BE /* NSString+FontAwesome.m */; };
 		5BEC66E61BC7506F001C70FE /* CustomerGroupInfViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEC66E51BC7506F001C70FE /* CustomerGroupInfViewController.m */; };
+		5BEE08391C190ACC0058508C /* ArcGIS.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BEE08381C190ACC0058508C /* ArcGIS.bundle */; };
+		5BEE083B1C190B130058508C /* offlineMapData.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BEE083A1C190B130058508C /* offlineMapData.bundle */; };
 		5BF0CE6E1BC6100300009BED /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF0CE6D1BC6100300009BED /* KxMenu.m */; };
 		5BFF02771BD7399500A25D7A /* JumpHoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF02761BD7399500A25D7A /* JumpHoleViewController.m */; };
 		5BFF027D1BD75F8400A25D7A /* MendHoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF027C1BD75F8400A25D7A /* MendHoleViewController.m */; };
@@ -124,14 +128,20 @@
 		5B11C5371B8EDD4700382C9B /* XunYing_GolfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XunYing_GolfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B11C53C1B8EDD4700382C9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B11C53D1B8EDD4700382C9B /* XunYing_GolfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XunYing_GolfTests.m; sourceTree = "<group>"; };
-		5B11C5481B8EDED400382C9B /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ArcGIS.bundle; sourceTree = "<group>"; };
-		5B11C5571B8EE5F100382C9B /* offlineMapData.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = offlineMapData.bundle; sourceTree = "<group>"; };
 		5B136ACD1BDA15BF003BA918 /* SlowBallTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlowBallTableViewController.h; path = viewController/SlowBallTableViewController.h; sourceTree = "<group>"; };
 		5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlowBallTableViewController.m; path = viewController/SlowBallTableViewController.m; sourceTree = "<group>"; };
 		5B3468151BCDF80700CB2E73 /* HeartBeatAndDetectState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeartBeatAndDetectState.h; path = otherClass/HeartBeatAndDetectState.h; sourceTree = "<group>"; };
 		5B3468161BCDF80700CB2E73 /* HeartBeatAndDetectState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HeartBeatAndDetectState.m; path = otherClass/HeartBeatAndDetectState.m; sourceTree = "<group>"; };
 		5B3A14D71BB2486B008AA668 /* PlayProcessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayProcessViewController.h; path = viewController/PlayProcessViewController.h; sourceTree = "<group>"; };
 		5B3A14D81BB2486B008AA668 /* PlayProcessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayProcessViewController.m; path = viewController/PlayProcessViewController.m; sourceTree = "<group>"; };
+		5B3B669C1C197D4000C4D557 /* QRCameraSwitchButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCameraSwitchButton.h; path = XunYing_Golf/viewController/QRCodeReaderViewController/QRCameraSwitchButton.h; sourceTree = "<group>"; };
+		5B3B669D1C197D4000C4D557 /* QRCameraSwitchButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QRCameraSwitchButton.m; path = XunYing_Golf/viewController/QRCodeReaderViewController/QRCameraSwitchButton.m; sourceTree = "<group>"; };
+		5B3B669E1C197D4000C4D557 /* QRCodeReaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeReaderDelegate.h; path = XunYing_Golf/viewController/QRCodeReaderViewController/QRCodeReaderDelegate.h; sourceTree = "<group>"; };
+		5B3B669F1C197D4000C4D557 /* QRCodeReaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeReaderView.h; path = XunYing_Golf/viewController/QRCodeReaderViewController/QRCodeReaderView.h; sourceTree = "<group>"; };
+		5B3B66A01C197D4000C4D557 /* QRCodeReaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QRCodeReaderView.m; path = XunYing_Golf/viewController/QRCodeReaderViewController/QRCodeReaderView.m; sourceTree = "<group>"; };
+		5B3B66A11C197D4000C4D557 /* QRCodeReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeReaderViewController.h; path = XunYing_Golf/viewController/QRCodeReaderViewController/QRCodeReaderViewController.h; sourceTree = "<group>"; };
+		5B3B66A21C197D4000C4D557 /* QRCodeReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QRCodeReaderViewController.m; path = XunYing_Golf/viewController/QRCodeReaderViewController/QRCodeReaderViewController.m; sourceTree = "<group>"; };
+		5B3B66A61C19819600C4D557 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
 		5B4481031BFB25B10085A2E7 /* ChangeCaddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangeCaddyViewController.h; path = viewController/ChangeCaddyViewController.h; sourceTree = "<group>"; };
 		5B4481041BFB25B10085A2E7 /* ChangeCaddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChangeCaddyViewController.m; path = viewController/ChangeCaddyViewController.m; sourceTree = "<group>"; };
 		5B4E33E01BAFE415000693B3 /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_launcher.png; path = image/ic_launcher.png; sourceTree = "<group>"; };
@@ -249,6 +259,8 @@
 		5BEA92701BB1077200EAC9BE /* NSString+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+FontAwesome.m"; path = "otherFontAwesome/NSString+FontAwesome.m"; sourceTree = "<group>"; };
 		5BEC66E41BC7506F001C70FE /* CustomerGroupInfViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomerGroupInfViewController.h; path = viewController/CustomerGroupInfViewController.h; sourceTree = "<group>"; };
 		5BEC66E51BC7506F001C70FE /* CustomerGroupInfViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomerGroupInfViewController.m; path = viewController/CustomerGroupInfViewController.m; sourceTree = "<group>"; };
+		5BEE08381C190ACC0058508C /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ArcGIS.bundle; sourceTree = "<group>"; };
+		5BEE083A1C190B130058508C /* offlineMapData.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = offlineMapData.bundle; sourceTree = "<group>"; };
 		5BF0CE6C1BC6100300009BED /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxMenu.h; path = XunYing_Golf/viewController/Menu/KxMenu.h; sourceTree = "<group>"; };
 		5BF0CE6D1BC6100300009BED /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxMenu.m; path = XunYing_Golf/viewController/Menu/KxMenu.m; sourceTree = "<group>"; };
 		5BFF02751BD7399500A25D7A /* JumpHoleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JumpHoleViewController.h; sourceTree = "<group>"; };
@@ -308,6 +320,7 @@
 		5B11C5151B8EDD4600382C9B = {
 			isa = PBXGroup;
 			children = (
+				5B3B669B1C197D1D00C4D557 /* QRCodeReader */,
 				5B52F72A1B9D8A83004BA338 /* framework */,
 				5B52F4171B9D7B44004BA338 /* commonLibrary */,
 				5BB922851B9D593C00B7C936 /* Image */,
@@ -345,6 +358,7 @@
 		5B11C5211B8EDD4700382C9B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5B3B66A61C19819600C4D557 /* beep.wav */,
 				5B11C52E1B8EDD4700382C9B /* Images.xcassets */,
 				5B11C52B1B8EDD4700382C9B /* Main.storyboard */,
 				5B11C5301B8EDD4700382C9B /* LaunchScreen.xib */,
@@ -377,7 +391,7 @@
 		5B11C5471B8EDEAF00382C9B /* ArcGIS */ = {
 			isa = PBXGroup;
 			children = (
-				5B11C5481B8EDED400382C9B /* ArcGIS.bundle */,
+				5BEE08381C190ACC0058508C /* ArcGIS.bundle */,
 			);
 			name = ArcGIS;
 			sourceTree = "<group>";
@@ -385,7 +399,7 @@
 		5B11C54A1B8EDEF700382C9B /* offlineMapData */ = {
 			isa = PBXGroup;
 			children = (
-				5B11C5571B8EE5F100382C9B /* offlineMapData.bundle */,
+				5BEE083A1C190B130058508C /* offlineMapData.bundle */,
 			);
 			name = offlineMapData;
 			sourceTree = "<group>";
@@ -416,6 +430,20 @@
 				5B3A14D81BB2486B008AA668 /* PlayProcessViewController.m */,
 			);
 			name = playProcess;
+			sourceTree = "<group>";
+		};
+		5B3B669B1C197D1D00C4D557 /* QRCodeReader */ = {
+			isa = PBXGroup;
+			children = (
+				5B3B669C1C197D4000C4D557 /* QRCameraSwitchButton.h */,
+				5B3B669D1C197D4000C4D557 /* QRCameraSwitchButton.m */,
+				5B3B669E1C197D4000C4D557 /* QRCodeReaderDelegate.h */,
+				5B3B669F1C197D4000C4D557 /* QRCodeReaderView.h */,
+				5B3B66A01C197D4000C4D557 /* QRCodeReaderView.m */,
+				5B3B66A11C197D4000C4D557 /* QRCodeReaderViewController.h */,
+				5B3B66A21C197D4000C4D557 /* QRCodeReaderViewController.m */,
+			);
+			name = QRCodeReader;
 			sourceTree = "<group>";
 		};
 		5B4481021BFB25750085A2E7 /* changeCaddy */ = {
@@ -915,15 +943,16 @@
 				5B63E1171BAFB10C0034C577 /* logInLogo.png in Resources */,
 				5B11C5321B8EDD4700382C9B /* LaunchScreen.xib in Resources */,
 				5B63E1111BAFB10C0034C577 /* createGroup_Check.png in Resources */,
-				5B11C5491B8EDED400382C9B /* ArcGIS.bundle in Resources */,
+				5B3B66A71C19819600C4D557 /* beep.wav in Resources */,
 				5B63E1191BAFB10C0034C577 /* logInSelected.png in Resources */,
+				5BEE083B1C190B130058508C /* offlineMapData.bundle in Resources */,
+				5BEE08391C190ACC0058508C /* ArcGIS.bundle in Resources */,
 				5B63E1161BAFB10C0034C577 /* logInCompany-01.png in Resources */,
 				5B63E1151BAFB10C0034C577 /* logInAccount.png in Resources */,
 				5B63E1141BAFB10C0034C577 /* createGroup_QRcode.png in Resources */,
 				5B11C52F1B8EDD4700382C9B /* Images.xcassets in Resources */,
 				5B63E1181BAFB10C0034C577 /* logInPassword.png in Resources */,
 				5B63E1131BAFB10C0034C577 /* createGroup_Mannual.png in Resources */,
-				5B11C5581B8EE5F100382C9B /* offlineMapData.bundle in Resources */,
 				5B4E33E11BAFE415000693B3 /* ic_launcher.png in Resources */,
 				5BEA92711BB1077200EAC9BE /* FontAwesome.ttf in Resources */,
 			);
@@ -960,6 +989,7 @@
 				5B9ECB0E1BABF40900612474 /* CreateGroupViewController.m in Sources */,
 				5BD6D6951BD63311001524DB /* AFURLRequestSerialization.m in Sources */,
 				5B03A84B1C05A13D00207D59 /* ScoreViewController.m in Sources */,
+				5B3B66A51C197D4000C4D557 /* QRCodeReaderViewController.m in Sources */,
 				5BDC837B1BA2B1B500E69940 /* TaskComViewController.m in Sources */,
 				5BE7172E1BB8EDC40080C6F4 /* Reachability.m in Sources */,
 				5B3468171BCDF80700CB2E73 /* HeartBeatAndDetectState.m in Sources */,
@@ -1000,10 +1030,12 @@
 				5B9ECB131BAC113600612474 /* ChooseCreateGroupViewController.m in Sources */,
 				5B9D51EF1BA954BF006DD2C7 /* LogInViewController.m in Sources */,
 				5B52F44A1B9D7C08004BA338 /* UIViewController+UICon.m in Sources */,
+				5B3B66A41C197D4000C4D557 /* QRCodeReaderView.m in Sources */,
 				5B52F4211B9D7BC3004BA338 /* HttpTools.m in Sources */,
 				5BB97ACB1B9EC07B00A27809 /* settingTableViewCell.m in Sources */,
 				5B03A8471C05A0A700207D59 /* PersonalScoreViewController.m in Sources */,
 				5BFF027D1BD75F8400A25D7A /* MendHoleViewController.m in Sources */,
+				5B3B66A31C197D4000C4D557 /* QRCameraSwitchButton.m in Sources */,
 				5B93C8091BBB938A0081FBAF /* MoreInterfaceViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

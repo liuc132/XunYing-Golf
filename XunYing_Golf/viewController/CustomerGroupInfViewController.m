@@ -22,6 +22,8 @@
 @property (strong, nonatomic) DataTable *logPerson;
 @property (strong, nonatomic) DataTable *groupInfo;
 @property (strong, nonatomic) DataTable *allHoleInfo;
+@property (strong, nonatomic) DataTable *curSelectedCustomers;
+@property (strong, nonatomic) DataTable *selectedCartInfo;
 
 @property (strong, nonatomic) NSArray   *playStateArray;
 
@@ -71,7 +73,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    __weak typeof(self) weakSelf = self;
     //alloc and init cusGroupDBCon and cusGroupInf
     self.cusGroupDBCon = [[DBCon alloc] init];
     self.cusGroupInf   = [[DataTable alloc] init];
@@ -79,6 +81,8 @@
     self.locInfTable   = [[DataTable alloc] init];
     self.groupInfo     = [[DataTable alloc] init];
     self.allHoleInfo   = [[DataTable alloc] init];
+    self.curSelectedCustomers = [[DataTable alloc] init];
+    self.selectedCartInfo     = [[DataTable alloc] init];
     //初始化球洞状态 0正常 1较慢 2慢 3前方有慢组 4球洞较慢 5球洞慢
     self.playStateArray = [[NSArray alloc] initWithObjects:@"正常",@"较慢",@"慢",@"前方有慢组",@"球洞较慢",@"球洞慢", nil];
     //setting uiscrollView
@@ -90,15 +94,19 @@
     self.cusInfScrollView.indicatorStyle = UIScrollViewIndicatorStyleDefault;
     self.cusInfScrollView.contentInset = UIEdgeInsetsMake(0, 0, 85, 0);
     //查询相应的信息
-    self.cusGroupInf = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_groupHeartInf"];
-    self.padInfTable = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_padInfo"];
-    self.locInfTable = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_locHole"];
-    self.logPerson   = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_logPerson"];
-    self.groupInfo   = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_groupInf"];
-    self.allHoleInfo = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_holeInf"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        weakSelf.cusGroupInf = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_groupHeartInf"];
+        weakSelf.padInfTable = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_padInfo"];
+        weakSelf.locInfTable = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_locHole"];
+        weakSelf.logPerson   = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_logPerson"];
+        weakSelf.groupInfo   = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_groupInf"];
+        weakSelf.allHoleInfo = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_holeInf"];
+        weakSelf.curSelectedCustomers = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_CustomersInfo"];
+        weakSelf.selectedCartInfo     = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_selectCart"];
+    });
     //将相应的信息显示出来
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self constructDisInf];
+        [weakSelf constructDisInf];
     });
     
     NSLog(@"finish search");
@@ -171,7 +179,7 @@
         self.holeType.text  = self.groupInfo.Rows[0][@"hgcod"];
         
     }
-    //
+    //显示当前的球童的信息
     switch ([self.logPerson.Rows count]) {
         case 0:
             self.firstCaddyName.hidden = YES;
@@ -197,6 +205,142 @@
             break;
             
             
+        default:
+            break;
+    }
+    //显示当前的所有客户的名称
+    switch ([self.curSelectedCustomers.Rows count]) {
+        case 0:
+            self.firstCusName.hidden = YES;
+            self.firstCusNumber.hidden = YES;
+            self.secondCusName.hidden = YES;
+            self.secondCusNumber.hidden = YES;
+            self.thirdCusName.hidden = YES;
+            self.thirdCusNumber.hidden = YES;
+            self.fourthCusName.hidden = YES;
+            self.fourthCusNumber.hidden = YES;
+            
+            break;
+        case 1:
+            self.firstCusName.hidden = NO;
+            self.firstCusNumber.hidden = NO;
+            self.secondCusName.hidden = YES;
+            self.secondCusNumber.hidden = YES;
+            self.thirdCusName.hidden = YES;
+            self.thirdCusNumber.hidden = YES;
+            self.fourthCusName.hidden = YES;
+            self.fourthCusNumber.hidden = YES;
+            //将信息显示出来
+            //1
+            self.firstCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[0][@"cusnam"] isEmpty]?@"客户1":self.curSelectedCustomers.Rows[0][@"cusnam"]];
+            self.firstCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[0][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[0][@"cusnum"]];
+            
+            break;
+        case 2:
+            self.firstCusName.hidden = NO;
+            self.firstCusNumber.hidden = NO;
+            self.secondCusName.hidden = NO;
+            self.secondCusNumber.hidden = NO;
+            self.thirdCusName.hidden = YES;
+            self.thirdCusNumber.hidden = YES;
+            self.fourthCusName.hidden = YES;
+            self.fourthCusNumber.hidden = YES;
+            //
+            //将信息显示出来
+            //1
+            self.firstCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[0][@"cusnam"] isEmpty]?@"客户1":self.curSelectedCustomers.Rows[0][@"cusnam"]];
+            self.firstCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[0][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[0][@"cusnum"]];
+            //2
+            self.secondCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[1][@"cusnam"] isEmpty]?@"客户2":self.curSelectedCustomers.Rows[1][@"cusnam"]];
+            self.secondCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[1][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[1][@"cusnum"]];
+            
+            break;
+        case 3:
+            self.firstCusName.hidden = NO;
+            self.firstCusNumber.hidden = NO;
+            self.secondCusName.hidden = NO;
+            self.secondCusNumber.hidden = NO;
+            self.thirdCusName.hidden = NO;
+            self.thirdCusNumber.hidden = NO;
+            self.fourthCusName.hidden = YES;
+            self.fourthCusNumber.hidden = YES;
+            //
+            //将信息显示出来
+            //1
+            self.firstCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[0][@"cusnam"] isEmpty]?@"客户1":self.curSelectedCustomers.Rows[0][@"cusnam"]];
+            self.firstCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[0][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[0][@"cusnum"]];
+            //2
+            self.secondCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[1][@"cusnam"] isEmpty]?@"客户2":self.curSelectedCustomers.Rows[1][@"cusnam"]];
+            self.secondCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[1][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[1][@"cusnum"]];
+            //3
+            self.thirdCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[2][@"cusnam"] isEmpty]?@"客户3":self.curSelectedCustomers.Rows[2][@"cusnam"]];
+            self.thirdCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[2][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[2][@"cusnum"]];
+            
+            break;
+        case 4:
+            self.firstCusName.hidden = NO;
+            self.firstCusNumber.hidden = NO;
+            self.secondCusName.hidden = NO;
+            self.secondCusNumber.hidden = NO;
+            self.thirdCusName.hidden = NO;
+            self.thirdCusNumber.hidden = NO;
+            self.fourthCusName.hidden = NO;
+            self.fourthCusNumber.hidden = NO;
+            //
+            //将信息显示出来
+            //1
+            self.firstCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[0][@"cusnam"] isEmpty]?@"客户1":self.curSelectedCustomers.Rows[0][@"cusnam"]];
+            self.firstCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[0][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[0][@"cusnum"]];
+            //2
+            self.secondCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[1][@"cusnam"] isEmpty]?@"客户2":self.curSelectedCustomers.Rows[1][@"cusnam"]];
+            self.secondCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[1][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[1][@"cusnum"]];
+            //3
+            self.thirdCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[2][@"cusnam"] isEmpty]?@"客户3":self.curSelectedCustomers.Rows[2][@"cusnam"]];
+            self.thirdCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[2][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[2][@"cusnum"]];
+            //4
+            self.fourthCusName.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[3][@"cusnam"] isEmpty]?@"客户4":self.curSelectedCustomers.Rows[3][@"cusnam"]];
+            self.fourthCusNumber.text = [NSString stringWithFormat:@"%@",[self.curSelectedCustomers.Rows[3][@"cusnum"] isEmpty]?@"057":self.curSelectedCustomers.Rows[3][@"cusnum"]];
+            
+            break;
+            
+        default:
+            break;
+    }
+    //显示球车的信息
+    switch ([self.selectedCartInfo.Rows count]) {
+            //没有选球车
+        case 0:
+            self.firstCartNumber.hidden = YES;
+            self.firstCartSeats.hidden  = YES;
+            self.secondCartNumber.hidden = YES;
+            self.seconCartSeats.hidden = YES;
+            break;
+            //只选了一个球车
+        case 1:
+            self.firstCartNumber.hidden = NO;
+            self.firstCartSeats.hidden  = NO;
+            self.secondCartNumber.hidden = YES;
+            self.seconCartSeats.hidden  = YES;
+            //
+            self.firstCartNumber.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[0][@"carnum"] isEmpty]?@"042":self.selectedCartInfo.Rows[0][@"carnum"]];
+            self.firstCartSeats.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[0][@"carsea"] isEmpty]?@"4":self.selectedCartInfo.Rows[0][@"carsea"]];
+            
+            break;
+            //选了两个球车
+        case 2:
+            self.firstCartNumber.hidden = NO;
+            self.firstCartSeats.hidden  = NO;
+            self.secondCartNumber.hidden = NO;
+            self.seconCartSeats.hidden  = NO;
+            //将相应的信息显示出来
+            //1
+            self.firstCartNumber.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[0][@"carnum"] isEmpty]?@"042":self.selectedCartInfo.Rows[0][@"carnum"]];
+            self.firstCartSeats.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[0][@"carsea"] isEmpty]?@"4":self.selectedCartInfo.Rows[0][@"carsea"]];
+            //2
+            self.firstCartNumber.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[1][@"carnum"] isEmpty]?@"042":self.selectedCartInfo.Rows[1][@"carnum"]];
+            self.firstCartSeats.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[1][@"carsea"] isEmpty]?@"4":self.selectedCartInfo.Rows[1][@"carsea"]];
+            
+            break;
         default:
             break;
     }

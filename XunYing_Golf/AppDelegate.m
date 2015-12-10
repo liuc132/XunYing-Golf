@@ -158,6 +158,8 @@ CGRectMake1(CGFloat x,CGFloat y,CGFloat width,CGFloat height)
     [dbCon ExecDataTable:@"create table if not exists tbl_caddyInf(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)"];
     //获取到所有球车的信息
     [dbCon ExecDataTable:@"create table if not exists tbl_cartInf(carcod text,carnum text,carsea text)"];
+    //当前创建的小组所选择的球车
+    [dbCon ExecDataTable:@"create table if not exists tbl_selectCart(carcod text,carnum text,carsea text)"];
     //获取心跳中的组信息
     /*
      grocod:小组编码
@@ -181,7 +183,8 @@ CGRectMake1(CGFloat x,CGFloat y,CGFloat width,CGFloat height)
     [dbCon ExecDataTable:@"create table if not exists tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)"];
     //客户组对象
     [dbCon ExecDataTable:@"create table if not exists tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)"];
-    
+    //当前所创建的小组的顾客的信息
+    [dbCon ExecDataTable:@"create table if not exists tbl_CustomersInfo(bansta text,bantim text,cadcod text,carcod text,cuscod text,cuslev text,cusnam text,cusnum text,cussex text,depsta text,endtim text,grocod text,memnum text,padcod text,phone text,statim text)"];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

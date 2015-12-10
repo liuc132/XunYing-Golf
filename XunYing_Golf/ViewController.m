@@ -113,10 +113,10 @@ FixedPoint gpsScreenPoint;
     
 //    Zooming to an initial envelope with the specified spatial reference of the map.
     AGSSpatialReference *sr = [AGSSpatialReference spatialReferenceWithWKID:3857];
-    AGSEnvelope *env = [AGSEnvelope envelopeWithXmin:11830339.77269565
-                                                ymin:3438241.601529867
-                                                xmax:11832598.78971369
-                                                ymax:3439664.004374673
+    AGSEnvelope *env = [AGSEnvelope envelopeWithXmin:11830220.9410906
+                                                ymin:3439691.60124628
+                                                xmax:11832488.6845279
+                                                ymax:3438114.33915628
                                     spatialReference:sr];
     
     
@@ -136,7 +136,7 @@ FixedPoint gpsScreenPoint;
     }
     //xunying.geodatabase
     NSError *xunyingError;
-    NSString *xunyingPath = [[[NSBundle mainBundle]resourcePath]stringByAppendingPathComponent:@"offlineMapData.bundle/xunying1.geodatabase"];
+    NSString *xunyingPath = [[[NSBundle mainBundle]resourcePath]stringByAppendingPathComponent:@"offlineMapData.bundle/xunying.geodatabase"];
     AGSGDBGeodatabase *gdb_xunying = [[AGSGDBGeodatabase alloc]initWithPath:xunyingPath error:&xunyingError];
     //
     if(xunyingError)
@@ -207,8 +207,8 @@ FixedPoint gpsScreenPoint;
     //地图中的当前GPS定位点的位置信息点的显示
     [self.mapView.locationDisplay addObserver:self forKeyPath:@"autoPanMode" options:(NSKeyValueObservingOptionNew) context:NULL];
     //
-    if(!self.mapView.locationDisplay.dataSourceStarted)
-        [self.mapView.locationDisplay startDataSource];
+//    if(!self.mapView.locationDisplay.dataSourceStarted)
+//        [self.mapView.locationDisplay startDataSource];
     
     //Listen to KVO notifications for map scale property
     [self.mapView addObserver:self
@@ -444,16 +444,7 @@ FixedPoint gpsScreenPoint;
     if(!self.mapView.locationDisplay.dataSourceStarted)
         [self.mapView.locationDisplay startDataSource];
 }
-/**
- *  绘制当前的GPS坐标的位置
- */
--(void)drawCurrentGPSPoint{
-    
-}
-
-
-
-
+#pragma -mark switchMapFunction
 - (IBAction)switchMapFunction:(UISegmentedControl *)sender {
     NSLog(@"segment's index:%ld",(long)sender.selectedSegmentIndex);
     NSInteger index = sender.selectedSegmentIndex;

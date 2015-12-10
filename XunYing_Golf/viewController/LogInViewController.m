@@ -676,6 +676,7 @@ extern BOOL allowDownCourt;
         {
             [self.dbCon ExecDataTable:@"delete from tbl_groupInf"];
             [self.dbCon ExecDataTable:@"delete from tbl_holeInf"];
+            [self.dbCon ExecDataTable:@"delete from tbl_CustomersInfo"];
             //
             //获取到球洞信息，并将相应的信息保存到内存中
             NSArray *allHolesInfo = recDic[@"holes"];
@@ -684,19 +685,27 @@ extern BOOL allowDownCourt;
                 [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_holeInf(forecasttime,gronum,holcod,holcue,holfla,holgro,holind,hollen,holnam,holenum,holspe,holsta,nowgroups,stan1,stan2,stan3,stan4,usestatus,x,y) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleParam];
             }
             //
-            DataTable *table = [[DataTable alloc] init];
-            table = [strongSelf.dbCon ExecDataTable:@"select *from tbl_holeInf"];
-            //
             NSString *groupValue = [recDic[@"Msg"] objectForKey:@"group"];
             if([(NSNull *)groupValue isEqual: @"null"])//
             {
-                //[strongSelf performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];
                 [self logIn];
             }
             else//
             {
-                //                ucCusCounts = [recDic[@"Msg"][@"group"][@"cuss"] count] - 1;
-                //                NSString *curHoleName = recDic[@"Msg"][@"group"][@"hgcod"];
+                [self.dbCon ExecDataTable:@"delete from tbl_selectCart"];
+                //获取到登录小组的所有客户的信息
+                NSArray *allCustomers = recDic[@"Msg"][@"group"][@"cuss"];
+                for (NSDictionary *eachCus in allCustomers) {
+                    NSMutableArray *eachCusParam = [[NSMutableArray alloc] initWithObjects:eachCus[@"bansta"],eachCus[@"bantim"],eachCus[@"cadcod"],eachCus[@"carcod"],eachCus[@"cuscod"],eachCus[@"cuslev"],eachCus[@"cusnam"],eachCus[@"cusnum"],eachCus[@"cussex"],eachCus[@"depsta"],eachCus[@"endtim"],eachCus[@"grocod"],eachCus[@"memnum"],eachCus[@"padcod"],eachCus[@"phone"],eachCus[@"statim"], nil];
+                    [weakSelf.dbCon ExecNonQuery:@"insert into tbl_CustomersInfo(bansta,bantim,cadcod,carcod,cuscod,cuslev,cusnam,cusnum,cussex,depsta,endtim,grocod,memnum,padcod,phone,statim) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachCusParam];
+                }
+                //将所选择的球车的信息保存下来
+                //保存添加的球车的信息 tbl_selectCart(carcod text,carnum text,carsea text)
+                NSArray *allSelectedCartsArray = recDic[@"Msg"][@"group"][@"cars"];
+                for (NSDictionary *eachCart in allSelectedCartsArray) {
+                    NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
+                    [strongSelf.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
+                }
                 //此处的数据还没有传递到需要的地方去
                 self.customerCount = [recDic[@"Msg"][@"group"][@"cuss"] count] - 1;
                 self.curHoleName = recDic[@"Msg"][@"group"][@"hgcod"];
@@ -737,6 +746,12 @@ extern BOOL allowDownCourt;
                         [heartBeat initHeartBeat];//启动心跳服务
                     }
                     strongSelf.haveGroupNotDown = YES;
+                    //获取到球洞信息，并将相应的信息保存到内存中
+                    NSArray *allHolesInfo = recDic[@"Msg"][@"holes"];
+                    for (NSDictionary *eachHole in allHolesInfo) {
+                        NSMutableArray *eachHoleParam = [[NSMutableArray alloc] initWithObjects:eachHole[@"forecasttime"],eachHole[@"gronum"],eachHole[@"holcod"],eachHole[@"holcue"],eachHole[@"holfla"],eachHole[@"holgro"],eachHole[@"holind"],eachHole[@"hollen"],eachHole[@"holnam"],eachHole[@"holnum"],eachHole[@"holspe"],eachHole[@"holsta"],eachHole[@"nowgroups"],eachHole[@"stan1"],eachHole[@"stan2"],eachHole[@"stan3"],eachHole[@"stan4"],eachHole[@"usestatus"],eachHole[@"x"],eachHole[@"y"], nil];
+                        [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_holeInf(forecasttime,gronum,holcod,holcue,holfla,holgro,holind,hollen,holnam,holenum,holspe,holsta,nowgroups,stan1,stan2,stan3,stan4,usestatus,x,y) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleParam];
+                    }
                     //
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf getCaddyCartInf];

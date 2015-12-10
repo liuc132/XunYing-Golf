@@ -310,6 +310,9 @@ typedef NS_ENUM(NSInteger,holePosition) {
         }
         else
         {
+            [self.dbCon ExecDataTable:@"delete from tbl_CustomersInfo"];
+            [self.dbCon ExecDataTable:@"delete from tbl_selectCart"];
+            //
             NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"]);
             //组建获取到的组信息的数组
             NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"],receiveCreateGroupDic[@"Msg"][@"hgcod"],receiveCreateGroupDic[@"Msg"][@"onlinestatus"], nil];
@@ -319,12 +322,19 @@ typedef NS_ENUM(NSInteger,holePosition) {
             [self.dbCon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
             
             NSLog(@"successfully create group and the recDic:%@  code:%@",receiveCreateGroupDic[@"Msg"],receiveCreateGroupDic[@"code"]);
+            //获取到登录小组的所有客户的信息
+            NSArray *allCustomers = receiveCreateGroupDic[@"Msg"][@"cuss"];
+            for (NSDictionary *eachCus in allCustomers) {
+                NSMutableArray *eachCusParam = [[NSMutableArray alloc] initWithObjects:eachCus[@"bansta"],eachCus[@"bantim"],eachCus[@"cadcod"],eachCus[@"carcod"],eachCus[@"cuscod"],eachCus[@"cuslev"],eachCus[@"cusnam"],eachCus[@"cusnum"],eachCus[@"cussex"],eachCus[@"depsta"],eachCus[@"endtim"],eachCus[@"grocod"],eachCus[@"memnum"],eachCus[@"padcod"],eachCus[@"phone"],eachCus[@"statim"], nil];
+                [strongself.dbCon ExecNonQuery:@"insert into tbl_CustomersInfo(bansta,bantim,cadcod,carcod,cuscod,cuslev,cusnam,cusnum,cussex,depsta,endtim,grocod,memnum,padcod,phone,statim) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachCusParam];
+            }
+            //保存添加的球车的信息 tbl_selectCart(carcod text,carnum text,carsea text)
+            NSArray *allSelectedCartsArray = receiveCreateGroupDic[@"Msg"][@"cars"];
+            for (NSDictionary *eachCart in allSelectedCartsArray) {
+                NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
+                [strongself.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
+            }
             
-            //
-            DataTable *table = [[DataTable alloc] init];
-            table = [self.dbCon ExecDataTable:@"select *from tbl_groupInf"];
-            //NSLog(@"123");
-            //
             //设置代理
             //CreateGroupViewController *tempViewCtl = [[CreateGroupViewController alloc] init];
             //tempViewCtl.cusAndHoleDelegate = (WaitToPlayTableViewController *)self;
@@ -339,11 +349,9 @@ typedef NS_ENUM(NSInteger,holePosition) {
             
             //建组成功之后，进入心跳处理类中，开始心跳功能
             HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
-            [heartBeat initHeartBeat];//1、开启心跳功能
-            
-            
-//            self.heartBeatTime = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(timelySend) userInfo:nil repeats:YES];
-//            [[NSRunLoop mainRunLoop] addTimer:self.heartBeatTime forMode:NSDefaultRunLoopMode];
+            if (![heartBeat checkState]) {
+                [heartBeat initHeartBeat];//1、开启心跳功能
+            }
         }
         
     }failure:^(NSError *err){
@@ -407,12 +415,6 @@ typedef NS_ENUM(NSInteger,holePosition) {
     self.theSelectedHolePosition = (holePosition)holeNum;
     NSLog(@"position:%ld",(long)self.theSelectedHolePosition);
 }
-
-//-(void)viewWillDisappear:(BOOL)animated
-//{
-//    [super viewWillDisappear:animated];
-//    
-//}
 
 -(void)viewWillAppear:(BOOL)animated
 {

@@ -22,6 +22,8 @@
 @property (strong, nonatomic) DataTable *holePlanInfo;
 @property (strong, nonatomic) DataTable *holesInfo;
 
+@property (strong, nonatomic) NSArray   *holePositionArray;
+
 
 @property (strong, nonatomic) IBOutlet UIScrollView *playProcessScrollView;
 
@@ -88,8 +90,100 @@
         [weakSelf GetPlayProcess];
         
     });
+    //添加通知：当请求成功之后，进行页面数据的刷新
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hadRefreshSuccess:) name:@"refreshSuccess" object:nil];
+    //
+    self.holePositionArray = [[NSArray alloc] initWithObjects:@"发球台",@"球道",@"果岭", nil];
     
 }
+#pragma -mark observer
+- (void)hadRefreshSuccess:(NSNotification *)sender
+{
+    __weak typeof(self) weakSelf = self;
+    NSLog(@"info:%@",sender.userInfo);
+    //
+    self.groupInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_groupInf"];
+    self.holesInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_holeInf"];
+    NSLog(@"groupInfo:%@",self.groupInfo.Rows);
+    //将相应的数据显示出来
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //
+        if ([weakSelf.groupInfo.Rows count]) {
+            //显示球洞组
+            weakSelf.holeGroup.text = self.groupInfo.Rows[0][@"hgcod"];
+            
+        }
+        
+    });
+    //
+    if ([sender.userInfo[@"hasRefreshed"] intValue] == 1) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.cusGroInfEmp = [weakSelf.lcDbcon ExecDataTable:@"select *from tbl_CusGroInf"];
+                weakSelf.holePlanInfo = [weakSelf.lcDbcon ExecDataTable:@"select *from tbl_holePlanInfo"];
+                //将相应的有用信息显示到当前界面中
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([weakSelf.cusGroInfEmp.Rows count] && [weakSelf.holePlanInfo.Rows count]) {
+                        NSString *curHoleCode = weakSelf.cusGroInfEmp.Rows[0][@"nowholcod"];
+                        NSArray *allgHolePlanArray = weakSelf.holePlanInfo.Rows;
+                        for (NSDictionary *eachHolePlan in allgHolePlanArray) {
+                            if ([eachHolePlan[@"holcod"] isEqualToString:curHoleCode]) {
+                                weakSelf.displayHoleNumber.text = eachHolePlan[@"holnum"];
+                                break;
+                            }
+                        }
+                        //显示当前球洞耗时
+                        NSInteger curPlayTime = [weakSelf.cusGroInfEmp.Rows[0][@"pladur"] integerValue];
+                        NSInteger hour  = curPlayTime/3600;
+                        NSInteger min = (curPlayTime%3600)/60;
+                        NSInteger second = curPlayTime%60;
+                        if (hour > 0) {
+                            weakSelf.currentHoleTime.text = [NSString stringWithFormat:@"%ld小时%ld分%ld秒",hour,min
+                                                             ,second];
+                        }
+                        else if (min > 0) {
+                            weakSelf.currentHoleTime.text = [NSString stringWithFormat:@"%ld分%ld秒",min,second];
+                        }
+                        else{
+                            weakSelf.currentHoleTime.text = [NSString stringWithFormat:@"%ld秒",second];
+                        }
+                        //查询球洞别名并显示
+                        NSString *_curHoleCode = weakSelf.cusGroInfEmp.Rows[0][@"nowholcod"];
+                        NSArray *allHolesInfoArray = weakSelf.holesInfo.Rows;
+                        for (NSDictionary *eachHole in allHolesInfoArray) {
+                            if ([eachHole[@"holcod"] isEqualToString:_curHoleCode]) {
+                                weakSelf.displayHoleSubName.text = eachHole[@"holnam"];
+                                break;
+                            }
+                        }
+                        //显示球洞位置@"发球台",@"球道",@"果岭"
+                        NSString *curHolePosStr = [[NSString alloc] init];//当前所在球洞的位置
+                        switch ([weakSelf.cusGroInfEmp.Rows[0][@"nowblocks"] intValue]) {
+                                //发球台
+                            case 1:
+                                curHolePosStr = weakSelf.holePositionArray[0];
+                                break;
+                                //球道
+                            case 2:
+                                curHolePosStr = weakSelf.holePositionArray[1];
+                                break;
+                                //果岭
+                            case 3:
+                                curHolePosStr = weakSelf.holePositionArray[2];
+                                break;
+                            default:
+                                break;
+                        }
+                        //
+                        weakSelf.holePosition.text = curHolePosStr;
+                    }
+                    
+                });
+            });
+    }
+    
+}
+
+
 -(UIStatusBarStyle)preferredStatusBarStyle
 {
     return UIStatusBarStyleDefault;
@@ -100,33 +194,27 @@
 {
     [super viewWillAppear:animated];
     //
-    __weak typeof(self) weakSelf = self;
+//    __weak typeof(self) weakSelf = self;
     //read some data for request(check the database)
     self.groupInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_groupInf"];
     self.holesInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_holeInf"];
 //    NSLog(@"groupInfo:%@",self.groupInfo.Rows);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        weakSelf.cusGroInfEmp = [weakSelf.lcDbcon ExecDataTable:@"select *from tbl_CusGroInf"];
-        weakSelf.holePlanInfo = [weakSelf.lcDbcon ExecDataTable:@"select *from tbl_holePlanInfo"];
-        //将相应的有用信息显示到当前界面中
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([weakSelf.cusGroInfEmp.Rows count] && [weakSelf.holePlanInfo.Rows count]) {
-                NSString *curHoleCode = weakSelf.cusGroInfEmp.Rows[0][@"grocod"];
-                NSArray *allgHolePlanArray = weakSelf.holePlanInfo.Rows;
-                for (NSDictionary *eachHolePlan in allgHolePlanArray) {
-                    if ([eachHolePlan[@"grocod"] isEqualToString:curHoleCode]) {
-                        weakSelf.displayHoleNumber.text = eachHolePlan[@"holnum"];
-                        
-                        
-                    }
-                }
-                
-            }
-            
-            weakSelf.displayHoleNumber.text = [NSString stringWithFormat:@"%@",weakSelf.cusGroInfEmp.Rows[0][@""]];
-//            weakSelf.displayHoleSubName.text = [
-        });
-    });
+//    //将相应的数据显示出来
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        if ([self.holesInfo.Rows count]) {
+//            //显示球洞别名
+//            weakSelf.displayHoleSubName.text = self.holesInfo.Rows[0][@"holnam"];
+//            
+//        }
+//        //
+//        if ([self.groupInfo.Rows count]) {
+//            //显示球洞组
+//            weakSelf.holeGroup.text = self.groupInfo.Rows[0][@"hgcod"];
+//            
+//        }
+//        
+//        
+//    });
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -151,25 +239,28 @@
     [HttpTools getHttp:GetPlayProcessURL forParams:refreshParam success:^(NSData *nsData){
         NSLog(@"success refresh");
         NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-//        NSLog(@"refreshData:%@",latestDataDic[@"Msg"]);
-        //delete the old data
-        [weakSelf.lcDbcon ExecNonQuery:@"delete from tbl_CusGroInf"];
-        [weakSelf.lcDbcon ExecNonQuery:@"delete from tbl_holePlanInfo"];
-        //
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //客户组对象
-            NSMutableArray *cusGroInfPart = [[NSMutableArray alloc] initWithObjects:latestDataDic[@"Msg"][@"appGroupE"][@"grocod"],latestDataDic[@"Msg"][@"appGroupE"][@"grosta"],latestDataDic[@"Msg"][@"appGroupE"][@"nextgrodistime"],latestDataDic[@"Msg"][@"appGroupE"][@"nowblocks"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholcod"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholnum"],latestDataDic[@"Msg"][@"appGroupE"][@"pladur"],latestDataDic[@"Msg"][@"appGroupE"][@"stahol"],latestDataDic[@"Msg"][@"appGroupE"][@"statim"],latestDataDic[@"Msg"][@"appGroupE"][@"stddur"], nil];
-            //tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
-            [self.lcDbcon ExecNonQuery:@"insert into tbl_CusGroInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGroInfPart];
-            //球洞规划组对象
-            NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
-            for (NSDictionary *eachHoleInf in allGroHoleList) {
-                NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadui"], nil];
-                //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
-                [weakSelf.lcDbcon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
-            }
-            
-        });
+        if ([latestDataDic[@"Code"] intValue] > 0) {
+            //delete the old data
+            [weakSelf.lcDbcon ExecNonQuery:@"delete from tbl_CusGroInf"];
+            [weakSelf.lcDbcon ExecNonQuery:@"delete from tbl_holePlanInfo"];
+            //
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //客户组对象
+                NSMutableArray *cusGroInfPart = [[NSMutableArray alloc] initWithObjects:latestDataDic[@"Msg"][@"appGroupE"][@"grocod"],latestDataDic[@"Msg"][@"appGroupE"][@"grosta"],latestDataDic[@"Msg"][@"appGroupE"][@"nextgrodistime"],latestDataDic[@"Msg"][@"appGroupE"][@"nowblocks"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholcod"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholnum"],latestDataDic[@"Msg"][@"appGroupE"][@"pladur"],latestDataDic[@"Msg"][@"appGroupE"][@"stahol"],latestDataDic[@"Msg"][@"appGroupE"][@"statim"],latestDataDic[@"Msg"][@"appGroupE"][@"stddur"], nil];
+                //tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
+                [self.lcDbcon ExecNonQuery:@"insert into tbl_CusGroInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGroInfPart];
+                //球洞规划组对象
+                NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
+                for (NSDictionary *eachHoleInf in allGroHoleList) {
+                    NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadui"], nil];
+                    //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
+                    [weakSelf.lcDbcon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
+                }
+                //通知数据已经更新了
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshSuccess" object:nil userInfo:@{@"hasRefreshed":@"1"}];
+                
+            });
+        }
         
     }failure:^(NSError *err){
         NSLog(@"refresh failled and err:%@",err);
