@@ -68,11 +68,6 @@ extern BOOL allowDownCourt;
     self.tap.delegate = self;
     [self.view addGestureRecognizer:self.tap];
     
-//    self.activityView = [[ActivityIndicatorView alloc]initWithFrame:CGRectMake(0, 0, ScreenHeight, ScreenWidth)];
-    
-//    self.activityView.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
-    //[self.view addSubview:self.activityView];
-//    [self.activityView hideIndicator];
     //init activityIndicatorView
     self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
     self.activityIndicatorView.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
@@ -101,7 +96,6 @@ extern BOOL allowDownCourt;
     [self.hostReachability startNotifier];
     [self updateInterfaceWithReachability:self.hostReachability];
     
-//    NSLog(@"%@",HeartBeatURL);
     
     self.internetReachability = [Reachability reachabilityForInternetConnection];
     [self.internetReachability startNotifier];
@@ -114,9 +108,6 @@ extern BOOL allowDownCourt;
     self.logPersonInf = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
     NSLog(@"logPersonInf:%@",self.logInPerson);
     
-//    [self addObserver:self forKeyPath:@"allowDown" options:(NSKeyValueObservingOptionNew) context:NULL];
-//    
-//    [[NSNotificationCenter defaultCenter] addObserver:self forKeyPath:@"allowDown" options:(NSKeyValueObservingOptionOld) context:NULL];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(canDownCourt:) name:@"allowDown" object:nil];
 }
@@ -231,11 +222,6 @@ extern BOOL allowDownCourt;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //
-//    self.navigationController.navigationBarHidden = YES;
-    //
-//    self.dbCon = [[DBCon alloc] init];
-//    self.logInPerson = [[DataTable alloc] init];
     //research the logPerson's information
     self.logInPerson = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
     if([self.logInPerson.Rows count])
@@ -264,7 +250,7 @@ extern BOOL allowDownCourt;
 {
     [super viewWillDisappear:animated];
     
-    self.navigationController.navigationBarHidden = NO;
+//    self.navigationController.navigationBarHidden = NO;
 }
 
 
@@ -287,22 +273,6 @@ extern BOOL allowDownCourt;
         [sender setImage:[UIImage imageNamed:@"logInSelected.png"] forState:UIControlStateNormal];
     }
 }
-
-//- (IBAction)autoLogIn:(UIButton *)sender {
-//    NSLog(@"autoLogIn");
-//    //
-//    if(!self.remCode){
-//        self.remCode = YES;
-//        //change image
-//        [sender setImage:[UIImage imageNamed:@"logInUnselected.png"] forState:UIControlStateNormal];
-//    }
-//    else{
-//        self.remCode = NO;
-//        //change image
-//        [sender setImage:[UIImage imageNamed:@"logInSelected.png"] forState:UIControlStateNormal];
-//    }
-//    
-//}
 
 #pragma -mark getCaddyCartInf
 -(void)getCaddyCartInf

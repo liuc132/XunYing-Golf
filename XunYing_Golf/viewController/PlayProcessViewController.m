@@ -127,7 +127,19 @@
                         NSArray *allgHolePlanArray = weakSelf.holePlanInfo.Rows;
                         for (NSDictionary *eachHolePlan in allgHolePlanArray) {
                             if ([eachHolePlan[@"holcod"] isEqualToString:curHoleCode]) {
+                                //球洞号显示
                                 weakSelf.displayHoleNumber.text = eachHolePlan[@"holnum"];
+                                 //当前球洞的标准耗时,计算出结果来
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    NSInteger totalSeconds = [eachHolePlan[@"stadur"] integerValue];
+                                    NSInteger hour = totalSeconds/3600;
+                                    NSInteger min  = (totalSeconds%3600)/60;
+                                    if (hour > 0) {
+                                        weakSelf.standardTime.text  = [NSString stringWithFormat:@"%ld时%ld分",hour,min];
+                                    }
+                                    else
+                                        weakSelf.standardTime.text  = [NSString stringWithFormat:@"%ld分",min];
+                                });
                                 break;
                             }
                         }
@@ -175,6 +187,7 @@
                         }
                         //
                         weakSelf.holePosition.text = curHolePosStr;
+                        
                     }
                     
                 });
@@ -252,7 +265,7 @@
                 //球洞规划组对象
                 NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
                 for (NSDictionary *eachHoleInf in allGroHoleList) {
-                    NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadui"], nil];
+                    NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadur"], nil];
                     //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
                     [weakSelf.lcDbcon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
                 }

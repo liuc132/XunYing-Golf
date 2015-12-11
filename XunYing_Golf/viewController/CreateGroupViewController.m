@@ -290,7 +290,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
     }
     NSMutableDictionary *createGroupParameters = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",@"",@"gronum",selectedCus,@"cus",@"",@"car",self.theThreeHolesInf.Rows[self.theSelectedHolePosition][@"pdtag"],@"hole",self.userData.Rows[0][@"number"],@"cad",self.userData.Rows[0][@"caddyLogIn"],@"cadShow",self.userData.Rows[0][@"code"],@"user", nil];
     //
-    __weak CreateGroupViewController *weakself = self;
+    __weak typeof(self) weakself = self;
     //
     [HttpTools getHttp:createGroupURL forParams:createGroupParameters success:^(NSData *nsData){
         CreateGroupViewController *strongself = weakself;

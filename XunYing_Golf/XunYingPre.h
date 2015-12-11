@@ -53,6 +53,9 @@
 #define ChangeCartURL                       [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/changeCart.htm"]
 //打球进度借口
 #define GetPlayProcessURL                   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getProgress.htm"]
+//申请立场休息
+#define RequestLeaveTimeURL                 [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/offHole.htm"]
+
 
 //#define testChangeInterface                 1
 

@@ -174,7 +174,11 @@
         NSString *gropNumStr = [[NSString alloc] init];
         gropNumStr = self.groupInfo.Rows[0][@"gronum"];
         //将组编号显示出来
-        self.groupCode.text = [gropNumStr substringToIndex:3];
+        if ([gropNumStr hasPrefix:@"_"]) {
+            self.groupCode.text = gropNumStr;
+        }
+        else
+            self.groupCode.text = [gropNumStr substringToIndex:3];
         //显示当前所选择的球洞的类型
         self.holeType.text  = self.groupInfo.Rows[0][@"hgcod"];
         
@@ -337,8 +341,8 @@
             self.firstCartNumber.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[0][@"carnum"] isEmpty]?@"042":self.selectedCartInfo.Rows[0][@"carnum"]];
             self.firstCartSeats.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[0][@"carsea"] isEmpty]?@"4":self.selectedCartInfo.Rows[0][@"carsea"]];
             //2
-            self.firstCartNumber.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[1][@"carnum"] isEmpty]?@"042":self.selectedCartInfo.Rows[1][@"carnum"]];
-            self.firstCartSeats.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[1][@"carsea"] isEmpty]?@"4":self.selectedCartInfo.Rows[1][@"carsea"]];
+            self.secondCartNumber.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[1][@"carnum"] isEmpty]?@"042":self.selectedCartInfo.Rows[1][@"carnum"]];
+            self.seconCartSeats.text = [NSString stringWithFormat:@"%@",[self.selectedCartInfo.Rows[1][@"carsea"] isEmpty]?@"4":self.selectedCartInfo.Rows[1][@"carsea"]];
             
             break;
         default:

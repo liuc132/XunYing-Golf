@@ -46,6 +46,8 @@ extern BOOL          allowDownCourt;
 @property (strong, nonatomic) DataTable *groupTable;
 @property (nonatomic) NSInteger cusCounts;  //选取的客户个数
 @property (nonatomic) NSInteger holeName;   //选取的球洞类型
+//
+@property (strong, nonatomic) NSArray   *cusCardNumArray;
 
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;
 
@@ -91,7 +93,15 @@ extern BOOL          allowDownCourt;
     self.groupTable = [[DataTable alloc] init];
     //查询球童信息
     self.caddyTable = [self.localDBcon ExecDataTable:@"select *from tbl_logPerson"];
-    self.cusCardNumTable = [self.localDBcon ExecDataTable:@"select *from tbl_CustomerNumbers"];
+    //
+    if (self.QRCodeEnable) {
+        self.cusCardNumArray = self.cusCardArray;
+    }
+    else
+    {
+        self.cusCardNumTable = [self.localDBcon ExecDataTable:@"select *from tbl_CustomerNumbers"];
+        self.cusCardNumArray = self.cusCardNumTable.Rows;
+    }
     self.groupTable = [self.localDBcon ExecDataTable:@"select *from tbl_groupInf"];
     
     //
@@ -101,9 +111,21 @@ extern BOOL          allowDownCourt;
     //self.activityIndicatorView.alpha = 0.2;
     self.activityIndicatorView.hidden = YES;
     self.activityIndicatorView.layer.cornerRadius = 20.0f;
-    
+    //from heart beat
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detectTheThing:) name:@"readyDown" object:nil];
+    //from QRCodeReaderView
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(QRCodeResult:) name:@"QRCodeResult" object:nil];
+    
 }
+#pragma -mark QRCodeResult
+//- (void)QRCodeResult:(NSNotification *)sender
+//{
+//    NSLog(@"QRCodeResult:%@",sender.userInfo);
+//    self.holeType = sender.userInfo[@"holetype"];
+//    self.customerCounts = [sender.userInfo[@"customerCount"] integerValue];
+//    
+//}
+
 //#pragma -mark -(void)getCustomerCounts:(NSInteger)customerCount andHolePosition:(NSString *)holePosition
 //-(void)getCustomerCounts:(NSInteger )customerCount andHolePosition:(NSInteger )holePosition
 //{
@@ -128,14 +150,6 @@ extern BOOL          allowDownCourt;
     }
     
 }
-//-(void)loadView
-//{
-//    [super loadView];
-//    CGRect rect = [[UIScreen mainScreen] applicationFrame];
-//    UIView *view = [[UIView alloc] initWithFrame:rect];
-//    view.backgroundColor = self.view.backgroundColor;
-//    self.view = view;
-//}
 
 #pragma -mark navBack
 -(void)navBack
@@ -162,7 +176,7 @@ extern BOOL          allowDownCourt;
     
     switch (section) {
         case 0:
-            eachSectionRow = self.customerCounts + 1;//[self.customerCount count];
+            eachSectionRow = [self.cusCardNumArray count];//self.customerCounts + 1;//[self.customerCount count];
             break;
             
         case 1:
@@ -200,16 +214,20 @@ extern BOOL          allowDownCourt;
         NSString *cusNum = [[NSString alloc] init];
         switch (indexPath.row) {
             case 0:
-                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumTable.Rows[0][@"first"]];
+//                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumTable.Rows[0][@"first"]];
+                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumArray[0]];
                 break;
             case 1:
-                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumTable.Rows[0][@"second"]];
+//                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumTable.Rows[0][@"second"]];
+                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumArray[1]];
                 break;
             case 2:
-                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumTable.Rows[0][@"third"]];
+//                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumTable.Rows[0][@"third"]];
+                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumArray[2]];
                 break;
             case 3:
-                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumTable.Rows[0][@"fourth"]];
+//                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumTable.Rows[0][@"fourth"]];
+                cusNum = [NSString stringWithFormat:@"%@",self.cusCardNumArray[3]];
                 break;
                 
             default:

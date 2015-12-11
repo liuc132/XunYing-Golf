@@ -13,6 +13,8 @@
 
 @property (nonatomic) NSString* holeType;
 @property (nonatomic) NSInteger customerCounts;
+@property (nonatomic) BOOL      QRCodeEnable;
+@property (strong, nonatomic)   NSArray *cusCardArray;
 
 
 @property (strong, nonatomic) id<passValueLogInDelegate> passDelegate;

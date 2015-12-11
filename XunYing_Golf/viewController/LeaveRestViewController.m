@@ -10,6 +10,8 @@
 #import "CurTaskCenterTableViewController.h"
 #import "DataTable.h"
 #import "DBCon.h"
+#import "XunYingPre.h"
+#import "HttpTools.h"
 
 @interface LeaveRestViewController ()<UIPickerViewDataSource,UIPickerViewDelegate>
 {
@@ -32,6 +34,8 @@
 
 - (IBAction)recoverTimeComfirm:(UIButton *)sender;
 - (IBAction)backToMain:(UIBarButtonItem *)sender;
+- (IBAction)requestToLeave:(UIButton *)sender;
+
 
 @end
 
@@ -94,6 +98,38 @@
 
 - (IBAction)backToMain:(UIBarButtonItem *)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)requestToLeave:(UIButton *)sender {
+    NSLog(@"enter to leave");
+    //判断所取得的数据是否为空
+    if (![self.logPerson.Rows count]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请求异常" message:@"参数为空" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+    }
+    //组装数据,恢复时间以及已经完成的球洞规划表编码（这个目前设计中为空） 设置为空
+    NSMutableDictionary *requestToLeaveParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"empcod",@"",@"finishcods",@"",@"retime", nil];
+    //开始请求
+    [HttpTools getHttp:RequestLeaveTimeURL forParams:requestToLeaveParam success:^(NSData *nsData){
+        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+        NSLog(@"recDic:%@",recDic);
+        //
+        if ([recDic[@"Code"] intValue] > 0) {
+            
+        }
+        else
+        {
+            
+        }
+        
+        
+    }failure:^(NSError *err){
+        NSLog(@"request to leave failled");
+        
+        
+        
+    }];
+    
 }
 
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView

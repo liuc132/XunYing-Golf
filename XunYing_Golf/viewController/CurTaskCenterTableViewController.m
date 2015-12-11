@@ -11,7 +11,7 @@
 #import "KxMenu.h"
 #import "HttpTools.h"
 
-@interface CurTaskCenterTableViewController ()
+@interface CurTaskCenterTableViewController ()<UIGestureRecognizerDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UIView *displayNoTask;
@@ -28,14 +28,21 @@
 {
     [super viewDidLoad];
     //
-//    UIImageView *backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.navigationController.navigationBar.frame.size.height, ScreenWidth, ScreenHeight/4)];//[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"createGroup_Main.png"]];
-//    [backgroundImage setImage:[UIImage imageNamed:@"curNoTask.png"]];
-    
-//    self.tableView.backgroundView = backgroundImage;
     [self displayNoTaskView];
+    //
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapDismissSheet)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    tapGesture.delegate = self;
     
     
 }
+#pragma -mark tapDismissSheet
+- (void)tapDismissSheet
+{
+    [KxMenu dismissMenu];
+}
+
 #pragma -mark displayNoTaskView
 -(void)displayNoTaskView
 {
