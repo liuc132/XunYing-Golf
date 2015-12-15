@@ -436,6 +436,7 @@ extern unsigned char ucHolePosition;
         waitToPlay.QRCodeEnable = YES;
         waitToPlay.cusCardArray = self.QRcusCard;
     }
+    
 }
 
 

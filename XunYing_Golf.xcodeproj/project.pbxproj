@@ -92,6 +92,12 @@
 		5BEE08391C190ACC0058508C /* ArcGIS.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BEE08381C190ACC0058508C /* ArcGIS.bundle */; };
 		5BEE083B1C190B130058508C /* offlineMapData.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BEE083A1C190B130058508C /* offlineMapData.bundle */; };
 		5BF0CE6E1BC6100300009BED /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF0CE6D1BC6100300009BED /* KxMenu.m */; };
+		5BF321391C1FFD5C005A0DF6 /* CellFrameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF321321C1FFD5C005A0DF6 /* CellFrameModel.m */; };
+		5BF3213A1C1FFD5C005A0DF6 /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF321341C1FFD5C005A0DF6 /* Friend.m */; };
+		5BF3213B1C1FFD5C005A0DF6 /* FriendGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF321361C1FFD5C005A0DF6 /* FriendGroup.m */; };
+		5BF3213C1C1FFD5C005A0DF6 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF321381C1FFD5C005A0DF6 /* MessageModel.m */; };
+		5BF321421C1FFEFD005A0DF6 /* UIImage+ResizeImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF3213F1C1FFEFD005A0DF6 /* UIImage+ResizeImage.m */; };
+		5BF321431C1FFEFD005A0DF6 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF321411C1FFEFD005A0DF6 /* NSString+Extension.m */; };
 		5BFF02771BD7399500A25D7A /* JumpHoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF02761BD7399500A25D7A /* JumpHoleViewController.m */; };
 		5BFF027D1BD75F8400A25D7A /* MendHoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF027C1BD75F8400A25D7A /* MendHoleViewController.m */; };
 /* End PBXBuildFile section */
@@ -263,6 +269,18 @@
 		5BEE083A1C190B130058508C /* offlineMapData.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = offlineMapData.bundle; sourceTree = "<group>"; };
 		5BF0CE6C1BC6100300009BED /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxMenu.h; path = XunYing_Golf/viewController/Menu/KxMenu.h; sourceTree = "<group>"; };
 		5BF0CE6D1BC6100300009BED /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxMenu.m; path = XunYing_Golf/viewController/Menu/KxMenu.m; sourceTree = "<group>"; };
+		5BF321311C1FFD5C005A0DF6 /* CellFrameModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellFrameModel.h; sourceTree = "<group>"; };
+		5BF321321C1FFD5C005A0DF6 /* CellFrameModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFrameModel.m; sourceTree = "<group>"; };
+		5BF321331C1FFD5C005A0DF6 /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
+		5BF321341C1FFD5C005A0DF6 /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
+		5BF321351C1FFD5C005A0DF6 /* FriendGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendGroup.h; sourceTree = "<group>"; };
+		5BF321361C1FFD5C005A0DF6 /* FriendGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendGroup.m; sourceTree = "<group>"; };
+		5BF321371C1FFD5C005A0DF6 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
+		5BF321381C1FFD5C005A0DF6 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
+		5BF3213E1C1FFEFD005A0DF6 /* UIImage+ResizeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ResizeImage.h"; sourceTree = "<group>"; };
+		5BF3213F1C1FFEFD005A0DF6 /* UIImage+ResizeImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ResizeImage.m"; sourceTree = "<group>"; };
+		5BF321401C1FFEFD005A0DF6 /* NSString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extension.h"; sourceTree = "<group>"; };
+		5BF321411C1FFEFD005A0DF6 /* NSString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extension.m"; sourceTree = "<group>"; };
 		5BFF02751BD7399500A25D7A /* JumpHoleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JumpHoleViewController.h; sourceTree = "<group>"; };
 		5BFF02761BD7399500A25D7A /* JumpHoleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JumpHoleViewController.m; sourceTree = "<group>"; };
 		5BFF027B1BD75F8400A25D7A /* MendHoleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MendHoleViewController.h; path = viewController/MendHoleViewController.h; sourceTree = "<group>"; };
@@ -804,6 +822,8 @@
 		5BDC83781BA2B17600E69940 /* taskCommunication */ = {
 			isa = PBXGroup;
 			children = (
+				5BF3213D1C1FFEE3005A0DF6 /* other */,
+				5BF321301C1FFCF1005A0DF6 /* tableModel */,
 				5BDC83791BA2B1B500E69940 /* TaskComViewController.h */,
 				5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */,
 			);
@@ -845,6 +865,32 @@
 				5BF0CE6D1BC6100300009BED /* KxMenu.m */,
 			);
 			name = Menu;
+			sourceTree = "<group>";
+		};
+		5BF321301C1FFCF1005A0DF6 /* tableModel */ = {
+			isa = PBXGroup;
+			children = (
+				5BF321311C1FFD5C005A0DF6 /* CellFrameModel.h */,
+				5BF321321C1FFD5C005A0DF6 /* CellFrameModel.m */,
+				5BF321331C1FFD5C005A0DF6 /* Friend.h */,
+				5BF321341C1FFD5C005A0DF6 /* Friend.m */,
+				5BF321351C1FFD5C005A0DF6 /* FriendGroup.h */,
+				5BF321361C1FFD5C005A0DF6 /* FriendGroup.m */,
+				5BF321371C1FFD5C005A0DF6 /* MessageModel.h */,
+				5BF321381C1FFD5C005A0DF6 /* MessageModel.m */,
+			);
+			name = tableModel;
+			sourceTree = "<group>";
+		};
+		5BF3213D1C1FFEE3005A0DF6 /* other */ = {
+			isa = PBXGroup;
+			children = (
+				5BF3213E1C1FFEFD005A0DF6 /* UIImage+ResizeImage.h */,
+				5BF3213F1C1FFEFD005A0DF6 /* UIImage+ResizeImage.m */,
+				5BF321401C1FFEFD005A0DF6 /* NSString+Extension.h */,
+				5BF321411C1FFEFD005A0DF6 /* NSString+Extension.m */,
+			);
+			name = other;
 			sourceTree = "<group>";
 		};
 		5BFF026E1BD72D8600A25D7A /* mendHole */ = {
@@ -973,15 +1019,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BD6D6971BD63311001524DB /* AFURLSessionManager.m in Sources */,
+				5BF321391C1FFD5C005A0DF6 /* CellFrameModel.m in Sources */,
 				5B52F4431B9D7C08004BA338 /* NSString+FontAwesome.m in Sources */,
 				5B52F42C1B9D7BE3004BA338 /* DataTable.m in Sources */,
 				5BD6D69E1BD6359A001524DB /* BLLocationProvider.m in Sources */,
+				5BF321431C1FFEFD005A0DF6 /* NSString+Extension.m in Sources */,
 				5B11C52A1B8EDD4700382C9B /* ViewController.m in Sources */,
 				5B52F4491B9D7C08004BA338 /* UIView+FramePostion.m in Sources */,
 				5BD6D6941BD63311001524DB /* AFURLConnectionOperation.m in Sources */,
 				5B52F4461B9D7C08004BA338 /* UIImageView+UICon.m in Sources */,
 				5B52F4481B9D7C08004BA338 /* UITableViewController+UICon.m in Sources */,
 				5B93C8111BBBBA010081FBAF /* MoreMainTabBarViewController.m in Sources */,
+				5BF3213C1C1FFD5C005A0DF6 /* MessageModel.m in Sources */,
 				5B11C5271B8EDD4700382C9B /* AppDelegate.m in Sources */,
 				5BC76F4F1B9FD74C004ABBAF /* ActivityIndicatorView.m in Sources */,
 				5BEA92721BB1077200EAC9BE /* NSString+FontAwesome.m in Sources */,
@@ -999,6 +1048,8 @@
 				5BD6D6961BD63311001524DB /* AFURLResponseSerialization.m in Sources */,
 				5BB97AC81B9EB8CA00A27809 /* SettingViewController.m in Sources */,
 				5B4E33E81BAFE76C000693B3 /* WaitToPlayTableViewController.m in Sources */,
+				5BF321421C1FFEFD005A0DF6 /* UIImage+ResizeImage.m in Sources */,
+				5BF3213A1C1FFD5C005A0DF6 /* Friend.m in Sources */,
 				5BC136B41B93EFD500FF1CB1 /* TOUCHOverlayWindow.m in Sources */,
 				5BA96CAB1C0469F1009DD1B0 /* LeaveRestViewController.m in Sources */,
 				5B52F4161B9D7973004BA338 /* MainViewController.m in Sources */,
@@ -1019,6 +1070,7 @@
 				5BF0CE6E1BC6100300009BED /* KxMenu.m in Sources */,
 				5B3A14D91BB2486B008AA668 /* PlayProcessViewController.m in Sources */,
 				5B93C8191BBBDD8B0081FBAF /* CurTaskCenterTableViewController.m in Sources */,
+				5BF3213B1C1FFD5C005A0DF6 /* FriendGroup.m in Sources */,
 				5B588E171BE891D900D2B327 /* GetGPSLocationData.m in Sources */,
 				5B52F4441B9D7C08004BA338 /* UIColor+UICon.m in Sources */,
 				5B52F4421B9D7C08004BA338 /* NSDate+Con.m in Sources */,

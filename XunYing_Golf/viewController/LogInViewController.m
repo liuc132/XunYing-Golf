@@ -448,7 +448,7 @@ extern BOOL allowDownCourt;
     [self.dbCon ExecNonQuery:@"delete from tbl_logInBackInf"];
     [self.dbCon ExecNonQuery:@"delete from tbl_logPerson"];
     [self.dbCon ExecNonQuery:@"delete from tbl_holeInf"];
-    [self.dbCon ExecNonQuery:@"delete from tbl_otherEmployeeInf"];
+    [self.dbCon ExecNonQuery:@"delete from tbl_EmployeeInf"];
     
     //start request from the server
     NSLog(@"username:%@,password:%@",self.account.text,self.password.text);
@@ -564,6 +564,18 @@ extern BOOL allowDownCourt;
                 
 //                DataTable *table11 = [[DataTable alloc] init];
 //                table11 = [weakSelf.dbCon ExecDataTable:@"select *from tbl_holeInf"];
+                //获取到所有职员的信息
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //获取到所有球员的数组
+                    NSArray *allEmployee = recDictionary[@"emps"];
+                    for (NSDictionary *eachEmployee in allEmployee) {
+                        NSMutableArray *eachEmpParam = [[NSMutableArray alloc] initWithObjects:eachEmployee[@"empcod"],eachEmployee[@"empjob"],eachEmployee[@"empnam"],eachEmployee[@"empnum"],eachEmployee[@"empsex"],eachEmployee[@"loctime"],eachEmployee[@"online"],eachEmployee[@"x"],eachEmployee[@"y"], nil];
+                        [weakSelf.dbCon ExecNonQuery:@"insert into tbl_EmployeeInf(empcod,empjob,empnam,empnum,empsex,loctime,online,x,y) values(?,?,?,?,?,?,?,?,?)" forParameter:eachEmpParam];
+                    }
+//                    DataTable *table11 = [[DataTable alloc] init];
+//                    table11 = [weakSelf.dbCon ExecDataTable:@"select *from tbl_EmployeeInf"];
+//                    NSLog(@"table11:%@",table11.Rows);
+                });
                 
                 //
                 dispatch_async(dispatch_get_main_queue(), ^{

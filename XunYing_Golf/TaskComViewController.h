@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TaskComViewController : UITableViewController
+@interface TaskComViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
+
+
+@property (strong, nonatomic) IBOutlet UITableView *allEmpCommunicate;
+
 
 @end

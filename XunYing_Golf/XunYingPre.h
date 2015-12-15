@@ -22,7 +22,7 @@
  
  */
 
-#define MainURL                             @"http://www.hdch.net"
+#define MainURL                             @"http://192.168.1.119"
 #define PortNum                             @":8089"
 
 
@@ -55,6 +55,10 @@
 #define GetPlayProcessURL                   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getProgress.htm"]
 //申请立场休息
 #define RequestLeaveTimeURL                 [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/offHole.htm"]
+//获取历史消息
+#define RequestMsgHistoryURL                [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/msgHistroyApp.htm"]
+//发送消息
+#define RequestSendMsgURL                   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/messageComm.htm"]
 
 
 //#define testChangeInterface                 1
@@ -63,7 +67,7 @@
 
 //IMEI code
 #define TESTMIDCODE                         @"A_IMEI_864505021764438"
-#define MIDCODE                             @"A_IMEI_864505021764438"
+#define MIDCODE                             @"A_IMEI_15000204330"
 //how many times send simulateGPS Data for for each GPS point
 #define GPSSendTimes    3
 

@@ -145,7 +145,7 @@ CGRectMake1(CGFloat x,CGFloat y,CGFloat width,CGFloat height)
     //球洞信息
     [dbCon ExecDataTable:@"create table if not exists tbl_holeInf(forecasttime text,gronum text,holcod text,holcue text,holfla text,holgro text,holind text,hollen text,holnam text,holenum text,holspe text,holsta text,nowgroups text,stan1 text,stan2 text,stan3 text,stan4 text,usestatus text,x text,y text)"];
     //其他球员的信息，用于通讯
-    [dbCon ExecDataTable:@"create table if not exists tbl_otherEmployeeInf(code text,job text,name text,number text,sex text,locationTime text,online text,x text,y text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_EmployeeInf(empcod text,empjob text,empnam text,empnum text,empsex text,loctime text,online text,x text,y text)"];
     //获取到的消费卡号
     [dbCon ExecDataTable:@"create table if not exists tbl_CustomerNumbers(first text,second text,third text,fourth text)"];
     //所选择的球洞的信息，上九洞，下九洞，十八洞

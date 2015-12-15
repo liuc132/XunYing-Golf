@@ -100,7 +100,8 @@ extern BOOL          allowDownCourt;
     else
     {
         self.cusCardNumTable = [self.localDBcon ExecDataTable:@"select *from tbl_CustomerNumbers"];
-        self.cusCardNumArray = self.cusCardNumTable.Rows;
+        //
+        self.cusCardNumArray = [[NSArray alloc] initWithObjects:self.cusCardNumTable.Rows[0][@"first"],self.cusCardNumTable.Rows[0][@"second"],self.cusCardNumTable.Rows[0][@"third"],self.cusCardNumTable.Rows[0][@"fourth"], nil];
     }
     self.groupTable = [self.localDBcon ExecDataTable:@"select *from tbl_groupInf"];
     
@@ -117,25 +118,6 @@ extern BOOL          allowDownCourt;
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(QRCodeResult:) name:@"QRCodeResult" object:nil];
     
 }
-#pragma -mark QRCodeResult
-//- (void)QRCodeResult:(NSNotification *)sender
-//{
-//    NSLog(@"QRCodeResult:%@",sender.userInfo);
-//    self.holeType = sender.userInfo[@"holetype"];
-//    self.customerCounts = [sender.userInfo[@"customerCount"] integerValue];
-//    
-//}
-
-//#pragma -mark -(void)getCustomerCounts:(NSInteger)customerCount andHolePosition:(NSString *)holePosition
-//-(void)getCustomerCounts:(NSInteger )customerCount andHolePosition:(NSInteger )holePosition
-//{
-//    self.cusCounts = customerCount;
-//    self.holeName  = holePosition;
-//    NSLog(@"enter get cusCounts:%ld;holeNumb:%ld",(long)self.cusCounts,(long)self.holeName);
-//}
-
-
-
 
 #pragma -mark detectTheThing
 -(void)detectTheThing:(NSNotification *)sender
@@ -176,7 +158,7 @@ extern BOOL          allowDownCourt;
     
     switch (section) {
         case 0:
-            eachSectionRow = [self.cusCardNumArray count];//self.customerCounts + 1;//[self.customerCount count];
+            eachSectionRow = self.QRCodeEnable?[self.cusCardNumArray count]:self.customerCounts + 1;
             break;
             
         case 1:
