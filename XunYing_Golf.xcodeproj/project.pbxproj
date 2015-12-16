@@ -19,6 +19,9 @@
 		5B11C5321B8EDD4700382C9B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B11C5301B8EDD4700382C9B /* LaunchScreen.xib */; };
 		5B11C53E1B8EDD4700382C9B /* XunYing_GolfTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B11C53D1B8EDD4700382C9B /* XunYing_GolfTests.m */; };
 		5B136ACF1BDA15BF003BA918 /* SlowBallTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */; };
+		5B33DDE91C2136AE00C62DF7 /* HeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE61C2136AE00C62DF7 /* HeadView.m */; };
+		5B33DDEA1C2136AE00C62DF7 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE81C2136AE00C62DF7 /* MessageCell.m */; };
+		5B33DDEE1C2139EB00C62DF7 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDED1C2139EB00C62DF7 /* ChatViewController.m */; };
 		5B3468171BCDF80700CB2E73 /* HeartBeatAndDetectState.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3468161BCDF80700CB2E73 /* HeartBeatAndDetectState.m */; };
 		5B3A14D91BB2486B008AA668 /* PlayProcessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3A14D81BB2486B008AA668 /* PlayProcessViewController.m */; };
 		5B3B66A31C197D4000C4D557 /* QRCameraSwitchButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B669D1C197D4000C4D557 /* QRCameraSwitchButton.m */; };
@@ -92,6 +95,9 @@
 		5BEE08391C190ACC0058508C /* ArcGIS.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BEE08381C190ACC0058508C /* ArcGIS.bundle */; };
 		5BEE083B1C190B130058508C /* offlineMapData.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BEE083A1C190B130058508C /* offlineMapData.bundle */; };
 		5BF0CE6E1BC6100300009BED /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF0CE6D1BC6100300009BED /* KxMenu.m */; };
+		5BF0ECA31C2156DD00945877 /* messages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5BF0ECA21C2156DD00945877 /* messages.plist */; };
+		5BF0ECA51C21698A00945877 /* noResult.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BF0ECA41C21698A00945877 /* noResult.xib */; };
+		5BF0ECA81C21714800945877 /* haveResultView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BF0ECA71C21714800945877 /* haveResultView.xib */; };
 		5BF321391C1FFD5C005A0DF6 /* CellFrameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF321321C1FFD5C005A0DF6 /* CellFrameModel.m */; };
 		5BF3213A1C1FFD5C005A0DF6 /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF321341C1FFD5C005A0DF6 /* Friend.m */; };
 		5BF3213B1C1FFD5C005A0DF6 /* FriendGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF321361C1FFD5C005A0DF6 /* FriendGroup.m */; };
@@ -136,6 +142,12 @@
 		5B11C53D1B8EDD4700382C9B /* XunYing_GolfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XunYing_GolfTests.m; sourceTree = "<group>"; };
 		5B136ACD1BDA15BF003BA918 /* SlowBallTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlowBallTableViewController.h; path = viewController/SlowBallTableViewController.h; sourceTree = "<group>"; };
 		5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlowBallTableViewController.m; path = viewController/SlowBallTableViewController.m; sourceTree = "<group>"; };
+		5B33DDE51C2136AE00C62DF7 /* HeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadView.h; sourceTree = "<group>"; };
+		5B33DDE61C2136AE00C62DF7 /* HeadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadView.m; sourceTree = "<group>"; };
+		5B33DDE71C2136AE00C62DF7 /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
+		5B33DDE81C2136AE00C62DF7 /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
+		5B33DDEC1C2139EB00C62DF7 /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatViewController.h; path = viewController/ChatViewController.h; sourceTree = "<group>"; };
+		5B33DDED1C2139EB00C62DF7 /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatViewController.m; path = viewController/ChatViewController.m; sourceTree = "<group>"; };
 		5B3468151BCDF80700CB2E73 /* HeartBeatAndDetectState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeartBeatAndDetectState.h; path = otherClass/HeartBeatAndDetectState.h; sourceTree = "<group>"; };
 		5B3468161BCDF80700CB2E73 /* HeartBeatAndDetectState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HeartBeatAndDetectState.m; path = otherClass/HeartBeatAndDetectState.m; sourceTree = "<group>"; };
 		5B3A14D71BB2486B008AA668 /* PlayProcessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayProcessViewController.h; path = viewController/PlayProcessViewController.h; sourceTree = "<group>"; };
@@ -269,6 +281,9 @@
 		5BEE083A1C190B130058508C /* offlineMapData.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = offlineMapData.bundle; sourceTree = "<group>"; };
 		5BF0CE6C1BC6100300009BED /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxMenu.h; path = XunYing_Golf/viewController/Menu/KxMenu.h; sourceTree = "<group>"; };
 		5BF0CE6D1BC6100300009BED /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxMenu.m; path = XunYing_Golf/viewController/Menu/KxMenu.m; sourceTree = "<group>"; };
+		5BF0ECA21C2156DD00945877 /* messages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = messages.plist; sourceTree = "<group>"; };
+		5BF0ECA41C21698A00945877 /* noResult.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = noResult.xib; sourceTree = "<group>"; };
+		5BF0ECA71C21714800945877 /* haveResultView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = haveResultView.xib; sourceTree = "<group>"; };
 		5BF321311C1FFD5C005A0DF6 /* CellFrameModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellFrameModel.h; sourceTree = "<group>"; };
 		5BF321321C1FFD5C005A0DF6 /* CellFrameModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFrameModel.m; sourceTree = "<group>"; };
 		5BF321331C1FFD5C005A0DF6 /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
@@ -376,6 +391,7 @@
 		5B11C5211B8EDD4700382C9B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5BF0ECA21C2156DD00945877 /* messages.plist */,
 				5B3B66A61C19819600C4D557 /* beep.wav */,
 				5B11C52E1B8EDD4700382C9B /* Images.xcassets */,
 				5B11C52B1B8EDD4700382C9B /* Main.storyboard */,
@@ -430,6 +446,26 @@
 				5B9ECB0B1BABF3DF00612474 /* createGroup */,
 			);
 			name = createGroup;
+			sourceTree = "<group>";
+		};
+		5B33DDE41C21369F00C62DF7 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				5B33DDE51C2136AE00C62DF7 /* HeadView.h */,
+				5B33DDE61C2136AE00C62DF7 /* HeadView.m */,
+				5B33DDE71C2136AE00C62DF7 /* MessageCell.h */,
+				5B33DDE81C2136AE00C62DF7 /* MessageCell.m */,
+			);
+			name = view;
+			sourceTree = "<group>";
+		};
+		5B33DDEB1C2139B800C62DF7 /* chatView */ = {
+			isa = PBXGroup;
+			children = (
+				5B33DDEC1C2139EB00C62DF7 /* ChatViewController.h */,
+				5B33DDED1C2139EB00C62DF7 /* ChatViewController.m */,
+			);
+			name = chatView;
 			sourceTree = "<group>";
 		};
 		5B3468141BCDF7AF00CB2E73 /* heartBeatAndDetectState */ = {
@@ -658,6 +694,7 @@
 		5B93C8161BBBDD530081FBAF /* CurrentTaskCenter */ = {
 			isa = PBXGroup;
 			children = (
+				5BF0ECA61C21705700945877 /* cellXibview */,
 				5B93C8171BBBDD8B0081FBAF /* CurTaskCenterTableViewController.h */,
 				5B93C8181BBBDD8B0081FBAF /* CurTaskCenterTableViewController.m */,
 				5BA96CA81C0469CB009DD1B0 /* leaveRest */,
@@ -822,6 +859,8 @@
 		5BDC83781BA2B17600E69940 /* taskCommunication */ = {
 			isa = PBXGroup;
 			children = (
+				5B33DDEB1C2139B800C62DF7 /* chatView */,
+				5B33DDE41C21369F00C62DF7 /* view */,
 				5BF3213D1C1FFEE3005A0DF6 /* other */,
 				5BF321301C1FFCF1005A0DF6 /* tableModel */,
 				5BDC83791BA2B1B500E69940 /* TaskComViewController.h */,
@@ -865,6 +904,15 @@
 				5BF0CE6D1BC6100300009BED /* KxMenu.m */,
 			);
 			name = Menu;
+			sourceTree = "<group>";
+		};
+		5BF0ECA61C21705700945877 /* cellXibview */ = {
+			isa = PBXGroup;
+			children = (
+				5BF0ECA41C21698A00945877 /* noResult.xib */,
+				5BF0ECA71C21714800945877 /* haveResultView.xib */,
+			);
+			name = cellXibview;
 			sourceTree = "<group>";
 		};
 		5BF321301C1FFCF1005A0DF6 /* tableModel */ = {
@@ -991,13 +1039,16 @@
 				5B63E1111BAFB10C0034C577 /* createGroup_Check.png in Resources */,
 				5B3B66A71C19819600C4D557 /* beep.wav in Resources */,
 				5B63E1191BAFB10C0034C577 /* logInSelected.png in Resources */,
+				5BF0ECA81C21714800945877 /* haveResultView.xib in Resources */,
 				5BEE083B1C190B130058508C /* offlineMapData.bundle in Resources */,
 				5BEE08391C190ACC0058508C /* ArcGIS.bundle in Resources */,
 				5B63E1161BAFB10C0034C577 /* logInCompany-01.png in Resources */,
+				5BF0ECA31C2156DD00945877 /* messages.plist in Resources */,
 				5B63E1151BAFB10C0034C577 /* logInAccount.png in Resources */,
 				5B63E1141BAFB10C0034C577 /* createGroup_QRcode.png in Resources */,
 				5B11C52F1B8EDD4700382C9B /* Images.xcassets in Resources */,
 				5B63E1181BAFB10C0034C577 /* logInPassword.png in Resources */,
+				5BF0ECA51C21698A00945877 /* noResult.xib in Resources */,
 				5B63E1131BAFB10C0034C577 /* createGroup_Mannual.png in Resources */,
 				5B4E33E11BAFE415000693B3 /* ic_launcher.png in Resources */,
 				5BEA92711BB1077200EAC9BE /* FontAwesome.ttf in Resources */,
@@ -1038,6 +1089,7 @@
 				5B9ECB0E1BABF40900612474 /* CreateGroupViewController.m in Sources */,
 				5BD6D6951BD63311001524DB /* AFURLRequestSerialization.m in Sources */,
 				5B03A84B1C05A13D00207D59 /* ScoreViewController.m in Sources */,
+				5B33DDEE1C2139EB00C62DF7 /* ChatViewController.m in Sources */,
 				5B3B66A51C197D4000C4D557 /* QRCodeReaderViewController.m in Sources */,
 				5BDC837B1BA2B1B500E69940 /* TaskComViewController.m in Sources */,
 				5BE7172E1BB8EDC40080C6F4 /* Reachability.m in Sources */,
@@ -1068,6 +1120,7 @@
 				5BD6D6911BD63311001524DB /* AFHTTPSessionManager.m in Sources */,
 				5B11C5241B8EDD4700382C9B /* main.m in Sources */,
 				5BF0CE6E1BC6100300009BED /* KxMenu.m in Sources */,
+				5B33DDE91C2136AE00C62DF7 /* HeadView.m in Sources */,
 				5B3A14D91BB2486B008AA668 /* PlayProcessViewController.m in Sources */,
 				5B93C8191BBBDD8B0081FBAF /* CurTaskCenterTableViewController.m in Sources */,
 				5BF3213B1C1FFD5C005A0DF6 /* FriendGroup.m in Sources */,
@@ -1087,6 +1140,7 @@
 				5BB97ACB1B9EC07B00A27809 /* settingTableViewCell.m in Sources */,
 				5B03A8471C05A0A700207D59 /* PersonalScoreViewController.m in Sources */,
 				5BFF027D1BD75F8400A25D7A /* MendHoleViewController.m in Sources */,
+				5B33DDEA1C2136AE00C62DF7 /* MessageCell.m in Sources */,
 				5B3B66A31C197D4000C4D557 /* QRCameraSwitchButton.m in Sources */,
 				5B93C8091BBB938A0081FBAF /* MoreInterfaceViewController.m in Sources */,
 			);

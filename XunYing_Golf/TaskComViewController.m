@@ -11,6 +11,9 @@
 #import "DataTable.h"
 #import "HttpTools.h"
 #import "CellFrameModel.h"
+#import "Friend.h"
+#import "FriendGroup.h"
+#import "HeadView.h"
 
 //职员在系统中的状态
 typedef enum empStatus{
@@ -30,7 +33,7 @@ typedef enum jobType{
 
 
 
-@interface TaskComViewController ()
+@interface TaskComViewController ()<HeadViewDelegate>
 {
     NSArray *_employeesData;
 }
@@ -70,95 +73,253 @@ typedef enum jobType{
     self.empInfo  = [[DataTable alloc] init];
     self.employeesArray = [[NSMutableArray alloc] init];
     //
-    //dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         weakSelf.empInfo = [weakSelf.comDbCon ExecDataTable:@"select *from tbl_EmployeeInf"];
         NSLog(@"empInfo:%@",weakSelf.empInfo.Rows);
-        //
+        //这里还要分各个职位进行参数的添加 所有职位，管理员，调度，巡场，球童，前台，餐厅
+        NSMutableArray *partInfoEmpAll          = [[NSMutableArray alloc] init];
+        NSMutableArray *partInfoEmpManager      = [[NSMutableArray alloc] init];
+        NSMutableArray *partInfoEmpDispatch     = [[NSMutableArray alloc] init];
+        NSMutableArray *partInfoEmpTourField    = [[NSMutableArray alloc] init];
+        NSMutableArray *partInfoEmpreception    = [[NSMutableArray alloc] init];
+        NSMutableArray *partInfoEmprestaurant   = [[NSMutableArray alloc] init];
+        
         if ([weakSelf.empInfo.Rows count]) {
             NSArray *allempsInfo = weakSelf.empInfo.Rows;
+            static unsigned char onlineall,onlinemanager,onlinedispatch,onlinetourfield,onlinereception,onlinerestaurant;
+            onlineall = 0;
+            onlinemanager = 0;
+            onlinedispatch = 0;
+            onlinetourfield = 0;
+            onlinereception = 0;
+            onlinerestaurant = 0;
             for (NSDictionary *eachEmp in allempsInfo) {
-                //包含friends（array），name（string），online（number）
-                NSDictionary *eachItemEmp = [[NSDictionary alloc] init];
-                //这里还要分各个职位进行参数的添加 所有职位，管理员，巡场
-                NSMutableArray *partInfoEmp = [[NSMutableArray alloc] init];
-                //再次查询一次以便将friends给生成
-                for (NSDictionary *eachEmp1 in allempsInfo) {
-                    NSString *iconStr = [[NSString alloc] init];
-                    iconStr = [NSString stringWithFormat:@"%@",([eachEmp1[@"online"] boolValue]?@"online":@"offline")];
-                    
-                    NSDictionary *eachEmpPartInfo = [[NSDictionary alloc] initWithObjectsAndKeys:iconStr,@"icon",eachEmp1[@"empnum"],@"intro",eachEmp1[@"empnam"],@"name",@"0",@"vip", nil];
-                    [partInfoEmp addObject:eachEmpPartInfo];
-                }
                 //
                 NSString *sectionName = [[NSString alloc] init];
+                NSString *iconStr = [[NSString alloc] init];
+                NSDictionary *eachEmpPartInfo = [[NSDictionary alloc] init];
+                
                 switch ([eachEmp[@"empjob"] intValue]) {
                     case allJob:
                         sectionName = @"所有岗位";
+                        //确定是否离线
+                        iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
+                        if ([eachEmp[@"online"] boolValue]) {
+                            onlineall++;
+                        }
+                        //
+                        eachEmpPartInfo = [[NSDictionary alloc] initWithObjectsAndKeys:iconStr,@"icon",eachEmp[@"empnum"],@"intro",eachEmp[@"empnam"],@"name",@"0",@"vip", nil];
+                        [partInfoEmpAll addObject:eachEmpPartInfo];
+                        
                         break;
                     case manager:
                         sectionName = @"管理员";
+                        //确定是否离线
+                        iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
+                        if ([eachEmp[@"online"] boolValue]) {
+                            onlinemanager++;
+                        }
+                        //
+                        eachEmpPartInfo = [[NSDictionary alloc] initWithObjectsAndKeys:iconStr,@"icon",eachEmp[@"empnum"],@"intro",eachEmp[@"empnam"],@"name",@"0",@"vip", nil];
+                        [partInfoEmpManager addObject:eachEmpPartInfo];
+                        
                         break;
                     case dispatch:
                         sectionName = @"调度";
+                        //确定是否离线
+                        iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
+                        if ([eachEmp[@"online"] boolValue]) {
+                            onlinedispatch++;
+                        }
+                        //
+                        eachEmpPartInfo = [[NSDictionary alloc] initWithObjectsAndKeys:iconStr,@"icon",eachEmp[@"empnum"],@"intro",eachEmp[@"empnam"],@"name",@"0",@"vip", nil];
+                        [partInfoEmpDispatch addObject:eachEmpPartInfo];
+                        
                         break;
                     case tourField:
                         sectionName = @"巡场";
+                        //确定是否离线
+                        iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
+                        if ([eachEmp[@"online"] boolValue]) {
+                            onlinetourfield++;
+                        }
+                        //
+                        eachEmpPartInfo = [[NSDictionary alloc] initWithObjectsAndKeys:iconStr,@"icon",eachEmp[@"empnum"],@"intro",eachEmp[@"empnam"],@"name",@"0",@"vip", nil];
+                        [partInfoEmpTourField addObject:eachEmpPartInfo];
+                        
                         break;
                     case reception:
                         sectionName = @"前台";
+                        //确定是否离线
+                        iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
+                        if ([eachEmp[@"online"] boolValue]) {
+                            onlinereception++;
+                        }
+                        //
+                        eachEmpPartInfo = [[NSDictionary alloc] initWithObjectsAndKeys:iconStr,@"icon",eachEmp[@"empnum"],@"intro",eachEmp[@"empnam"],@"name",@"0",@"vip", nil];
+                        [partInfoEmpreception addObject:eachEmpPartInfo];
+                        
                         break;
                     case restaurant:
                         sectionName = @"餐厅";
+                        //确定是否离线
+                        iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
+                        if ([eachEmp[@"online"] boolValue]) {
+                            onlinerestaurant++;
+                        }
+                        //
+                        eachEmpPartInfo = [[NSDictionary alloc] initWithObjectsAndKeys:iconStr,@"icon",eachEmp[@"empnum"],@"intro",eachEmp[@"empnam"],@"name",@"0",@"vip", nil];
+                        [partInfoEmprestaurant addObject:eachEmpPartInfo];
+                        
                         break;
                         
                     default:
                         break;
                 }
-                //
-                eachItemEmp = [[NSDictionary alloc] initWithObjectsAndKeys:partInfoEmp,@"friends",sectionName,@"name",eachEmp[@"online"],@"online", nil];
-                //
-                [weakSelf.employeesArray addObject:eachItemEmp];
             }
+            //
+            NSString *managerOnlineCount = [NSString stringWithFormat:@"%c",onlinemanager];
+            NSString *dispatchOnlineCount = [NSString stringWithFormat:@"%c",onlinedispatch];
+            NSString *tourfieldOnlineCount = [NSString stringWithFormat:@"%c",onlinetourfield];
+            NSString *receptionOnlineCount = [NSString stringWithFormat:@"%c",onlinereception];
+            NSString *restaurantOnlineCount = [NSString stringWithFormat:@"%c",onlinerestaurant];
+            //将数据组装到数组中onlinemanager
+            [self.employeesArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:partInfoEmpManager,@"friends",@"管理员",@"name",managerOnlineCount,@"online", nil]];
+            //
+            [self.employeesArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:partInfoEmpDispatch,@"friends",@"调度",@"name",dispatchOnlineCount,@"online", nil]];
+            //
+            [self.employeesArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:partInfoEmpTourField,@"friends",@"巡场",@"name",tourfieldOnlineCount,@"online", nil]];
+            //
+            [self.employeesArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:partInfoEmpreception,@"friends",@"前台",@"name",receptionOnlineCount,@"online", nil]];
+            //
+            [self.employeesArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:partInfoEmprestaurant,@"friends",@"餐厅",@"name",restaurantOnlineCount,@"online", nil]];
+            //
             NSLog(@"all emps:%@",weakSelf.employeesArray);
             
         }
         
-    //});
-    
-    
-    
-    
+    });
     //load data
+    [self loadData];
     
     
 }
-
-
-
-
+#pragma -mark loadData
+- (void)loadData
+{
+    NSArray *tempArray = [[NSArray alloc] initWithArray:self.employeesArray];
+    NSMutableArray *fgArray = [NSMutableArray array];
+    for (NSDictionary *dict in tempArray) {
+        FriendGroup *friendGroup = [FriendGroup friendGroupWithDict:dict];
+        [fgArray addObject:friendGroup];
+    }
+    _employeesData = fgArray;
+}
 
 #pragma -mark numberOfRowsInSection
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;
+    FriendGroup *friendGroup = _employeesData[section];
+    NSInteger count = friendGroup.isOpened ? friendGroup.friends.count : 0;
+    return count;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return _employeesData.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *identifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    FriendGroup *friendGroup = _employeesData[indexPath.section];
+    Friend *friend = friendGroup.friends[indexPath.row];
+    
+    cell.imageView.image = [UIImage imageNamed:friend.icon];
+    cell.textLabel.textColor = friend.isVip ? [UIColor redColor] : [UIColor blackColor];
+    cell.textLabel.text = friend.name;
+    cell.detailTextLabel.text = friend.intro;
+    
     
     return cell;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    HeadView *headView = [HeadView headViewWithTableView:tableView];
+    
+    headView.delegate = self;
+    headView.friendGroup = _employeesData[section];
+    
+    return headView;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //跳转到聊天界面
+    [self performSegueWithIdentifier:@"toChatView" sender:nil];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 40.0f;
+}
+//将没有内容的地方的分割线去除掉
+#pragma -mark tableView:willDisplayCell:forRowAtIndexPath
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView setTableFooterView:[[UIView alloc]init]];
+    //
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+}
+//将分割线铺满整个窗口
+- (void)viewWillLayoutSubviews
+{
+    if ([self.allEmpCommunicate respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.allEmpCommunicate setSeparatorInset:UIEdgeInsetsMake(0,0,0,0)];
+    }
+    
+    if ([self.allEmpCommunicate respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.allEmpCommunicate setLayoutMargins:UIEdgeInsetsMake(0,0,0,0)];
+    }
+}
+
+- (void)clickHeadView
+{
+    [self.allEmpCommunicate reloadData];
+}
+
 - (IBAction)msgDisWays:(UISegmentedControl *)sender {
-    
-    
+    NSLog(@"sender:%ld",sender.selectedSegmentIndex);
+    NSDictionary *dict = [[NSDictionary alloc] init];
+    NSMutableArray *fgArray = [NSMutableArray array];
+    FriendGroup *friendGroup;
+    switch (sender.selectedSegmentIndex) {
+        case 0:
+            [self loadData];
+            
+            break;
+        case 1:
+            
+            friendGroup  = [FriendGroup friendGroupWithDict:dict];
+            [fgArray addObject:friendGroup];
+            _employeesData = [[NSArray alloc] initWithArray:fgArray];
+            break;
+            
+        default:
+            break;
+    }
     
 }
 @end

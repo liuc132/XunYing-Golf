@@ -28,19 +28,9 @@
 {
     [super viewDidLoad];
     //
-    [self displayNoTaskView];
-    //
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapDismissSheet)];
-    tapGesture.numberOfTapsRequired = 1;
-    tapGesture.numberOfTouchesRequired = 1;
-    tapGesture.delegate = self;
+//    [self displayNoTaskView];
     
     
-}
-#pragma -mark tapDismissSheet
-- (void)tapDismissSheet
-{
-    [KxMenu dismissMenu];
 }
 
 #pragma -mark displayNoTaskView
@@ -56,7 +46,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -94,10 +84,6 @@
       [KxMenuItem menuItem:@"补洞" image:[UIImage imageNamed:@"mendHole.png"] target:self action:@selector(MendHoles)],
       [KxMenuItem menuItem:@"离场休息" image:[UIImage imageNamed:@"leaveToRest.png"] target:self action:@selector(leaveToRest)]];
     
-//    KxMenuItem *first = menuItems[0];
-//    first.foreColor = [UIColor colorWithRed:47/255.0f green:112/255.0f blue:225/255.0f alpha:1.0];
-//    first.alignment = NSTextAlignmentCenter;
-    //self.navigationController.navigationBar.frame
     [KxMenu showMenuInView:self.view
                   fromRect:CGRectMake(ScreenWidth-47, self.navigationController.navigationBar.frame.size.height, 30, 30)
                  menuItems:menuItems];
