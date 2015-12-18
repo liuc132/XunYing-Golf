@@ -25,10 +25,9 @@ extern BOOL          allowDownCourt;
 
 
 
-@interface WaitToPlayTableViewController ()//<WaitToPlayTableViewControllerDelegate>
+@interface WaitToPlayTableViewController ()
 
 
-@property (strong, nonatomic) IBOutlet UINavigationItem *customNavigationView;
 
 
 @property (strong, nonatomic) NSMutableArray *customerCount;
@@ -51,6 +50,11 @@ extern BOOL          allowDownCourt;
 
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;
 
+
+@property (strong, nonatomic) IBOutlet UITableView *waitInformationTable;
+
+
+
 - (IBAction)cancleDownGround:(UIBarButtonItem *)sender;
 - (IBAction)backToCreateInf:(UIBarButtonItem *)sender;
 
@@ -62,29 +66,8 @@ extern BOOL          allowDownCourt;
 - (void)viewDidLoad {
     [super viewDidLoad];
     //
-    [AppDelegate storyBoardAutoLay:self.view];
-//    NSLog(@"holeType:%ld  cusCount:%ld",self.holeType,self.customerCounts);
-    //
-//    LogInViewController *logInView = [[LogInViewController alloc] init];//[[LogInViewController alloc] init];
-//    self.passDelegate = logInView;
-//    
-//    [self.passDelegate passCusNumbersAndHoleType];
-//    NSLog(@"holetype:%ld,cusCount:%ld",(long)self.holeType,self.customerCounts);
-//    NSLog(@"holetype:%@,cusCount:%ld",logInView.curHoleName,logInView.customerCount);
-    
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"navBarBack.png"] style:UIBarButtonItemStyleDone target:self action:@selector(navBack)];
-    self.navigationItem.leftBarButtonItem.tintColor = [UIColor HexString:@"454545"];
-    self.navigationItem.rightBarButtonItem.tintColor = [UIColor HexString:@"0096d5"];
-    
-    //后台执行
-//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//       //do something
-//        self.timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:5 target:self selector:@selector(detectTheThing) userInfo:nil repeats:YES];
-//        [self.timer fire];
-//    });
-//    //do something
-//    self.timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:5 target:self selector:@selector(detectTheThing) userInfo:nil repeats:YES];
-//    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+    self.waitInformationTable.dataSource = self;
+    self.waitInformationTable.delegate   = self;
     
     //init and alloc dbcon and datatable
     self.localDBcon = [[DBCon alloc] init];
@@ -354,19 +337,22 @@ extern BOOL          allowDownCourt;
 #pragma --mark viewDidLayoutSubviews
 -(void)viewDidLayoutSubviews
 {
-    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-        [self.tableView setSeparatorInset:UIEdgeInsetsMake(0,0,0,0)];
+    if ([self.waitInformationTable respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.waitInformationTable setSeparatorInset:UIEdgeInsetsMake(0,0,0,0)];
     }
     
-    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
-        [self.tableView setLayoutMargins:UIEdgeInsetsMake(0,0,0,0)];
+    if ([self.waitInformationTable respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.waitInformationTable setLayoutMargins:UIEdgeInsetsMake(0,0,0,0)];
     }
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"customerNum" forIndexPath:indexPath];
-    
+    NSString *cellIdentifier = @"cell";
+    UITableViewCell *cell = [self.waitInformationTable dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
     // Configure the cell...
     [self.view bringSubviewToFront:self.activityIndicatorView];
     return cell;

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "passValueLogInDelegate.h"
 
-@interface WaitToPlayTableViewController : UITableViewController
+@interface WaitToPlayTableViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic) NSString* holeType;
 @property (nonatomic) NSInteger customerCounts;

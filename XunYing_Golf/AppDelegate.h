@@ -29,7 +29,7 @@
 
 @property float autoSizeScaleX;
 @property float autoSizeScaleY;
-+(void)storyBoardAutoLay:(UIView *)allView;
+//+(void)storyBoardAutoLay:(UIView *)allView;
 
 //@property (strong, nonatomic) UIImageView *splashView;
 

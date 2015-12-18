@@ -61,7 +61,6 @@ extern BOOL allowDownCourt;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     //NSLog(@"enter Login viewcontroller");
-    [AppDelegate storyBoardAutoLay:self.view];
     
     
     self.tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTap:)];

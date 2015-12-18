@@ -73,7 +73,7 @@ typedef enum ChangeReason{
 {
     self.eventInfoDic = sender.userInfo;
     NSLog(@"ChangeCart info:%@ and eventInfoDic:%@",sender.userInfo,self.eventInfoDic);
-    [self.view removeFromSuperview];
+//    [self.view removeFromSuperview];
     
 }
 

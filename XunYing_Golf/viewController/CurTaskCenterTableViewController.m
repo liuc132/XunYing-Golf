@@ -14,9 +14,11 @@
 @interface CurTaskCenterTableViewController ()<UIGestureRecognizerDelegate>
 
 
+@property (strong, nonatomic) NSMutableArray *dataArray;
+@property (strong, nonatomic) NSArray        *displayArray;
+
+
 @property (strong, nonatomic) IBOutlet UIView *displayNoTask;
-
-
 
 - (IBAction)selectTask:(UIBarButtonItem *)sender;
 
@@ -30,8 +32,20 @@
     //
 //    [self displayNoTaskView];
     
+    //初始化一个通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTaskResult:) name:@"displayTaskResult" object:nil];
+    
     
 }
+#pragma -mark
+- (void)getTaskResult:(NSNotification *)sender
+{
+    NSLog(@"sender Info:%@",sender.userInfo);
+    //根据所获得的数据来组装参数
+    
+    
+}
+
 
 #pragma -mark displayNoTaskView
 -(void)displayNoTaskView
@@ -57,8 +71,11 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"listAllTask" forIndexPath:indexPath];
-    
+    static NSString *cellIdentifier = @"listAllTask";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
     // Configure the cell...
     cell.backgroundColor = [UIColor clearColor];
     
@@ -71,7 +88,8 @@
     [super viewWillAppear:animated];
     NSLog(@"curTime:%@",self.leaveTime);
     //[self.displayNoTask removeFromSuperview];//该语句可以实现将该uiview给移除掉
-    
+    //
+    [self.view setNeedsLayout];
 }
 
 

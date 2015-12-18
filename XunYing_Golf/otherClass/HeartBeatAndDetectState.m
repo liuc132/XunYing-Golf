@@ -210,6 +210,10 @@ typedef enum eventOrder{
                     }
                     //通过通知发送到相应的界面中去
                     [[NSNotificationCenter defaultCenter] postNotificationName:observerName object:nil userInfo:eventDic];
+                    //发送到事务通讯主界面中去 displayTaskResult
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"displayTaskResult" object:eventDic];
+                    //同时还得把数据给保存下来，在回场之后将相应的内存清空
+                    
                 }
                 
                 //

@@ -308,13 +308,14 @@ typedef enum jobType{
     switch (sender.selectedSegmentIndex) {
         case 0:
             [self loadData];
-            
+            [self.allEmpCommunicate reloadData];
             break;
         case 1:
             
             friendGroup  = [FriendGroup friendGroupWithDict:dict];
             [fgArray addObject:friendGroup];
             _employeesData = [[NSArray alloc] initWithArray:fgArray];
+            [self.allEmpCommunicate reloadData];
             break;
             
         default:

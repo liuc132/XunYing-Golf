@@ -108,28 +108,28 @@
  return rect;
  }
  */
-#pragma -mark Storyboard view自动适配
-+(void)storyBoardAutoLay:(UIView *)allView
-{
-    for (UIView *temp in allView.subviews) {
-        temp.frame = CGRectMake1(temp.frame.origin.x, temp.frame.origin.y, temp.frame.size.width, temp.frame.size.height);
-        for (UIView *temp1 in temp.subviews) {
-            temp1.frame = CGRectMake1(temp1.frame.origin.x, temp1.frame.origin.y, temp1.frame.size.width, temp1.frame.size.height);
-        }
-    }
-}
+//#pragma -mark Storyboard view自动适配
+//+(void)storyBoardAutoLay:(UIView *)allView
+//{
+//    for (UIView *temp in allView.subviews) {
+//        temp.frame = CGRectMake1(temp.frame.origin.x, temp.frame.origin.y, temp.frame.size.width, temp.frame.size.height);
+//        for (UIView *temp1 in temp.subviews) {
+//            temp1.frame = CGRectMake1(temp1.frame.origin.x, temp1.frame.origin.y, temp1.frame.size.width, temp1.frame.size.height);
+//        }
+//    }
+//}
 //修改CGRectMake
-CG_INLINE CGRect
-CGRectMake1(CGFloat x,CGFloat y,CGFloat width,CGFloat height)
-{
-    AppDelegate *myDelegate = [[UIApplication sharedApplication] delegate];
-    CGRect rect;
-    rect.origin.x = x*myDelegate.autoSizeScaleX;
-    rect.origin.y = y*myDelegate.autoSizeScaleY;
-    rect.size.width = width*myDelegate.autoSizeScaleX;
-    rect.size.height = height*myDelegate.autoSizeScaleY;
-    return rect;
-}
+//CG_INLINE CGRect
+//CGRectMake1(CGFloat x,CGFloat y,CGFloat width,CGFloat height)
+//{
+//    AppDelegate *myDelegate = [[UIApplication sharedApplication] delegate];
+//    CGRect rect;
+//    rect.origin.x = x*myDelegate.autoSizeScaleX;
+//    rect.origin.y = y*myDelegate.autoSizeScaleY;
+//    rect.size.width = width*myDelegate.autoSizeScaleX;
+//    rect.size.height = height*myDelegate.autoSizeScaleY;
+//    return rect;
+//}
 
 /**
  *  初始化本地数据库,数据库文件及列表
@@ -185,6 +185,42 @@ CGRectMake1(CGFloat x,CGFloat y,CGFloat width,CGFloat height)
     [dbCon ExecDataTable:@"create table if not exists tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)"];
     //当前所创建的小组的顾客的信息
     [dbCon ExecDataTable:@"create table if not exists tbl_CustomersInfo(bansta text,bantim text,cadcod text,carcod text,cuscod text,cuslev text,cusnam text,cusnum text,cussex text,depsta text,endtim text,grocod text,memnum text,padcod text,phone text,statim text)"];
+    //事件处理的信息
+    /*evecod = eve15121717452946189;
+     everes =         {
+     everea = "11;12";
+     result = 0;
+     };
+     evesta = 1;
+     hantim = "";
+     subtim = "2015-12-17 17:45:29";
+     //
+     empcod = employee15012817402638672;
+     endcod = 2;
+     evecod = eve15121717452946189;
+     everes =     {
+     everea = "11;12";
+     newcar =         {
+     carcod = cart15121416345811194;
+     carnum = 99;
+     carsea = 0;
+     };
+     oldcar =         {
+     carcod = cart14101516183510980;
+     carnum = 001;
+     carsea = 4;
+     };
+     result = 1;
+     };
+     evesta = 3;
+     evetyp = 1;
+     hancod = employee15040815205446952;
+     hannam = "\U738b\U5a77";
+     hannum = e110;
+     hantim = "2015-12-17 17:46:38";
+     subtim = "2015-12-17 17:45:29";
+     */
+    [dbCon ExecDataTable:@"create table if not exists tbl_taskInfo(evecod text,evesta text,subtim text)"];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

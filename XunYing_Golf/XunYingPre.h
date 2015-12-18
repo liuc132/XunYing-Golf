@@ -22,7 +22,7 @@
  
  */
 
-#define MainURL                             @"http://192.168.1.119"
+#define MainURL                             @"http:www.hdch.net"
 #define PortNum                             @":8089"
 
 

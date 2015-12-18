@@ -19,6 +19,11 @@
 		5B11C5321B8EDD4700382C9B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B11C5301B8EDD4700382C9B /* LaunchScreen.xib */; };
 		5B11C53E1B8EDD4700382C9B /* XunYing_GolfTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B11C53D1B8EDD4700382C9B /* XunYing_GolfTests.m */; };
 		5B136ACF1BDA15BF003BA918 /* SlowBallTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */; };
+		5B13BB511C225A8C00D1B8D9 /* NoResultTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB501C225A8C00D1B8D9 /* NoResultTableViewCell.m */; };
+		5B13BB541C225AA600D1B8D9 /* HaveResultTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB531C225AA600D1B8D9 /* HaveResultTableViewCell.m */; };
+		5B13BB571C22671D00D1B8D9 /* NoResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB561C22671D00D1B8D9 /* NoResultMode.m */; };
+		5B13BB5A1C22682900D1B8D9 /* HaveResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB591C22682900D1B8D9 /* HaveResultMode.m */; };
+		5B13BB5D1C22687000D1B8D9 /* CellViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */; };
 		5B33DDE91C2136AE00C62DF7 /* HeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE61C2136AE00C62DF7 /* HeadView.m */; };
 		5B33DDEA1C2136AE00C62DF7 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE81C2136AE00C62DF7 /* MessageCell.m */; };
 		5B33DDEE1C2139EB00C62DF7 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDED1C2139EB00C62DF7 /* ChatViewController.m */; };
@@ -142,6 +147,16 @@
 		5B11C53D1B8EDD4700382C9B /* XunYing_GolfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XunYing_GolfTests.m; sourceTree = "<group>"; };
 		5B136ACD1BDA15BF003BA918 /* SlowBallTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlowBallTableViewController.h; path = viewController/SlowBallTableViewController.h; sourceTree = "<group>"; };
 		5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlowBallTableViewController.m; path = viewController/SlowBallTableViewController.m; sourceTree = "<group>"; };
+		5B13BB4F1C225A8C00D1B8D9 /* NoResultTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoResultTableViewCell.h; path = viewController/NoResultTableViewCell.h; sourceTree = "<group>"; };
+		5B13BB501C225A8C00D1B8D9 /* NoResultTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NoResultTableViewCell.m; path = viewController/NoResultTableViewCell.m; sourceTree = "<group>"; };
+		5B13BB521C225AA600D1B8D9 /* HaveResultTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HaveResultTableViewCell.h; path = viewController/HaveResultTableViewCell.h; sourceTree = "<group>"; };
+		5B13BB531C225AA600D1B8D9 /* HaveResultTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HaveResultTableViewCell.m; path = viewController/HaveResultTableViewCell.m; sourceTree = "<group>"; };
+		5B13BB551C22671D00D1B8D9 /* NoResultMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoResultMode.h; path = viewController/NoResultMode.h; sourceTree = "<group>"; };
+		5B13BB561C22671D00D1B8D9 /* NoResultMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NoResultMode.m; path = viewController/NoResultMode.m; sourceTree = "<group>"; };
+		5B13BB581C22682900D1B8D9 /* HaveResultMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HaveResultMode.h; path = viewController/HaveResultMode.h; sourceTree = "<group>"; };
+		5B13BB591C22682900D1B8D9 /* HaveResultMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HaveResultMode.m; path = viewController/HaveResultMode.m; sourceTree = "<group>"; };
+		5B13BB5B1C22687000D1B8D9 /* CellViewNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellViewNode.h; path = viewController/CellViewNode.h; sourceTree = "<group>"; };
+		5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellViewNode.m; path = viewController/CellViewNode.m; sourceTree = "<group>"; };
 		5B33DDE51C2136AE00C62DF7 /* HeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadView.h; sourceTree = "<group>"; };
 		5B33DDE61C2136AE00C62DF7 /* HeadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadView.m; sourceTree = "<group>"; };
 		5B33DDE71C2136AE00C62DF7 /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
@@ -911,6 +926,16 @@
 			children = (
 				5BF0ECA41C21698A00945877 /* noResult.xib */,
 				5BF0ECA71C21714800945877 /* haveResultView.xib */,
+				5B13BB4F1C225A8C00D1B8D9 /* NoResultTableViewCell.h */,
+				5B13BB501C225A8C00D1B8D9 /* NoResultTableViewCell.m */,
+				5B13BB521C225AA600D1B8D9 /* HaveResultTableViewCell.h */,
+				5B13BB531C225AA600D1B8D9 /* HaveResultTableViewCell.m */,
+				5B13BB551C22671D00D1B8D9 /* NoResultMode.h */,
+				5B13BB561C22671D00D1B8D9 /* NoResultMode.m */,
+				5B13BB581C22682900D1B8D9 /* HaveResultMode.h */,
+				5B13BB591C22682900D1B8D9 /* HaveResultMode.m */,
+				5B13BB5B1C22687000D1B8D9 /* CellViewNode.h */,
+				5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */,
 			);
 			name = cellXibview;
 			sourceTree = "<group>";
@@ -1078,7 +1103,9 @@
 				5B11C52A1B8EDD4700382C9B /* ViewController.m in Sources */,
 				5B52F4491B9D7C08004BA338 /* UIView+FramePostion.m in Sources */,
 				5BD6D6941BD63311001524DB /* AFURLConnectionOperation.m in Sources */,
+				5B13BB5A1C22682900D1B8D9 /* HaveResultMode.m in Sources */,
 				5B52F4461B9D7C08004BA338 /* UIImageView+UICon.m in Sources */,
+				5B13BB541C225AA600D1B8D9 /* HaveResultTableViewCell.m in Sources */,
 				5B52F4481B9D7C08004BA338 /* UITableViewController+UICon.m in Sources */,
 				5B93C8111BBBBA010081FBAF /* MoreMainTabBarViewController.m in Sources */,
 				5BF3213C1C1FFD5C005A0DF6 /* MessageModel.m in Sources */,
@@ -1109,6 +1136,7 @@
 				5BA96CA71C045B89009DD1B0 /* ChangeCartViewController.m in Sources */,
 				5BD6D6931BD63311001524DB /* AFSecurityPolicy.m in Sources */,
 				5B93C80D1BBBB39A0081FBAF /* BackMainInterfaceViewController.m in Sources */,
+				5B13BB5D1C22687000D1B8D9 /* CellViewNode.m in Sources */,
 				5BD6D6921BD63311001524DB /* AFNetworkReachabilityManager.m in Sources */,
 				5BEC66E61BC7506F001C70FE /* CustomerGroupInfViewController.m in Sources */,
 				5B4481051BFB25B10085A2E7 /* ChangeCaddyViewController.m in Sources */,
@@ -1134,6 +1162,8 @@
 				5B52F42D1B9D7BE3004BA338 /* DBCon.m in Sources */,
 				5B9ECB131BAC113600612474 /* ChooseCreateGroupViewController.m in Sources */,
 				5B9D51EF1BA954BF006DD2C7 /* LogInViewController.m in Sources */,
+				5B13BB511C225A8C00D1B8D9 /* NoResultTableViewCell.m in Sources */,
+				5B13BB571C22671D00D1B8D9 /* NoResultMode.m in Sources */,
 				5B52F44A1B9D7C08004BA338 /* UIViewController+UICon.m in Sources */,
 				5B3B66A41C197D4000C4D557 /* QRCodeReaderView.m in Sources */,
 				5B52F4211B9D7BC3004BA338 /* HttpTools.m in Sources */,

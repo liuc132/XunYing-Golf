@@ -58,8 +58,6 @@ extern unsigned char ucHolePosition;
     self.logEmp     = [[DataTable alloc] init];
     self.cusNumbers = [[DataTable alloc] init];
     //
-    [AppDelegate storyBoardAutoLay:self.view];
-    //
     self.QRCodeWay  = NO;
     //
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"navBarBack.png"] style:UIBarButtonItemStyleDone target:self action:@selector(navBack)];
