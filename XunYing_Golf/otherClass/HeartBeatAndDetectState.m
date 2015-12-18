@@ -184,30 +184,46 @@ typedef enum eventOrder{
                 NSArray *eventInfo = receiveDic[@"Msg"][@"eveinfo"];
 //                NSLog(@"event:%@",eventInfo);
                 if ([eventInfo count]) {
+                    //
+//                    [weakSelf.lcDBCon ExecNonQuery:@"delete from tbl_taskInfo"];
+                    //
                     NSDictionary *eventDic = eventInfo[0];
                     NSString *observerName = [[NSString alloc] init];
+//                    NSMutableArray *taskInfo = [[NSMutableArray alloc] init];
+                    NSLog(@"eventDic:%@",eventDic);
                     switch ([eventDic[@"evetyp"] intValue]) {
                         case changeCaddy:
                             observerName = self.observerNameArray[_caddy];
+                            
+                            
                             break;
                         case changeCart:
                             observerName = self.observerNameArray[_cart];
+                            
+                            
                             break;
                         case jumpHole:
                             observerName = self.observerNameArray[_jump];
+                            
+                            
                             break;
                         case mendHole:
                             observerName = self.observerNameArray[_mend];
+                            
                             break;
                         case order:
                             observerName = self.observerNameArray[_order];
+                            
                             break;
                         case leaveToRest:
                             observerName = self.observerNameArray[_leave];
+                            
                             break;
                         default:
                             break;
                     }
+                    //保存数据 tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,retime text,newCartNum text,rehole text)
+                    
                     //通过通知发送到相应的界面中去
                     [[NSNotificationCenter defaultCenter] postNotificationName:observerName object:nil userInfo:eventDic];
                     //发送到事务通讯主界面中去 displayTaskResult

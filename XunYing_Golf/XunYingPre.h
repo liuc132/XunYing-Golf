@@ -59,7 +59,8 @@
 #define RequestMsgHistoryURL                [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/msgHistroyApp.htm"]
 //发送消息
 #define RequestSendMsgURL                   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/messageComm.htm"]
-
+//注册设备到服务器中的接口
+#define RequestAddDeviceURL                 [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/addPad.htm"]
 
 //#define testChangeInterface                 1
 
@@ -67,7 +68,7 @@
 
 //IMEI code
 #define TESTMIDCODE                         @"A_IMEI_864505021764438"
-#define MIDCODE                             @"A_IMEI_15000204330"
+#define MIDCODE                             @"A_IMEI_864505021764438"//@"A_IMEI_15000204330"
 //how many times send simulateGPS Data for for each GPS point
 #define GPSSendTimes    3
 

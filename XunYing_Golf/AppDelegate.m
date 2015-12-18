@@ -220,7 +220,7 @@
      hantim = "2015-12-17 17:46:38";
      subtim = "2015-12-17 17:45:29";
      */
-    [dbCon ExecDataTable:@"create table if not exists tbl_taskInfo(evecod text,evesta text,subtim text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,retime text,newCartNum text,rehole text)"];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

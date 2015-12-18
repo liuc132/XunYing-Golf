@@ -109,6 +109,10 @@ extern BOOL allowDownCourt;
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(canDownCourt:) name:@"allowDown" object:nil];
+    //
+    self.forceLogInAlert = [[UIAlertView alloc]initWithTitle:@"是否强制登录" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    self.forceLogInAlert.tag = 1;
+    
 }
 
 -(void)canDownCourt:(NSNotification *)sender
@@ -388,30 +392,49 @@ extern BOOL allowDownCourt;
                     //创建登录人信息数组
                     //1sex cadShowNum 1empcod 1empnam 1empnum 1empjob
                     //code text,job text,name text,number text,sex text,caddyLogIn text
-                    NSMutableArray *logPersonInf = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"logemp"][@"empcod"],recDic[@"Msg"][@"logemp"][@"empjob"],recDic[@"Msg"][@"logemp"][@"empnam"],recDic[@"Msg"][@"logemp"][@"empnum"],recDic[@"Msg"][@"logemp"][@"empsex"],recDic[@"Msg"][@"logemp"][@"cadShowNum"], nil];
-                    //将数据加载到创建的数据库中
-                    [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
-                    //
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        //进入建组界面，发送获取参数（球童，球车，球场的球洞），之后发送
-                        [weakSelf getCaddyCartInf];
-                        //获取客户信息
-                        [weakSelf getCustomInf];
-                        //关闭activityIndicator
-                        [weakSelf.activityIndicatorView stopAnimating];
-                        weakSelf.activityIndicatorView.hidden = YES;
+                    if ([recDic[@"Code"] intValue] > 0) {
+                        NSMutableArray *logPersonInf = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"logemp"][@"empcod"],recDic[@"Msg"][@"logemp"][@"empjob"],recDic[@"Msg"][@"logemp"][@"empnam"],recDic[@"Msg"][@"logemp"][@"empnum"],recDic[@"Msg"][@"logemp"][@"empsex"],recDic[@"Msg"][@"logemp"][@"cadShowNum"], nil];
+                        //将数据加载到创建的数据库中
+                        [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
                         //
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            if(recDic[@"Msg"][@"group"] == NULL)
-                                [weakSelf performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];
-                            else
-                            {
-                                [weakSelf performSegueWithIdentifier:@"directToWaitingDown" sender:nil];
-                            }
+                            //进入建组界面，发送获取参数（球童，球车，球场的球洞），之后发送
+                            [weakSelf getCaddyCartInf];
+                            //获取客户信息
+                            [weakSelf getCustomInf];
+                            //关闭activityIndicator
+                            [weakSelf.activityIndicatorView stopAnimating];
+                            weakSelf.activityIndicatorView.hidden = YES;
+                            //
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if(recDic[@"Msg"][@"group"] == NULL)
+                                    [weakSelf performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];
+                                else
+                                {
+                                    [weakSelf performSegueWithIdentifier:@"directToWaitingDown" sender:nil];
+                                }
+                                
+                            });
                             
                         });
-                        
-                    });
+                    }
+                    //如果没有在系统中注册则调用注册接口
+                    if ([recDic[@"Code"] intValue] == -2) {
+                        //组装数据
+                        NSMutableDictionary *addDeviceParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"padtag",@"",@"phoneNum", nil];
+                        [HttpTools getHttp:RequestAddDeviceURL forParams:addDeviceParam success:^(NSData *nsData){
+                            NSLog(@"successfully requested");
+                            NSDictionary *recDic1 = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+                            
+                            NSLog(@"recDic:%@",recDic1);
+                            
+                            
+                        }failure:^(NSError *err){
+                            NSLog(@"request failled");
+                            
+                            
+                        }];
+                    }
                     
                 }failure:^(NSError *err){
                     NSLog(@"强制登录失败");
@@ -520,9 +543,6 @@ extern BOOL allowDownCourt;
             //handle error
             NSLog(@"Code:%@",reDic[@"Code"]);
             NSLog(@"message is:%@",reDic[@"Msg"]);
-            
-            strongSelf.forceLogInAlert = [[UIAlertView alloc]initWithTitle:@"是否强制登录" message:nil delegate:strongSelf cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-            strongSelf.forceLogInAlert.tag = 1;
             
             if([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
             {
@@ -651,7 +671,8 @@ extern BOOL allowDownCourt;
         }
         else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]])
         {
-            
+            //现实需要强制登录
+            [strongSelf.forceLogInAlert show];
         }
         else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:1]])
         {

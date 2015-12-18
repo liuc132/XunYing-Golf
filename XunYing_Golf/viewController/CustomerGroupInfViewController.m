@@ -103,11 +103,12 @@
         weakSelf.allHoleInfo = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_holeInf"];
         weakSelf.curSelectedCustomers = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_CustomersInfo"];
         weakSelf.selectedCartInfo     = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_selectCart"];
+        //将相应的信息显示出来
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf constructDisInf];
+        });
     });
-    //将相应的信息显示出来
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf constructDisInf];
-    });
+    
     
     NSLog(@"finish search");
 }
