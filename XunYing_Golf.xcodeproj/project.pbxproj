@@ -18,12 +18,13 @@
 		5B11C52F1B8EDD4700382C9B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B11C52E1B8EDD4700382C9B /* Images.xcassets */; };
 		5B11C5321B8EDD4700382C9B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B11C5301B8EDD4700382C9B /* LaunchScreen.xib */; };
 		5B11C53E1B8EDD4700382C9B /* XunYing_GolfTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B11C53D1B8EDD4700382C9B /* XunYing_GolfTests.m */; };
-		5B136ACF1BDA15BF003BA918 /* SlowBallTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */; };
 		5B13BB511C225A8C00D1B8D9 /* NoResultTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB501C225A8C00D1B8D9 /* NoResultTableViewCell.m */; };
 		5B13BB541C225AA600D1B8D9 /* HaveResultTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB531C225AA600D1B8D9 /* HaveResultTableViewCell.m */; };
 		5B13BB571C22671D00D1B8D9 /* NoResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB561C22671D00D1B8D9 /* NoResultMode.m */; };
 		5B13BB5A1C22682900D1B8D9 /* HaveResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB591C22682900D1B8D9 /* HaveResultMode.m */; };
 		5B13BB5D1C22687000D1B8D9 /* CellViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */; };
+		5B33ACF71C27F6D60073737F /* SlowBallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33ACF61C27F6D60073737F /* SlowBallViewController.m */; };
+		5B33ACFA1C27FEC70073737F /* TaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33ACF91C27FEC70073737F /* TaskTableViewCell.m */; };
 		5B33DDE91C2136AE00C62DF7 /* HeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE61C2136AE00C62DF7 /* HeadView.m */; };
 		5B33DDEA1C2136AE00C62DF7 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE81C2136AE00C62DF7 /* MessageCell.m */; };
 		5B33DDEE1C2139EB00C62DF7 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDED1C2139EB00C62DF7 /* ChatViewController.m */; };
@@ -34,6 +35,7 @@
 		5B3B66A51C197D4000C4D557 /* QRCodeReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B66A21C197D4000C4D557 /* QRCodeReaderViewController.m */; };
 		5B3B66A71C19819600C4D557 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B66A61C19819600C4D557 /* beep.wav */; };
 		5B4481051BFB25B10085A2E7 /* ChangeCaddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4481041BFB25B10085A2E7 /* ChangeCaddyViewController.m */; };
+		5B4B2EE91C27900D0058A713 /* TaskDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4B2EE81C27900D0058A713 /* TaskDetailViewController.m */; };
 		5B4E33E11BAFE415000693B3 /* ic_launcher.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4E33E01BAFE415000693B3 /* ic_launcher.png */; };
 		5B4E33E81BAFE76C000693B3 /* WaitToPlayTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4E33E71BAFE76C000693B3 /* WaitToPlayTableViewController.m */; };
 		5B52F4161B9D7973004BA338 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B52F4151B9D7973004BA338 /* MainViewController.m */; };
@@ -145,8 +147,6 @@
 		5B11C5371B8EDD4700382C9B /* XunYing_GolfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XunYing_GolfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B11C53C1B8EDD4700382C9B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B11C53D1B8EDD4700382C9B /* XunYing_GolfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XunYing_GolfTests.m; sourceTree = "<group>"; };
-		5B136ACD1BDA15BF003BA918 /* SlowBallTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlowBallTableViewController.h; path = viewController/SlowBallTableViewController.h; sourceTree = "<group>"; };
-		5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlowBallTableViewController.m; path = viewController/SlowBallTableViewController.m; sourceTree = "<group>"; };
 		5B13BB4F1C225A8C00D1B8D9 /* NoResultTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoResultTableViewCell.h; path = viewController/NoResultTableViewCell.h; sourceTree = "<group>"; };
 		5B13BB501C225A8C00D1B8D9 /* NoResultTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NoResultTableViewCell.m; path = viewController/NoResultTableViewCell.m; sourceTree = "<group>"; };
 		5B13BB521C225AA600D1B8D9 /* HaveResultTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HaveResultTableViewCell.h; path = viewController/HaveResultTableViewCell.h; sourceTree = "<group>"; };
@@ -157,6 +157,10 @@
 		5B13BB591C22682900D1B8D9 /* HaveResultMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HaveResultMode.m; path = viewController/HaveResultMode.m; sourceTree = "<group>"; };
 		5B13BB5B1C22687000D1B8D9 /* CellViewNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellViewNode.h; path = viewController/CellViewNode.h; sourceTree = "<group>"; };
 		5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellViewNode.m; path = viewController/CellViewNode.m; sourceTree = "<group>"; };
+		5B33ACF51C27F6D60073737F /* SlowBallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlowBallViewController.h; path = viewController/SlowBallViewController.h; sourceTree = "<group>"; };
+		5B33ACF61C27F6D60073737F /* SlowBallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlowBallViewController.m; path = viewController/SlowBallViewController.m; sourceTree = "<group>"; };
+		5B33ACF81C27FEC70073737F /* TaskTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskTableViewCell.h; path = viewController/TaskTableViewCell.h; sourceTree = "<group>"; };
+		5B33ACF91C27FEC70073737F /* TaskTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskTableViewCell.m; path = viewController/TaskTableViewCell.m; sourceTree = "<group>"; };
 		5B33DDE51C2136AE00C62DF7 /* HeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadView.h; sourceTree = "<group>"; };
 		5B33DDE61C2136AE00C62DF7 /* HeadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadView.m; sourceTree = "<group>"; };
 		5B33DDE71C2136AE00C62DF7 /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
@@ -177,6 +181,8 @@
 		5B3B66A61C19819600C4D557 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
 		5B4481031BFB25B10085A2E7 /* ChangeCaddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangeCaddyViewController.h; path = viewController/ChangeCaddyViewController.h; sourceTree = "<group>"; };
 		5B4481041BFB25B10085A2E7 /* ChangeCaddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChangeCaddyViewController.m; path = viewController/ChangeCaddyViewController.m; sourceTree = "<group>"; };
+		5B4B2EE71C27900D0058A713 /* TaskDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskDetailViewController.h; path = viewController/TaskDetailViewController.h; sourceTree = "<group>"; };
+		5B4B2EE81C27900D0058A713 /* TaskDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskDetailViewController.m; path = viewController/TaskDetailViewController.m; sourceTree = "<group>"; };
 		5B4E33E01BAFE415000693B3 /* ic_launcher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_launcher.png; path = image/ic_launcher.png; sourceTree = "<group>"; };
 		5B4E33E61BAFE76C000693B3 /* WaitToPlayTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WaitToPlayTableViewController.h; path = viewController/WaitToPlayTableViewController.h; sourceTree = "<group>"; };
 		5B4E33E71BAFE76C000693B3 /* WaitToPlayTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WaitToPlayTableViewController.m; path = viewController/WaitToPlayTableViewController.m; sourceTree = "<group>"; };
@@ -525,6 +531,17 @@
 			name = changeCaddy;
 			sourceTree = "<group>";
 		};
+		5B4B2EE61C278FBE0058A713 /* detailViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5B4B2EE71C27900D0058A713 /* TaskDetailViewController.h */,
+				5B4B2EE81C27900D0058A713 /* TaskDetailViewController.m */,
+				5B33ACF81C27FEC70073737F /* TaskTableViewCell.h */,
+				5B33ACF91C27FEC70073737F /* TaskTableViewCell.m */,
+			);
+			name = detailViewController;
+			sourceTree = "<group>";
+		};
 		5B4E33E21BAFE6C7000693B3 /* waitToPlay */ = {
 			isa = PBXGroup;
 			children = (
@@ -658,8 +675,8 @@
 		5B93C8021BBB912A0081FBAF /* slowBallNotice */ = {
 			isa = PBXGroup;
 			children = (
-				5B136ACD1BDA15BF003BA918 /* SlowBallTableViewController.h */,
-				5B136ACE1BDA15BF003BA918 /* SlowBallTableViewController.m */,
+				5B33ACF51C27F6D60073737F /* SlowBallViewController.h */,
+				5B33ACF61C27F6D60073737F /* SlowBallViewController.m */,
 			);
 			name = slowBallNotice;
 			sourceTree = "<group>";
@@ -709,6 +726,7 @@
 		5B93C8161BBBDD530081FBAF /* CurrentTaskCenter */ = {
 			isa = PBXGroup;
 			children = (
+				5B4B2EE61C278FBE0058A713 /* detailViewController */,
 				5BF0ECA61C21705700945877 /* cellXibview */,
 				5B93C8171BBBDD8B0081FBAF /* CurTaskCenterTableViewController.h */,
 				5B93C8181BBBDD8B0081FBAF /* CurTaskCenterTableViewController.m */,
@@ -1128,6 +1146,7 @@
 				5BB97AC81B9EB8CA00A27809 /* SettingViewController.m in Sources */,
 				5B4E33E81BAFE76C000693B3 /* WaitToPlayTableViewController.m in Sources */,
 				5BF321421C1FFEFD005A0DF6 /* UIImage+ResizeImage.m in Sources */,
+				5B33ACF71C27F6D60073737F /* SlowBallViewController.m in Sources */,
 				5BF3213A1C1FFD5C005A0DF6 /* Friend.m in Sources */,
 				5BC136B41B93EFD500FF1CB1 /* TOUCHOverlayWindow.m in Sources */,
 				5BA96CAB1C0469F1009DD1B0 /* LeaveRestViewController.m in Sources */,
@@ -1140,8 +1159,8 @@
 				5BD6D6921BD63311001524DB /* AFNetworkReachabilityManager.m in Sources */,
 				5BEC66E61BC7506F001C70FE /* CustomerGroupInfViewController.m in Sources */,
 				5B4481051BFB25B10085A2E7 /* ChangeCaddyViewController.m in Sources */,
+				5B33ACFA1C27FEC70073737F /* TaskTableViewCell.m in Sources */,
 				5B93C8151BBBBED20081FBAF /* PersonalCenterViewController.m in Sources */,
-				5B136ACF1BDA15BF003BA918 /* SlowBallTableViewController.m in Sources */,
 				5B52F42E1B9D7BE3004BA338 /* PinYin.m in Sources */,
 				5B52F42B1B9D7BE3004BA338 /* ChineseString.m in Sources */,
 				5BD6D68F1BD63311001524DB /* AFHTTPRequestOperation.m in Sources */,
@@ -1152,6 +1171,7 @@
 				5B3A14D91BB2486B008AA668 /* PlayProcessViewController.m in Sources */,
 				5B93C8191BBBDD8B0081FBAF /* CurTaskCenterTableViewController.m in Sources */,
 				5BF3213B1C1FFD5C005A0DF6 /* FriendGroup.m in Sources */,
+				5B4B2EE91C27900D0058A713 /* TaskDetailViewController.m in Sources */,
 				5B588E171BE891D900D2B327 /* GetGPSLocationData.m in Sources */,
 				5B52F4441B9D7C08004BA338 /* UIColor+UICon.m in Sources */,
 				5B52F4421B9D7C08004BA338 /* NSDate+Con.m in Sources */,

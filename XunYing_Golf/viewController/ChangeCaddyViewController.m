@@ -12,6 +12,7 @@
 #import "DBCon.h"
 #import "DataTable.h"
 #import "UIColor+UICon.h"
+#import "TaskDetailViewController.h"
 
 typedef enum ChangeReason{
     CaddyRequest = 21,
@@ -323,7 +324,7 @@ typedef enum ChangeReason{
             
             
             //执行跳转程序
-            [weakSelf dismissViewControllerAnimated:YES completion:nil];
+            [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
             
         }
         
@@ -338,4 +339,15 @@ typedef enum ChangeReason{
     [self dismissViewControllerAnimated:YES completion:nil];
     
 }
+
+//将相应的信息传到相应的界面中
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    TaskDetailViewController *taskViewController = segue.destinationViewController;
+    taskViewController.taskTypeName = @"更换球童详情";
+    
+}
+
+
+
 @end

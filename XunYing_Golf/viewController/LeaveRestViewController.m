@@ -12,6 +12,7 @@
 #import "DBCon.h"
 #import "XunYingPre.h"
 #import "HttpTools.h"
+#import "TaskDetailViewController.h"
 
 @interface LeaveRestViewController ()<UIPickerViewDataSource,UIPickerViewDelegate>
 {
@@ -84,12 +85,12 @@
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    CurTaskCenterTableViewController *curTaskMainView = segue.destinationViewController;
-    curTaskMainView.leaveTime = @"2015-10-9 15:12:40";
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    // Get the new view controller using [segue destinationViewController].
+//    // Pass the selected object to the new view controller.
+//    CurTaskCenterTableViewController *curTaskMainView = segue.destinationViewController;
+//    curTaskMainView.leaveTime = @"2015-10-9 15:12:40";
+//}
 
 
 - (IBAction)recoverTimeComfirm:(UIButton *)sender {
@@ -102,6 +103,7 @@
 
 - (IBAction)requestToLeave:(UIButton *)sender {
     NSLog(@"enter to leave");
+    __weak typeof(self) weakSelf = self;
     //判断所取得的数据是否为空
     if (![self.logPerson.Rows count]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请求异常" message:@"参数为空" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
@@ -116,10 +118,14 @@
         //
         if ([recDic[@"Code"] intValue] > 0) {
             
-        }
-        else
-        {
             
+            //
+            [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
+        }
+        else if([recDic[@"Code"] intValue] == -7)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"你已经发起过离场休息申请" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];  
         }
         
         
@@ -187,6 +193,14 @@
 -(CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
     return 40.0;
+}
+
+//将相应的信息传到相应的界面中
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    TaskDetailViewController *taskViewController = segue.destinationViewController;
+    taskViewController.taskTypeName = @"离场休息详情";
+    
 }
 
 @end

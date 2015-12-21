@@ -12,6 +12,7 @@
 #import "DBCon.h"
 #import "DataTable.h"
 #import "UIColor+UICon.h"
+#import "TaskDetailViewController.h"
 
 typedef enum ChangeReason{
     LowPowerRequest = 11,
@@ -146,7 +147,13 @@ typedef enum ChangeReason{
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"recDic:%@",recDic);
         //
-//        [weakSelf dismissViewControllerAnimated:YES completion:nil];
+        if (recDic[@"Code"]) {
+            
+            
+            //
+            [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
+            
+        }
         
     }failure:^(NSError *err){
         NSLog(@"request failled and err:%@",err);
@@ -285,4 +292,13 @@ typedef enum ChangeReason{
     
     
 }
+
+//将相应的信息传到相应的界面中
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    TaskDetailViewController *taskViewController = segue.destinationViewController;
+    taskViewController.taskTypeName = @"更换球车详情";
+    
+}
+
 @end

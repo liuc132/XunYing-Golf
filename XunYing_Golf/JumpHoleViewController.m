@@ -12,6 +12,7 @@
 #import "UIColor+UICon.h"
 #import "DataTable.h"
 #import "DBCon.h"
+#import "TaskDetailViewController.h"
 
 #define CurrentHole     @"5ccd73"
 #define SelectedHole    @"f74c30"
@@ -150,7 +151,8 @@
         
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"code:%@  msg:%@",recDic[@"Code"],recDic[@"Msg"]);
-        [strongSelf dismissViewControllerAnimated:YES completion:nil];
+//        [strongSelf dismissViewControllerAnimated:YES completion:nil];
+        [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
         
         
     }failure:^(NSError *err){
@@ -160,7 +162,13 @@
     }];
     
 }
-
+//将相应的信息传到相应的界面中
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    TaskDetailViewController *taskViewController = segue.destinationViewController;
+    taskViewController.taskTypeName = @"跳洞详情";
+    
+}
 
 
 @end

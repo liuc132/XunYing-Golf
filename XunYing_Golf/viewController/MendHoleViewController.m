@@ -11,6 +11,7 @@
 #import "DataTable.h"
 #import "DBCon.h"
 #import "XunYingPre.h"
+#import "TaskDetailViewController.h"
 
 @interface MendHoleViewController ()
 
@@ -138,7 +139,13 @@
         NSDictionary *recDictionary = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         
         NSLog(@"returnMsg:%@",recDictionary[@"Msg"]);
-        [strongSelf dismissViewControllerAnimated:YES completion:nil];
+        
+        //
+        if (recDictionary[@"Code"] > 0) {
+            [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];                                                                                    
+        }
+        
+        
         
     }failure:^(NSError *err){
         NSLog(@"fail request mend");
@@ -153,4 +160,14 @@
 //    [self performSegueWithIdentifier:@"toMoreMain1" sender:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+//将相应的信息传到相应的界面中
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    TaskDetailViewController *taskViewController = segue.destinationViewController;
+    taskViewController.taskTypeName = @"补洞详情";
+    
+}
+
+
 @end
