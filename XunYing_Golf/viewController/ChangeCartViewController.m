@@ -30,6 +30,7 @@ typedef enum ChangeReason{
 @property (strong, nonatomic) DataTable *logPerson;
 @property (strong, nonatomic) DataTable *groupInfo;
 @property (strong, nonatomic) DataTable *cartInfo;
+@property (strong, nonatomic) DataTable *changeCartResult;
 @property (strong, nonatomic) NSString  *changeReasonStr;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
 
@@ -63,6 +64,7 @@ typedef enum ChangeReason{
     self.logPerson = [[DataTable alloc] init];
     self.cartInfo  = [[DataTable alloc] init];
     self.groupInfo = [[DataTable alloc] init];
+    self.changeCartResult = [[DataTable alloc] init];
     //
     self.changeReasonStr = [NSString stringWithFormat:@"%d",LowPowerRequest];
     //init a notificationcenter
@@ -77,6 +79,14 @@ typedef enum ChangeReason{
 //    [self.view removeFromSuperview];
     
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear: animated];
+    
+    NSLog(@"enter viewwilldisappear");
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -147,8 +157,11 @@ typedef enum ChangeReason{
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"recDic:%@",recDic);
         //
-        if (recDic[@"Code"]) {
-            
+        if ([recDic[@"Code"] intValue] > 0) {
+            //获取到服务器返回的结果，并将相应的结果保存在本地数据库中 tbl_taskChangeCartInfo(evecod text,evesta text,subtim text,newCartNum text,result text,everea text)
+            NSDictionary *allMsg = recDic[@"Msg"];
+            NSMutableArray *changeCartBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"evesta"],allMsg[@"subtim"],@"",allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"], nil];
+            [self.lcDBCon ExecNonQuery:@"insert into tbl_taskChangeCartInfo(evecod,evesta,subtim,newCartNum,result,everea) values(?,?,?,?,?,?)" forParameter:changeCartBackInfo];
             
             //
             [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
@@ -296,8 +309,36 @@ typedef enum ChangeReason{
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    __weak typeof(self) weakSelf = self;
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"更换球车详情";
+    //
+    self.changeCartResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskChangeCartInfo"];
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        if ([self.changeCartResult.Rows count]) {
+            //
+            NSString *resultStr = [[NSString alloc] init];
+            switch ([weakSelf.changeCartResult.Rows[0][@"result"] intValue]) {
+                case 0:
+                    resultStr = @"待处理";
+                    break;
+                case 1:
+                    resultStr = @"同意";
+                    break;
+                case 2:
+                    resultStr = @"不同意";
+                    break;
+                default:
+                    break;
+            }
+            
+            taskViewController.taskStatus = resultStr;
+            taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.logPerson.Rows[0][@"number"],weakSelf.logPerson.Rows[0][@"name"]];
+            taskViewController.taskRequstTime = weakSelf.changeCartResult.Rows[0][@"subtim"];
+        }
+        
+        
+    });
     
 }
 

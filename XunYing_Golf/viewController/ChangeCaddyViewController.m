@@ -67,6 +67,9 @@ typedef enum ChangeReason{
 //    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondListCaddy:)];
 //    tapGesture.delegate = self;
 //    [self.view addGestureRecognizer:tapGesture];
+    
+    self.caddyView1.layer.cornerRadius = 30.0;
+    self.caddyView1.layer.masksToBounds = YES;
     //
     self.lcDBCon = [[DBCon alloc] init];
     self.requestPerson = [[DataTable alloc] init];

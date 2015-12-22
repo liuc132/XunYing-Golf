@@ -12,7 +12,7 @@
 #import "MessageCell.h"
 #import "DBCon.h"
 #import "DataTable.h"
-#import "TaskTableViewCell.h"
+#import "XunYingPre.h"
 
 
 #define kToolBarH 44
@@ -25,31 +25,34 @@
     UIImageView *_toolBar;
 }
 
+@property (strong, nonatomic) UITableView *lcChatView;
+
+
 @property (strong, nonatomic) IBOutlet UINavigationBar *theNav;
 @property (strong, nonatomic) IBOutlet UILabel *statusDisLabel;
 @property (strong, nonatomic) IBOutlet UIView *jumpHoleDetailView;
 @property (strong, nonatomic) IBOutlet UINavigationItem *navigationItemDetail;
 //三行事件视图
-@property (strong, nonatomic) IBOutlet UIView *threeLineView;//整个视图
 @property (strong, nonatomic) IBOutlet UILabel *threeLineReqTime;//申请时间
+
 @property (strong, nonatomic) IBOutlet UILabel *threeLineReqPerson;//申请人
 @property (strong, nonatomic) IBOutlet UILabel *taskReqName;//请求事件名称
 @property (strong, nonatomic) IBOutlet UILabel *taskReqDetail;//请求事件详情
-@property (strong, nonatomic) IBOutlet TaskTableViewCell *threeLineTableCell;
+@property (strong, nonatomic) IBOutlet UITableView *threeLineTableView;
+
 
 //四行事件视图
-@property (strong, nonatomic) IBOutlet UIView *fourLineView;//真个视图
 @property (strong, nonatomic) IBOutlet UILabel *fourLineReqTime;//请求时间
 @property (strong, nonatomic) IBOutlet UILabel *fourLineReqPerson;//请求人
-@property (strong, nonatomic) IBOutlet UILabel *fourLineReqDetail;//请求事件详情
 @property (strong, nonatomic) IBOutlet UILabel *fourLineReqName;//请求事件名称
+@property (strong, nonatomic) IBOutlet UILabel *fourLineReqDetail;//请求事件详情
 @property (strong, nonatomic) IBOutlet UILabel *fourLineHandleName;//处理结果名称
 @property (strong, nonatomic) IBOutlet UILabel *fourLineHandleResult;//处理结果详情
-@property (strong, nonatomic) IBOutlet TaskTableViewCell *fourLineTableCell;
+@property (strong, nonatomic) IBOutlet UITableView *fourLineTableView;
+
 
 
 //五行事件视图
-@property (strong, nonatomic) IBOutlet UIView *fiveLineView;//整个视图
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineReqTime;//请求时间
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineReqPerson;//请求人
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineReqName;//事件请求名称
@@ -57,8 +60,12 @@
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineHandleName;//事件处理结果名称
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineHandleDetail;//事件处理结果详情
 @property (strong, nonatomic) IBOutlet UILabel *rebackHandleName;//恢复事件名称
-@property (strong, nonatomic) IBOutlet UILabel *rebackHandleDetail;//恢复时间详情
-@property (strong, nonatomic) IBOutlet TaskTableViewCell *fiveLineTableCell;
+@property (strong, nonatomic) IBOutlet UILabel *rebackHandleDetail;//恢复事件详情
+@property (strong, nonatomic) IBOutlet UITableView *fiveLineTableView;
+
+
+@property (strong, nonatomic) IBOutlet UITableView *detailInfoTableView;
+
 
 //
 - (IBAction)backToTaskList:(UIBarButtonItem *)sender;
@@ -71,11 +78,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
     
-    self.threeLineView.frame = CGRectMake(0, self.theNav.frame.size.height + self.theNav.frame.origin.y + self.statusDisLabel.frame.size.height + self.statusDisLabel.frame.origin.y, self.threeLineView.frame.size.width, self.threeLineView.frame.size.height);
-    
-    [self.view addSubview:self.threeLineView];
+//    self.threeLineTableView.frame = CGRectMake(0, self.theNav.frame.size.height + self.theNav.frame.origin.y + self.statusDisLabel.frame.size.height + self.statusDisLabel.frame.origin.y, self.threeLineTableView.frame.size.width, self.threeLineTableView.frame.size.height);
+//    
+//    [self.view addSubview:self.threeLineTableView];
     
     //0.加载数据
     [self loadData];
@@ -85,6 +95,19 @@
     
     //2.工具栏
     [self addToolBar];
+    
+    //添加当前事务详情的状态栏
+    [self.statusDisLabel setFrame:CGRectMake(0, self.theNav.frame.origin.y + self.theNav.frame.size.height, ScreenWidth, self.statusDisLabel.frame.size.height)];
+    
+    [self.view addSubview:self.statusDisLabel];
+    //添加当前事务详情的详细列表
+    [self.threeLineTableView setFrame:CGRectMake(0, self.statusDisLabel.frame.origin.y + self.statusDisLabel.frame.size.height, ScreenWidth, self.threeLineTableView.frame.size.height)];
+    [self.view addSubview:self.threeLineTableView];
+    //
+    self.threeLineTableView.dataSource = self;
+    self.threeLineTableView.delegate   = self;
+    
+    NSLog(@"threeTable%@",self.threeLineTableView);
     
 }
 
@@ -117,17 +140,17 @@
 - (void)addChatView
 {
     self.jumpHoleDetailView.backgroundColor = [UIColor colorWithRed:235.0/255 green:235.0/255 blue:235.0/255 alpha:1.0];
-    UITableView *chatView = [[UITableView alloc] init];
-    chatView.frame = CGRectMake(0, self.theNav.frame.size.height + self.theNav.frame.origin.y + self.statusDisLabel.frame.size.height + self.statusDisLabel.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height - kToolBarH - (self.theNav.frame.size.height + self.theNav.frame.origin.y + self.statusDisLabel.frame.size.height + self.statusDisLabel.frame.origin.y + 2*kToolBarH));
-    chatView.backgroundColor = [UIColor colorWithRed:235.0/255 green:235.0/255 blue:235.0/255 alpha:1.0];
-    chatView.delegate = self;
-    chatView.dataSource = self;
-    chatView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    chatView.allowsSelection = NO;
-    [chatView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEdit)]];
-    _chatView = chatView;
+    self.lcChatView = [[UITableView alloc] init];
+    self.lcChatView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.jumpHoleDetailView.frame.size.height - kToolBarH);
+    self.lcChatView.backgroundColor = [UIColor colorWithRed:235.0/255 green:235.0/255 blue:235.0/255 alpha:1.0];
+    self.lcChatView.delegate = self;
+    self.lcChatView.dataSource = self;
+    self.lcChatView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.lcChatView.allowsSelection = NO;
+    [self.lcChatView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEdit)]];
+    _chatView = self.lcChatView;
     
-    [self.jumpHoleDetailView addSubview:chatView];
+    [self.jumpHoleDetailView addSubview:self.lcChatView];
 }
 /**
  *  添加工具栏
@@ -135,7 +158,7 @@
 - (void)addToolBar
 {
     UIImageView *bgView = [[UIImageView alloc] init];
-    bgView.frame = CGRectMake(0, self.jumpHoleDetailView.frame.size.height - kToolBarH, self.jumpHoleDetailView.frame.size.width, kToolBarH);
+    bgView.frame = CGRectMake(0, self.jumpHoleDetailView.frame.size.height - kToolBarH, self.view.frame.size.width, kToolBarH);
     bgView.image = [UIImage imageNamed:@"chat_bottom_bg"];
     bgView.userInteractionEnabled = YES;
     _toolBar = bgView;
@@ -161,7 +184,7 @@
     textField.enablesReturnKeyAutomatically = YES;
     textField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, 1)];
     textField.leftViewMode = UITextFieldViewModeAlways;
-    textField.frame = CGRectMake(kToolBarH, (kToolBarH - kTextFieldH) * 0.5, self.view.frame.size.width - 3 * kToolBarH, kTextFieldH);
+    textField.frame = CGRectMake(kToolBarH, (kToolBarH - kTextFieldH) * 0.5, self.jumpHoleDetailView.frame.size.width - 3 * kToolBarH, kTextFieldH);
     textField.background = [UIImage imageNamed:@"chat_bottom_textfield"];
     textField.delegate = self;
     [bgView addSubview:textField];
@@ -170,33 +193,62 @@
 #pragma mark - tableView的数据源和代理方法
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _cellFrameDatas.count;
+    NSInteger numOfRows;
+    if (tableView == self.lcChatView) {
+        numOfRows = _cellFrameDatas.count;
+    }
+    else
+    {
+        numOfRows = 4;
+    }
+    
+    return numOfRows;
 }
 
 - (MessageCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"cell";
-    
     MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (cell == nil) {
-        cell = [[MessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    if (tableView == self.lcChatView) {
+        
+        if (cell == nil) {
+            cell = [[MessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        }
+        
+        cell.cellFrame = _cellFrameDatas[indexPath.row];
+        
+    }
+    else
+    {
+        if (cell == nil) {
+            cell = [[MessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.detailTextLabel.text = self.taskRequestPerson;
+        }
     }
     
-    cell.cellFrame = _cellFrameDatas[indexPath.row];
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CellFrameModel *cellFrame = _cellFrameDatas[indexPath.row];
-    return cellFrame.cellHeght;
+    CGFloat height;
+    if (tableView == self.lcChatView) {
+        CellFrameModel *cellFrame = _cellFrameDatas[indexPath.row];
+        height = cellFrame.cellHeght;
+    }
+    else
+    {
+        height = 40.0f;
+    }
+    
+    return height;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [self.view endEditing:YES];
+    self.threeLineTableView.hidden = NO;
 }
 
 #pragma mark - UITextField的代理方法
@@ -235,7 +287,13 @@
 
 - (void)endEdit
 {
-    [self.view endEditing:YES];
+//    [self.view endEditing:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.view endEditing:YES];
+        self.threeLineTableView.hidden = NO;
+    });
+    
+//    [self.jumpHoleDetailView endEditing:YES];
 }
 
 /**
@@ -249,9 +307,11 @@
     
     CGRect keyFrame = [userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
     CGFloat moveY = keyFrame.origin.y - self.view.frame.size.height;
+    //
+    self.threeLineTableView.hidden = YES;
     
     [UIView animateWithDuration:duration animations:^{
-        self.view.transform = CGAffineTransformMakeTranslation(0, moveY);
+        self.jumpHoleDetailView.transform = CGAffineTransformMakeTranslation(0, moveY);
     }];
 }
 - (void)didReceiveMemoryWarning {

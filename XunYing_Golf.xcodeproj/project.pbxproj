@@ -23,8 +23,8 @@
 		5B13BB571C22671D00D1B8D9 /* NoResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB561C22671D00D1B8D9 /* NoResultMode.m */; };
 		5B13BB5A1C22682900D1B8D9 /* HaveResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB591C22682900D1B8D9 /* HaveResultMode.m */; };
 		5B13BB5D1C22687000D1B8D9 /* CellViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */; };
+		5B3283731C28F8EA0054522D /* DetailInformationTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3283721C28F8EA0054522D /* DetailInformationTableView.m */; };
 		5B33ACF71C27F6D60073737F /* SlowBallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33ACF61C27F6D60073737F /* SlowBallViewController.m */; };
-		5B33ACFA1C27FEC70073737F /* TaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33ACF91C27FEC70073737F /* TaskTableViewCell.m */; };
 		5B33DDE91C2136AE00C62DF7 /* HeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE61C2136AE00C62DF7 /* HeadView.m */; };
 		5B33DDEA1C2136AE00C62DF7 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE81C2136AE00C62DF7 /* MessageCell.m */; };
 		5B33DDEE1C2139EB00C62DF7 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDED1C2139EB00C62DF7 /* ChatViewController.m */; };
@@ -95,6 +95,7 @@
 		5BD6D69E1BD6359A001524DB /* BLLocationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6D69B1BD6359A001524DB /* BLLocationProvider.m */; };
 		5BD6D69F1BD6359A001524DB /* BLMessageProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6D69D1BD6359A001524DB /* BLMessageProvider.m */; };
 		5BDC837B1BA2B1B500E69940 /* TaskComViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */; };
+		5BE599621C2900480071D062 /* LaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE599611C2900480071D062 /* LaunchViewController.m */; };
 		5BE7172E1BB8EDC40080C6F4 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE7172D1BB8EDC40080C6F4 /* Reachability.m */; };
 		5BEA92711BB1077200EAC9BE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEA926E1BB1077200EAC9BE /* FontAwesome.ttf */; };
 		5BEA92721BB1077200EAC9BE /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEA92701BB1077200EAC9BE /* NSString+FontAwesome.m */; };
@@ -157,10 +158,10 @@
 		5B13BB591C22682900D1B8D9 /* HaveResultMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HaveResultMode.m; path = viewController/HaveResultMode.m; sourceTree = "<group>"; };
 		5B13BB5B1C22687000D1B8D9 /* CellViewNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellViewNode.h; path = viewController/CellViewNode.h; sourceTree = "<group>"; };
 		5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellViewNode.m; path = viewController/CellViewNode.m; sourceTree = "<group>"; };
+		5B3283711C28F8EA0054522D /* DetailInformationTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailInformationTableView.h; sourceTree = "<group>"; };
+		5B3283721C28F8EA0054522D /* DetailInformationTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailInformationTableView.m; sourceTree = "<group>"; };
 		5B33ACF51C27F6D60073737F /* SlowBallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlowBallViewController.h; path = viewController/SlowBallViewController.h; sourceTree = "<group>"; };
 		5B33ACF61C27F6D60073737F /* SlowBallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlowBallViewController.m; path = viewController/SlowBallViewController.m; sourceTree = "<group>"; };
-		5B33ACF81C27FEC70073737F /* TaskTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskTableViewCell.h; path = viewController/TaskTableViewCell.h; sourceTree = "<group>"; };
-		5B33ACF91C27FEC70073737F /* TaskTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskTableViewCell.m; path = viewController/TaskTableViewCell.m; sourceTree = "<group>"; };
 		5B33DDE51C2136AE00C62DF7 /* HeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadView.h; sourceTree = "<group>"; };
 		5B33DDE61C2136AE00C62DF7 /* HeadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeadView.m; sourceTree = "<group>"; };
 		5B33DDE71C2136AE00C62DF7 /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
@@ -290,6 +291,8 @@
 		5BD6D69D1BD6359A001524DB /* BLMessageProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLMessageProvider.m; sourceTree = "<group>"; };
 		5BDC83791BA2B1B500E69940 /* TaskComViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskComViewController.h; sourceTree = "<group>"; };
 		5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskComViewController.m; sourceTree = "<group>"; };
+		5BE599601C2900480071D062 /* LaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LaunchViewController.h; path = viewController/LaunchViewController.h; sourceTree = "<group>"; };
+		5BE599611C2900480071D062 /* LaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LaunchViewController.m; path = viewController/LaunchViewController.m; sourceTree = "<group>"; };
 		5BE7172C1BB8EDC40080C6F4 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		5BE7172D1BB8EDC40080C6F4 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		5BEA91F01BB0E27000EAC9BE /* FontAwesome1111.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome1111.ttf; sourceTree = "<group>"; };
@@ -422,6 +425,8 @@
 				5B11C5221B8EDD4700382C9B /* Info.plist */,
 				5B11C5231B8EDD4700382C9B /* main.m */,
 				5B52F7291B9D88A2004BA338 /* XunYingPre.h */,
+				5BE599601C2900480071D062 /* LaunchViewController.h */,
+				5BE599611C2900480071D062 /* LaunchViewController.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -536,8 +541,8 @@
 			children = (
 				5B4B2EE71C27900D0058A713 /* TaskDetailViewController.h */,
 				5B4B2EE81C27900D0058A713 /* TaskDetailViewController.m */,
-				5B33ACF81C27FEC70073737F /* TaskTableViewCell.h */,
-				5B33ACF91C27FEC70073737F /* TaskTableViewCell.m */,
+				5B3283711C28F8EA0054522D /* DetailInformationTableView.h */,
+				5B3283721C28F8EA0054522D /* DetailInformationTableView.m */,
 			);
 			name = detailViewController;
 			sourceTree = "<group>";
@@ -1129,6 +1134,7 @@
 				5BF3213C1C1FFD5C005A0DF6 /* MessageModel.m in Sources */,
 				5B11C5271B8EDD4700382C9B /* AppDelegate.m in Sources */,
 				5BC76F4F1B9FD74C004ABBAF /* ActivityIndicatorView.m in Sources */,
+				5B3283731C28F8EA0054522D /* DetailInformationTableView.m in Sources */,
 				5BEA92721BB1077200EAC9BE /* NSString+FontAwesome.m in Sources */,
 				5B03A8571C05D24100207D59 /* BackToMainViewController.m in Sources */,
 				5B9ECB0E1BABF40900612474 /* CreateGroupViewController.m in Sources */,
@@ -1154,12 +1160,12 @@
 				5B52F4471B9D7C08004BA338 /* UILabel+UICon.m in Sources */,
 				5BA96CA71C045B89009DD1B0 /* ChangeCartViewController.m in Sources */,
 				5BD6D6931BD63311001524DB /* AFSecurityPolicy.m in Sources */,
+				5BE599621C2900480071D062 /* LaunchViewController.m in Sources */,
 				5B93C80D1BBBB39A0081FBAF /* BackMainInterfaceViewController.m in Sources */,
 				5B13BB5D1C22687000D1B8D9 /* CellViewNode.m in Sources */,
 				5BD6D6921BD63311001524DB /* AFNetworkReachabilityManager.m in Sources */,
 				5BEC66E61BC7506F001C70FE /* CustomerGroupInfViewController.m in Sources */,
 				5B4481051BFB25B10085A2E7 /* ChangeCaddyViewController.m in Sources */,
-				5B33ACFA1C27FEC70073737F /* TaskTableViewCell.m in Sources */,
 				5B93C8151BBBBED20081FBAF /* PersonalCenterViewController.m in Sources */,
 				5B52F42E1B9D7BE3004BA338 /* PinYin.m in Sources */,
 				5B52F42B1B9D7BE3004BA338 /* ChineseString.m in Sources */,
