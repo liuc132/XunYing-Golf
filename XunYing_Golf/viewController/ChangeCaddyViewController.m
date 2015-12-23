@@ -50,6 +50,7 @@ typedef enum ChangeReason{
 @property (strong, nonatomic) DBCon *lcDBCon;
 @property (strong, nonatomic) DataTable *requestPerson;
 @property (strong, nonatomic) DataTable *groInfo;
+@property (strong, nonatomic) DataTable *changeCaddyResult;
 
 @property (nonatomic) NSString *changeReasonStr;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
@@ -74,6 +75,7 @@ typedef enum ChangeReason{
     self.lcDBCon = [[DBCon alloc] init];
     self.requestPerson = [[DataTable alloc] init];
     self.groInfo       = [[DataTable alloc] init];
+    self.changeCaddyResult  = [[DataTable alloc] init];
     //setting the initial state
     self.changeReasonStr = [NSString stringWithFormat:@"%d",CaddyRequest];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"changeCaddy" object:nil];
@@ -324,8 +326,10 @@ typedef enum ChangeReason{
         NSLog(@"recDic:%@ Msg:%@ andCode:%@",recDic,recDic[@"Msg"],recDic[@"Code"]);
         //
         if ([recDic[@"Code"] intValue] > 0) {
-            
-            
+            //保存数据 tbl_taskChangeCaddyInfo(evecod text,everea text,result text,evesta text,oldCaddy text,oldCaddyCode text,newCaddy text,newCaddyCode,subtim text)
+            NSDictionary *allMsg = recDic[@"Msg"];
+            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],weakSelf.requestPerson.Rows[0][@"number"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",allMsg[@"subtim"], nil];
+            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskChangeCaddyInfo(evecod,everea,result,evesta,oldCaddy,oldCaddyCode,newCaddy,newCaddyCode,subtim) values(?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
             //执行跳转程序
             [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
             
@@ -346,9 +350,41 @@ typedef enum ChangeReason{
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    __weak typeof(self) weakSelf = self;
+    //
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"更换球童详情";
-    
+    //查询数据库
+    self.changeCaddyResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskChangeCaddyInfo"];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        if ([weakSelf.changeCaddyResult.Rows count]) {
+            NSString *resultStr = [[NSString alloc] init];
+            switch ([weakSelf.changeCaddyResult.Rows[0][@"result"] intValue]) {
+                case 0:
+                    resultStr = @"待处理";
+                    break;
+                case 1:
+                    resultStr = @"同意";
+                    break;
+                case 2:
+                    resultStr = @"不同意";
+                    break;
+                default:
+                    break;
+            }
+            
+            taskViewController.taskStatus = resultStr;
+            taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.requestPerson.Rows[0][@"number"],weakSelf.requestPerson.Rows[0][@"name"]];
+            NSString *subtime = weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"subtim"];
+            taskViewController.taskRequstTime = [subtime substringFromIndex:11];
+            taskViewController.taskDetailName = @"待更换球童";
+            NSLog(@"%@",[NSString stringWithFormat:@"%@",weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"oldCaddyNum"]]);
+            taskViewController.taskCaddyNum   = [NSString stringWithFormat:@"%@",weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"oldCaddy"]];
+            
+        }
+        
+        
+    });
 }
 
 

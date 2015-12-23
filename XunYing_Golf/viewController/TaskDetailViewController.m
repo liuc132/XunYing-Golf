@@ -38,7 +38,12 @@
 @property (strong, nonatomic) IBOutlet UILabel *threeLineReqPerson;//申请人
 @property (strong, nonatomic) IBOutlet UILabel *taskReqName;//请求事件名称
 @property (strong, nonatomic) IBOutlet UILabel *taskReqDetail;//请求事件详情
-@property (strong, nonatomic) IBOutlet UITableView *threeLineTableView;
+@property (strong, nonatomic) IBOutlet UIView *threeLineDetailView;
+@property (strong, nonatomic) IBOutlet UIButton *showOrDismissThreeLine;
+@property (strong, nonatomic) IBOutlet UIImageView *threeLineButtonImage;
+- (IBAction)showOrDismissThreeLine:(UIButton *)sender;
+
+
 
 
 //四行事件视图
@@ -100,14 +105,21 @@
     [self.statusDisLabel setFrame:CGRectMake(0, self.theNav.frame.origin.y + self.theNav.frame.size.height, ScreenWidth, self.statusDisLabel.frame.size.height)];
     
     [self.view addSubview:self.statusDisLabel];
-    //添加当前事务详情的详细列表
-    [self.threeLineTableView setFrame:CGRectMake(0, self.statusDisLabel.frame.origin.y + self.statusDisLabel.frame.size.height, ScreenWidth, self.threeLineTableView.frame.size.height)];
-    [self.view addSubview:self.threeLineTableView];
     //
-    self.threeLineTableView.dataSource = self;
-    self.threeLineTableView.delegate   = self;
-    
-    NSLog(@"threeTable%@",self.threeLineTableView);
+    self.statusDisLabel.text = self.taskStatus;
+    //添加当前事务详情的详细列表
+    [self.threeLineDetailView setFrame:CGRectMake(0, self.statusDisLabel.frame.origin.y + self.statusDisLabel.frame.size.height, ScreenWidth, self.threeLineDetailView.frame.size.height)];
+    self.showOrDismissThreeLine.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor lightGrayColor]);
+    self.threeLineReqTime.text = self.taskRequstTime;
+    self.threeLineReqPerson.text = self.taskRequestPerson;
+    self.taskReqName.text        = self.taskDetailName;
+//    self.taskReqDetail.text      = self.taskCartNum;//待更换球车号
+//    self.taskReqDetail.text      = self.taskCaddyNum;//待更换球童号
+//    self.taskReqDetail.text        = self.taskJumpHoleNum;//选择跳过的球洞
+    self.taskReqDetail.text        = self.taskLeaveRebacktime;//离场恢复时间
+    [self.view addSubview:self.threeLineDetailView];
+    //
+    [self.view addSubview:self.theNav];
     
 }
 
@@ -248,7 +260,7 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [self.view endEditing:YES];
-    self.threeLineTableView.hidden = NO;
+    self.threeLineDetailView.hidden = NO;
 }
 
 #pragma mark - UITextField的代理方法
@@ -290,7 +302,7 @@
 //    [self.view endEditing:YES];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.view endEditing:YES];
-        self.threeLineTableView.hidden = NO;
+        self.threeLineDetailView.hidden = NO;
     });
     
 //    [self.jumpHoleDetailView endEditing:YES];
@@ -308,7 +320,7 @@
     CGRect keyFrame = [userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
     CGFloat moveY = keyFrame.origin.y - self.view.frame.size.height;
     //
-    self.threeLineTableView.hidden = YES;
+    self.threeLineDetailView.hidden = YES;
     
     [UIView animateWithDuration:duration animations:^{
         self.jumpHoleDetailView.transform = CGAffineTransformMakeTranslation(0, moveY);
@@ -331,5 +343,32 @@
 
 - (IBAction)backToTaskList:(UIBarButtonItem *)sender {
     [self performSegueWithIdentifier:@"taskDetailtoAllTaskList" sender:nil];
+}
+- (IBAction)showOrDismissThreeLine:(UIButton *)sender {
+    NSLog(@"enter show or dismiss view");
+    __weak typeof(self) weakSelf = self;
+    static BOOL showEnable = NO;
+    
+    
+    //对事务详情的子视图进行平移
+    if (!showEnable) {
+        showEnable = !showEnable;
+        //
+        CGFloat moveYN = 0 - self.threeLineDetailView.frame.size.height;
+        //
+        [UIView animateWithDuration:0.1 animations:^{
+            weakSelf.threeLineDetailView.transform = CGAffineTransformMakeTranslation(0, moveYN);
+        }];
+    }
+    else
+    {
+        showEnable = !showEnable;
+        CGFloat moveYP = self.threeLineDetailView.frame.size.height;
+        //
+        [UIView animateWithDuration:0.1 animations:^{
+            weakSelf.threeLineDetailView.transform = CGAffineTransformMakeTranslation(0, moveYP/6);
+        }];
+    }
+    
 }
 @end

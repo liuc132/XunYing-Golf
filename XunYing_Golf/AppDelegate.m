@@ -220,7 +220,11 @@
      hantim = "2015-12-17 17:46:38";
      subtim = "2015-12-17 17:45:29";
      */
-    [dbCon ExecDataTable:@"create table if not exists tbl_taskChangeCartInfo(evecod text,evesta text,subtim text,newCartNum text,result text,everea text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_taskChangeCartInfo(evecod text,evesta text,subtim text,oldCartNum text,oldCartCode text,newCartNum text,newCartCode text,result text,everea text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_taskChangeCaddyInfo(evecod text,everea text,result text,evesta text,oldCaddy text,oldCaddyCode text,newCaddy text,newCaddyCode,subtim text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_taskJumpHoleInfo(evecod text,everea text,result text,evesta text,jumpHoleCode text,jumpHoleNum text,toHoleCode text,toHoleNum text,subtim text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_taskLeaveRest(evecod text,everea text,result text,evesta text,subtim text,hantim text,reholeCode text)"];
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

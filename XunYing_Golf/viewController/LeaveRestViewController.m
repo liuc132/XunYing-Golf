@@ -24,6 +24,7 @@
 
 @property (strong, nonatomic) DBCon *lcDBCon;
 @property (strong, nonatomic) DataTable *logPerson;
+@property (strong, nonatomic) DataTable *leaveRestResult;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
 
 
@@ -50,6 +51,7 @@
     //
     self.lcDBCon = [[DBCon alloc] init];
     self.logPerson = [[DataTable alloc] init];
+    self.leaveRestResult = [[DataTable alloc] init];
     //
     hourString = @[@"00",@"01",@"02",@"03",@"04",@"05",@"06",@"07",@"08",@"09",@"10",@"11",@"12",@"13",@"14",@"15",@"16",@"17",@"18",@"19",@"20",@"21",@"22",@"23"];
     minString = @[@"00",@"01",@"02",@"03",@"04",@"05",@"06",@"07",@"08",@"09",@"10",@"11",@"12",@"13",@"14",@"15",@"16",@"17",@"18",@"19",@"20",@"21",@"22",@"23",@"24",@"25",@"26",@"27",@"28",@"29",@"30",@"31",@"32",@"33",@"34",@"35",@"36",@"37",@"38",@"39",@"40",@"41",@"42",@"43",@"44",@"45",@"46",@"47",@"48",@"49",@"50",@"51",@"52",@"53",@"54",@"55",@"56",@"57",@"58",@"59"];
@@ -58,7 +60,9 @@
     self.logPerson = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
     //init a notificationcenter
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"leaveToRest" object:nil];
-    
+    //
+    self.selectTime.dataSource = self;
+    self.selectTime.delegate   = self;
 }
 
 - (void)getEventFromHeart:(NSNotification *)sender
@@ -117,8 +121,10 @@
         NSLog(@"recDic:%@",recDic);
         //
         if ([recDic[@"Code"] intValue] > 0) {
-            
-            
+            //tbl_taskLeaveRest(evecod text,everea text,result text,evesta text,subtim text,hantim text,,reholeCode text)
+            NSDictionary *allMsg = recDic[@"Msg"];
+            NSMutableArray *leaveRestBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],allMsg[@"hantim"],allMsg[@"subtim"],@"", nil];
+            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskLeaveRest(evecod,everea,result,evesta,subtim,hantim,reholeCode) values(?,?,?,?,?,?,?)" forParameter:leaveRestBackInfo];
             //
             [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
         }
@@ -165,9 +171,20 @@
     
     return _row;
 }
-
+//获取到当前选择的参数
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
-//    NSLog(@"curselect:",)
+    if (component == 0) {
+        [pickerView reloadComponent:2];
+        NSInteger rowOne = [pickerView selectedRowInComponent:0];
+        NSInteger rowThree = [pickerView selectedRowInComponent:2];
+        
+        NSString *_hourStr = hourString[rowOne];
+        NSString *_minStr  = minString[rowThree];
+        
+        NSLog(@"hour:%@ min:%@",_hourStr,_minStr);
+    }
+    
+    
 }
 
 -(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
@@ -198,9 +215,38 @@
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    __weak typeof(self) weakSelf = self;
+    
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"离场休息详情";
-    
+    //查询数据库
+    self.leaveRestResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskLeaveRest"];
+    //
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *resultStr = [[NSString alloc] init];
+        switch ([weakSelf.leaveRestResult.Rows[0][@"result"] intValue]) {
+            case 0:
+                resultStr = @"待处理";
+                break;
+            case 1:
+                resultStr = @"同意";
+                break;
+            case 2:
+                resultStr = @"不同意";
+                break;
+            default:
+                break;
+        }
+        
+        taskViewController.taskStatus = resultStr;
+        taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.logPerson.Rows[0][@"number"],weakSelf.logPerson.Rows[0][@"name"]];
+        NSString *subtime = weakSelf.leaveRestResult.Rows[[weakSelf.leaveRestResult.Rows count] - 1][@"subtim"];
+        taskViewController.taskRequstTime = subtime;//[subtime substringFromIndex:11];
+        taskViewController.taskDetailName = @"申请的恢复时间";
+        taskViewController.taskLeaveRebacktime   = @"";//[NSString stringWithFormat:@"%@",weakSelf.leaveRestResult.Rows[[weakSelf.leaveRestResult.Rows count] - 1][@"oldCaddy"]];
+        
+        
+    });
 }
 
 @end

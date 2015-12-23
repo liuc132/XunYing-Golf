@@ -16,6 +16,11 @@
 @property (strong, nonatomic) NSString *taskResult;
 @property (strong, nonatomic) NSString *taskRequstTime;
 @property (strong, nonatomic) NSString *taskRequestPerson;
+@property (strong, nonatomic) NSString *taskDetailName;
+@property (strong, nonatomic) NSString *taskCartNum;
+@property (strong, nonatomic) NSString *taskCaddyNum;
+@property (strong, nonatomic) NSString *taskJumpHoleNum;
+@property (strong, nonatomic) NSString *taskLeaveRebacktime;
 
 
 

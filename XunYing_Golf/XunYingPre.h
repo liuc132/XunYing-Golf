@@ -61,6 +61,9 @@
 #define RequestSendMsgURL                   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/messageComm.htm"]
 //注册设备到服务器中的接口
 #define RequestAddDeviceURL                 [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/addPad.htm"]
+//球洞状态更改
+#define MakeHoleCompleteStateURL            [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/completeHole.htm"]
+
 
 //#define testChangeInterface                 1
 

@@ -13,7 +13,7 @@
 #import "HttpTools.h"
 
 
-@interface PlayProcessViewController ()
+@interface PlayProcessViewController ()<UIAlertViewDelegate>
 
 
 @property (strong, nonatomic) DBCon *lcDbcon;
@@ -23,6 +23,8 @@
 @property (strong, nonatomic) DataTable *holesInfo;
 
 @property (strong, nonatomic) NSArray   *holePositionArray;
+@property (nonatomic)         NSInteger theSelectNum;
+@property (strong, nonatomic) NSArray   *holeStateArray;
 
 
 @property (strong, nonatomic) IBOutlet UIScrollView *playProcessScrollView;
@@ -94,6 +96,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hadRefreshSuccess:) name:@"refreshSuccess" object:nil];
     //
     self.holePositionArray = [[NSArray alloc] initWithObjects:@"发球台",@"球道",@"果岭", nil];
+    self.holeStateArray    = [[NSArray alloc] initWithObjects:@"正常",@"被完成",@"被跳过",@"被挂起",@"非法跳过",@"补打",@"补打完成",@"被补打",@"被预定", nil];
+    
     
 }
 #pragma -mark observer
@@ -103,7 +107,7 @@
     NSLog(@"info:%@",sender.userInfo);
     //
     self.groupInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_groupInf"];
-    self.holesInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_holeInf"];
+//    self.holesInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_holeInf"];
     NSLog(@"groupInfo:%@",self.groupInfo.Rows);
     //将相应的数据显示出来
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -283,12 +287,103 @@
     
 }
 
-
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+//    __weak typeof(self) weakSelf = self;
+    
+    if (alertView.tag == 1) {
+        //
+        switch (buttonIndex) {
+            case 0:
+                
+                break;
+                //
+            case 1:
+                if (![self.holePlanInfo.Rows count]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                    [alert show];
+                    return;
+                }
+                //组建参数
+                NSMutableDictionary *makeHoleCompleteParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.groupInfo.Rows[0][@"grocod"],@"grocod",self.holePlanInfo.Rows[self.theSelectNum - 1][@"holcod"],@"holecode", nil];
+                
+                //发送更改请求
+                [HttpTools getHttp:MakeHoleCompleteStateURL forParams:makeHoleCompleteParam success:^(NSData *nsData){
+                    NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+                    NSLog(@"recDic Msg:%@",recDic[@"Msg"]);
+                    //
+                    if ([recDic[@"Code"] intValue] > 0) {
+                        NSLog(@"正常");
+                        
+                        
+                    }
+                    
+                    else if ([recDic[@"Code"] intValue] == -3) {
+                        NSLog(@"发生错误");
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该球洞已经被完成了，不能进行此操作" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                        [alert show];
+                    }
+                    
+                    
+                    
+                }failure:^(NSError *err){
+                    NSLog(@"request failed");
+                }];
+                
+                
+                break;
+        }
+        
+    }
+    
+}
 
 
 - (IBAction)eachHoleState:(UIButton *)sender {
     NSLog(@"enter eachHoleState,button.Tag:%ld;button.title:%@",(long)sender.tag,sender.titleLabel.text);
+    //
+    self.theSelectNum = sender.tag + 1;
+    //查询数据库
+    self.holePlanInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_holePlanInfo"];
+    self.groupInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_groupInf"];
+    //
+    if (![self.holePlanInfo.Rows count]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
     
+    
+    //
+    NSString *curSelectHoleName = [NSString stringWithFormat:@"%ld号球洞",sender.tag + 1];//当前所在球洞提示
+    //
+    NSInteger holeNum = [self.holePlanInfo.Rows[sender.tag][@"ghsta"] integerValue];
+    NSString  *planInTime = self.holePlanInfo.Rows[sender.tag][@"pintim"];
+    planInTime = [planInTime substringFromIndex:11];
+    NSInteger totalSeconds = [self.holePlanInfo.Rows[sender.tag][@"stadur"] integerValue];
+    NSInteger hour = totalSeconds/3600;
+    NSInteger min  = (totalSeconds%3600)/60;
+    NSInteger second = totalSeconds%60;
+    NSString  *standardTime = [[NSString alloc] init];
+    if (hour > 0) {
+        standardTime = [NSString stringWithFormat:@"%ld时%ld分%ld秒",(long)hour,(long)min,(long)second];
+    }
+    else if(min > 0)
+    {
+        standardTime = [NSString stringWithFormat:@"%ld分%ld秒",(long)min,(long)second];
+    }
+    else
+    {
+        standardTime = [NSString stringWithFormat:@"%ld秒",(long)second];
+    }
+    NSString *planOutTime = self.holePlanInfo.Rows[sender.tag][@"poutim"];
+    planOutTime = [NSString stringWithFormat:@"%@",[planOutTime substringFromIndex:11]];
+    
+    NSString *subMsg = [NSString stringWithFormat:@" 打球状态   %@ \n计划进入时间   %@\n   标准耗时   %@\n计划离开时间   %@",self.holeStateArray[holeNum],planInTime,standardTime,planOutTime];
+    //
+    UIAlertView *changeHoleStateAlert = [[UIAlertView alloc] initWithTitle:curSelectHoleName message:subMsg delegate:self cancelButtonTitle:@" 取 消 " otherButtonTitles:@"改为被完成", nil];
+    changeHoleStateAlert.tag = 1;//到时候改成1
+    [changeHoleStateAlert show];
 }
 
 - (IBAction)refreshCurrentState:(UIBarButtonItem *)sender {

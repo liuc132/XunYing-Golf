@@ -142,7 +142,17 @@
         
         //
         if (recDictionary[@"Code"] > 0) {
+            NSDictionary *allMsg = recDictionary[@"Msg"];
+            
+            
             [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];                                                                                    
+        }
+        else if([recDictionary[@"Code"] intValue] == -5)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"正常球洞还未完成，不能补洞" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            //
+            [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
         }
         
         
