@@ -160,9 +160,9 @@ typedef enum ChangeReason{
         if ([recDic[@"Code"] intValue] > 0) {
             //获取到服务器返回的结果，并将相应的结果保存在本地数据库中 tbl_taskChangeCartInfo(evecod text,evesta text,subtim text,oldCartNum text,oldCartCode text,newCartNum text,newCartCode text,result text,everea text)
             NSDictionary *allMsg = recDic[@"Msg"];
-            NSMutableArray *changeCartBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"evesta"],allMsg[@"subtim"],weakSelf.cartInfo.Rows[0][@"carnum"],weakSelf.cartInfo.Rows[0][@"carcode"],@"",@"",allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"], nil];
-            [self.lcDBCon ExecNonQuery:@"insert into tbl_taskChangeCartInfo(evecod,evesta,subtim,oldCartNum,oldCartCode,newCartNum,newCartCode,result,everea) values(?,?,?,?,?,?,?,?,?)" forParameter:changeCartBackInfo];
-            
+            //
+            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"1",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.logPerson.Rows[0][@"code"],@"",weakSelf.cartInfo.Rows[0][@"carcod"],@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
             //
             [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
             
@@ -313,7 +313,7 @@ typedef enum ChangeReason{
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"更换球车详情";
     //
-    self.changeCartResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskChangeCartInfo"];
+    self.changeCartResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
     dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         if ([self.changeCartResult.Rows count]) {
             //
@@ -337,7 +337,15 @@ typedef enum ChangeReason{
             NSString *subtime = weakSelf.changeCartResult.Rows[[weakSelf.changeCartResult.Rows count] - 1][@"subtim"];
             taskViewController.taskRequstTime = [subtime substringFromIndex:11];
             taskViewController.taskDetailName = @"待更换球车";
-            taskViewController.taskCartNum    = [NSString stringWithFormat:@"%@",weakSelf.changeCartResult.Rows[[weakSelf.changeCartResult.Rows count] - 1][@"oldCartNum"]];
+            NSString *willChangeCartCode = [NSString stringWithFormat:@"%@",[NSString stringWithFormat:@"%@",weakSelf.changeCartResult.Rows[[weakSelf.changeCartResult.Rows count] - 1][@"oldCartCode"]]];
+            NSArray *allCartArray = weakSelf.cartInfo.Rows;
+            for (NSDictionary *eachCart in allCartArray) {
+                if ([eachCart[@"carcod"] isEqualToString:willChangeCartCode]) {
+                    taskViewController.taskCartNum  = [NSString stringWithFormat:@"%@",eachCart[@"carnum"]];
+                }
+            }
+            
+            
         }
         
         

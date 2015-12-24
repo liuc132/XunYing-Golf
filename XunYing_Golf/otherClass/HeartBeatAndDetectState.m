@@ -190,16 +190,30 @@ typedef enum eventOrder{
                     NSDictionary *eventDic = eventInfo[0];
                     NSString *observerName = [[NSString alloc] init];
 //                    NSMutableArray *taskInfo = [[NSMutableArray alloc] init];
+                    //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
+                    
                     NSLog(@"eventDic:%@",eventDic);
+                    NSDictionary *newCart = [[NSDictionary alloc] init];
+                    //
                     switch ([eventDic[@"evetyp"] intValue]) {
                         case changeCaddy:
                             observerName = self.observerNameArray[_caddy];
-                            
+                            //更新相应的数据
+//                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"update tbl_taskInfo SET newCaddyCode = %@ where evecod = %@",]];
                             
                             break;
                         case changeCart:
                             observerName = self.observerNameArray[_cart];
-                            
+                            //更新相应的数据
+                            newCart = eventDic[@"everes"][@"newcar"];
+                            for (id key in newCart) {
+                                if (key != [NSNull null]) {
+                                    NSLog(@"result:%@",[NSString stringWithFormat:@"update tbl_taskInfo SET newCartCode = '%@' , result = '%@' where evecod = '%@'",eventDic[@"everes"][@"newcar"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"evecod"]]);
+                                    
+                                    
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"update tbl_taskInfo SET newCartCode = %@ result = %@ where evecod = %@",eventDic[@"everes"][@"newcar"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"evecod"]]];
+                                }
+                            }
                             
                             break;
                         case jumpHole:
@@ -222,6 +236,9 @@ typedef enum eventOrder{
                         default:
                             break;
                     }
+                    
+                    
+                    
                     //保存数据 tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,retime text,newCartNum text,rehole text)
                     
                     //通过通知发送到相应的界面中去

@@ -94,7 +94,7 @@
     self.cusInfScrollView.indicatorStyle = UIScrollViewIndicatorStyleDefault;
     self.cusInfScrollView.contentInset = UIEdgeInsetsMake(0, 0, 85, 0);
     //查询相应的信息
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         weakSelf.cusGroupInf = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_groupHeartInf"];
         weakSelf.padInfTable = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_padInfo"];
         weakSelf.locInfTable = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_locHole"];
@@ -399,12 +399,21 @@
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"back to the field msg:%@",recDic[@"Msg"]);
         
+        if ([recDic[@"Code"] intValue] > 0) {
+            //删除掉本地保存的事务信息数据
+            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskChangeCartInfo"];
+            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskChangeCaddyInfo"];
+            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskJumpHoleInfo"];
+            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskLeaveRest"];
+            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskMendHoleInfo"];
+            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskInfo"];
+            
+            //执行跳转程序，跳转到建组方式选择界面
+            [strongSelf performSegueWithIdentifier:@"backToField" sender:nil];
+        }
         
         
         
-        //执行跳转程序，跳转到建组方式选择界面
-        [strongSelf performSegueWithIdentifier:@"backToField" sender:nil];
-        //除能心跳功能
         
         
     }failure:^(NSError *err){

@@ -180,8 +180,11 @@
         if ([recDic[@"Code"] intValue] > 0) {
             NSDictionary *allMsg = recDic[@"Msg"];
             //tbl_taskJumpHoleInfo(evecod text,everea text,result text,evesta text,jumpHoleCode text,jumpHoleNum text,toHoleCode,toHoleNum text,subtim text)
-            NSMutableArray *jumpHoleBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],weakSelf.grpInf.Rows[weakSelf.selectedJumpNum][@"holcod"],weakSelf.grpInf.Rows[weakSelf.selectedJumpNum][@"holenum"],@"",@"",allMsg[@"subtim"], nil];
-            [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_taskJumpHoleInfo(evecod,everea,result,evesta,jumpHoleCode,jumpHoleNum,toHoleCode,toHoleNum,subtim) values(?,?,?,?,?,?,?,?,?)" forParameter:jumpHoleBackInfo];
+//            NSMutableArray *jumpHoleBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],weakSelf.grpInf.Rows[weakSelf.selectedJumpNum][@"holcod"],weakSelf.grpInf.Rows[weakSelf.selectedJumpNum][@"holenum"],@"",@"",allMsg[@"subtim"], nil];
+//            [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_taskJumpHoleInfo(evecod,everea,result,evesta,jumpHoleCode,jumpHoleNum,toHoleCode,toHoleNum,subtim) values(?,?,?,?,?,?,?,?,?)" forParameter:jumpHoleBackInfo];
+            //
+            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"3",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",weakSelf.grpInf.Rows[weakSelf.selectedJumpNum][@"holcod"],@"",@"",@"",@"",@"",@"",@"", nil];
+            [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
             
             //执行跳转
             [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
@@ -201,7 +204,7 @@
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"跳洞详情";
     //查询数据库
-    self.jumpHoleResult = [self.locDBCon ExecDataTable:@"select *from tbl_taskJumpHoleInfo"];
+    self.jumpHoleResult = [self.locDBCon ExecDataTable:@"select *from tbl_taskInfo"];
     //
     dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         if ([weakSelf.jumpHoleResult.Rows count]) {
@@ -225,7 +228,16 @@
             NSString *subtime = weakSelf.jumpHoleResult.Rows[[weakSelf.jumpHoleResult.Rows count] - 1][@"subtim"];
             taskViewController.taskRequstTime = [subtime substringFromIndex:11];
             taskViewController.taskDetailName = @"跳过球洞";
-            taskViewController.taskJumpHoleNum   = [NSString stringWithFormat:@"%@",weakSelf.jumpHoleResult.Rows[[weakSelf.jumpHoleResult.Rows count] - 1][@"jumpHoleNum"]];
+            //
+            NSString *willJumpHoleCode = [NSString stringWithFormat:@"%@",weakSelf.jumpHoleResult.Rows[[weakSelf.jumpHoleResult.Rows count] - 1][@"jumpHoleCode"]];
+            NSArray *allHoleArray = self.grpInf.Rows;
+            for (NSDictionary *eachHole in allHoleArray) {
+                if ([eachHole[@"holcod"] isEqualToString:willJumpHoleCode]) {
+                    taskViewController.taskJumpHoleNum = [NSString stringWithFormat:@"%@",eachHole[@"holenum"]];
+                }
+                
+            }
+            
         }
         
         

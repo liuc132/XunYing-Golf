@@ -10,12 +10,27 @@
 #import "XunYingPre.h"
 #import "KxMenu.h"
 #import "HttpTools.h"
+#import "TaskCenterTableViewCell.h"
+#import "DBCon.h"
+#import "DataTable.h"
+#import "UIColor+UICon.h"
+
+
+//定义所有事务的背景颜色
+#define MendHoleColor       @"f686c1"
+#define LeaveRestColor      @"7e96fa"
+#define JumpHoleColor       @"61c1fb"
+#define ChangeCartColor     @"5ccd73"
+#define ChangeCaddyColor    @"fe9263"
 
 @interface CurTaskCenterTableViewController ()<UIGestureRecognizerDelegate>
 
 
 @property (strong, nonatomic) NSMutableArray *dataArray;
 @property (strong, nonatomic) NSArray        *displayArray;
+//
+@property (strong, nonatomic) DBCon          *lcDbCon;
+@property (strong, nonatomic) DataTable      *allTaskInfo;
 
 
 @property (strong, nonatomic) IBOutlet UIView *displayNoTask;
@@ -30,6 +45,10 @@
 {
     [super viewDidLoad];
     //
+    self.lcDbCon = [[DBCon alloc] init];
+    self.allTaskInfo = [[DataTable alloc] init];
+    
+    
 //    [self displayNoTaskView];
     
     //初始化一个通知
@@ -42,7 +61,7 @@
 {
     NSLog(@"sender Info:%@",sender.userInfo);
     //根据所获得的数据来组装参数
-    
+    [self.tableView reloadData];
     
 }
 
@@ -65,20 +84,100 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return [self.displayArray count];
 }
 
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+- (TaskCenterTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"listAllTask";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    TaskCenterTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[TaskCenterTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     // Configure the cell...
     cell.backgroundColor = [UIColor clearColor];
+    //根据事务类型来进行相应的视图的切换
+    //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
+    NSDictionary *eachTask = self.displayArray[[self.displayArray count] - indexPath.row - 1];
     
+    //
+    switch ([eachTask[@"evetyp"] intValue]) {
+        case 1://换球车
+            
+            cell.taskTypeImageDis.image = [UIImage imageNamed:@"groupCar.png"];
+            
+            cell.taskStatusDis.text     = ([eachTask[@"result"] intValue] == 0)?@"待处理":([eachTask[@"result"] intValue] == 1)?@"同意":([eachTask[@"result"] intValue] == 2)?@"不同意":@"";
+            
+            cell.taskTypeNameDis.text = @"换球车";
+            
+            cell.taskColorView.backgroundColor = [UIColor HexString:ChangeCartColor];
+            
+            break;
+        case 2://换球童
+            
+            cell.taskTypeImageDis.image = [UIImage imageNamed:@"groupCaddy.png"];
+            
+            cell.taskStatusDis.text     = ([eachTask[@"result"] intValue] == 0)?@"待处理":([eachTask[@"result"] intValue] == 1)?@"同意":([eachTask[@"result"] intValue] == 2)?@"不同意":@"";
+            
+            cell.taskTypeNameDis.text = @"换球童";
+            
+            cell.taskColorView.backgroundColor = [UIColor HexString:ChangeCaddyColor];
+            
+            break;
+        case 3://跳洞
+            
+            cell.taskTypeImageDis.image = [UIImage imageNamed:@"jumpHoleWhite.png"];
+            
+            cell.taskStatusDis.text     = ([eachTask[@"result"] intValue] == 0)?@"待处理":([eachTask[@"result"] intValue] == 1)?@"同意":([eachTask[@"result"] intValue] == 2)?@"不同意":@"";
+            
+            cell.taskTypeNameDis.text = @"跳洞";
+            
+            cell.taskColorView.backgroundColor = [UIColor HexString:JumpHoleColor];
+            
+//            cell.taskReqTimeDis.text    = [NSString stringWithFormat:@"%@",eachTask[@"subtim"]];
+            
+            break;
+        case 4://补洞
+            
+            cell.taskTypeImageDis.image = [UIImage imageNamed:@"mendHoleList.png"];
+            
+            cell.taskStatusDis.text     = ([eachTask[@"result"] intValue] == 0)?@"待处理":([eachTask[@"result"] intValue] == 1)?@"同意":([eachTask[@"result"] intValue] == 2)?@"不同意":@"";
+            
+            cell.taskTypeNameDis.text = @"补洞";
+            
+            cell.taskColorView.backgroundColor = [UIColor HexString:MendHoleColor];
+            
+//            cell.taskReqTimeDis.text    = [NSString stringWithFormat:@"%@",eachTask[@"subtim"]];
+            
+            break;
+        case 5://点餐
+            
+            break;
+        case 6://离场休息
+            
+            cell.taskTypeImageDis.image = [UIImage imageNamed:@"leaveToRestWhite.png"];
+            
+            cell.taskStatusDis.text     = ([eachTask[@"result"] intValue] == 0)?@"待处理":([eachTask[@"result"] intValue] == 1)?@"同意":([eachTask[@"result"] intValue] == 2)?@"不同意":@"";
+            
+            cell.taskTypeNameDis.text = @"离场休息";
+            
+            cell.taskColorView.backgroundColor = [UIColor HexString:LeaveRestColor];
+            
+//            cell.taskReqTimeDis.text    = [NSString stringWithFormat:@"%@",eachTask[@"subtim"]];
+            
+            break;
+        
+        default:
+            break;
+    }
+    //
+    cell.taskReqTimeDis.text    = [NSString stringWithFormat:@"%@",eachTask[@"subtim"]];
     
     return cell;
 }
@@ -90,6 +189,19 @@
     //[self.displayNoTask removeFromSuperview];//该语句可以实现将该uiview给移除掉
     //
     [self.view setNeedsLayout];
+    //
+    self.allTaskInfo = [self.lcDbCon ExecDataTable:@"select *from tbl_taskInfo"];
+    //
+    if (![self.allTaskInfo.Rows count]) {
+        [self displayNoTaskView];
+    }
+    else
+    {
+        self.displayArray = self.allTaskInfo.Rows;
+        [self.tableView reloadData];
+    }
+    
+    
 }
 
 
@@ -108,6 +220,33 @@
     
     
 }
+
+//将没有内容的地方的分割线去除掉
+#pragma -mark tableView:willDisplayCell:forRowAtIndexPath
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView setTableFooterView:[[UIView alloc]init]];
+    //
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+}
+//将分割线铺满整个窗口
+- (void)viewWillLayoutSubviews
+{
+    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.tableView setSeparatorInset:UIEdgeInsetsMake(0,0,0,0)];
+    }
+    
+    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.tableView setLayoutMargins:UIEdgeInsetsMake(0,0,0,0)];
+    }
+}
+
 #pragma -mark JumpHoles
 -(void)JumpToHoles
 {

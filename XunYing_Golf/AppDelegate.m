@@ -224,6 +224,9 @@
     [dbCon ExecDataTable:@"create table if not exists tbl_taskChangeCaddyInfo(evecod text,everea text,result text,evesta text,oldCaddy text,oldCaddyCode text,newCaddy text,newCaddyCode,subtim text)"];
     [dbCon ExecDataTable:@"create table if not exists tbl_taskJumpHoleInfo(evecod text,everea text,result text,evesta text,jumpHoleCode text,jumpHoleNum text,toHoleCode text,toHoleNum text,subtim text)"];
     [dbCon ExecDataTable:@"create table if not exists tbl_taskLeaveRest(evecod text,everea text,result text,evesta text,subtim text,hantim text,reholeCode text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_taskMendHoleInfo(evecod text,everea text,result text,evesta text,subtim text,mendHoleNum text)"];
+    //
+    [dbCon ExecDataTable:@"create table if not exists tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)"];
     
 }
 

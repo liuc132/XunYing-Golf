@@ -123,8 +123,11 @@
         if ([recDic[@"Code"] intValue] > 0) {
             //tbl_taskLeaveRest(evecod text,everea text,result text,evesta text,subtim text,hantim text,,reholeCode text)
             NSDictionary *allMsg = recDic[@"Msg"];
-            NSMutableArray *leaveRestBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],allMsg[@"hantim"],allMsg[@"subtim"],@"", nil];
-            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskLeaveRest(evecod,everea,result,evesta,subtim,hantim,reholeCode) values(?,?,?,?,?,?,?)" forParameter:leaveRestBackInfo];
+//            NSMutableArray *leaveRestBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"hantim"],@"", nil];
+//            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskLeaveRest(evecod,everea,result,evesta,subtim,hantim,reholeCode) values(?,?,?,?,?,?,?)" forParameter:leaveRestBackInfo];
+            //
+            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"6",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
             //
             [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
         }
@@ -220,7 +223,7 @@
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"离场休息详情";
     //查询数据库
-    self.leaveRestResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskLeaveRest"];
+    self.leaveRestResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
     //
     dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *resultStr = [[NSString alloc] init];
@@ -241,7 +244,7 @@
         taskViewController.taskStatus = resultStr;
         taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.logPerson.Rows[0][@"number"],weakSelf.logPerson.Rows[0][@"name"]];
         NSString *subtime = weakSelf.leaveRestResult.Rows[[weakSelf.leaveRestResult.Rows count] - 1][@"subtim"];
-        taskViewController.taskRequstTime = subtime;//[subtime substringFromIndex:11];
+        taskViewController.taskRequstTime = [subtime substringFromIndex:11];
         taskViewController.taskDetailName = @"申请的恢复时间";
         taskViewController.taskLeaveRebacktime   = @"";//[NSString stringWithFormat:@"%@",weakSelf.leaveRestResult.Rows[[weakSelf.leaveRestResult.Rows count] - 1][@"oldCaddy"]];
         

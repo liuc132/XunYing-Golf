@@ -51,6 +51,7 @@ typedef enum ChangeReason{
 @property (strong, nonatomic) DataTable *requestPerson;
 @property (strong, nonatomic) DataTable *groInfo;
 @property (strong, nonatomic) DataTable *changeCaddyResult;
+@property (strong, nonatomic) DataTable *allCaddyInfo;
 
 @property (nonatomic) NSString *changeReasonStr;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
@@ -76,6 +77,7 @@ typedef enum ChangeReason{
     self.requestPerson = [[DataTable alloc] init];
     self.groInfo       = [[DataTable alloc] init];
     self.changeCaddyResult  = [[DataTable alloc] init];
+    self.allCaddyInfo       = [[DataTable alloc] init];
     //setting the initial state
     self.changeReasonStr = [NSString stringWithFormat:@"%d",CaddyRequest];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"changeCaddy" object:nil];
@@ -327,9 +329,15 @@ typedef enum ChangeReason{
         //
         if ([recDic[@"Code"] intValue] > 0) {
             //保存数据 tbl_taskChangeCaddyInfo(evecod text,everea text,result text,evesta text,oldCaddy text,oldCaddyCode text,newCaddy text,newCaddyCode,subtim text)
+            //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
+            
             NSDictionary *allMsg = recDic[@"Msg"];
-            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],weakSelf.requestPerson.Rows[0][@"number"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",allMsg[@"subtim"], nil];
-            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskChangeCaddyInfo(evecod,everea,result,evesta,oldCaddy,oldCaddyCode,newCaddy,newCaddyCode,subtim) values(?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+//            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],weakSelf.requestPerson.Rows[0][@"number"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",allMsg[@"subtim"], nil];
+//            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskChangeCaddyInfo(evecod,everea,result,evesta,oldCaddy,oldCaddyCode,newCaddy,newCaddyCode,subtim) values(?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"2",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+            
+            
             //执行跳转程序
             [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
             
@@ -355,7 +363,8 @@ typedef enum ChangeReason{
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"更换球童详情";
     //查询数据库
-    self.changeCaddyResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskChangeCaddyInfo"];
+    self.changeCaddyResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
+    self.allCaddyInfo      = [self.lcDBCon ExecDataTable:@"select *from tbl_caddyInf"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         if ([weakSelf.changeCaddyResult.Rows count]) {
             NSString *resultStr = [[NSString alloc] init];
@@ -378,8 +387,14 @@ typedef enum ChangeReason{
             NSString *subtime = weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"subtim"];
             taskViewController.taskRequstTime = [subtime substringFromIndex:11];
             taskViewController.taskDetailName = @"待更换球童";
-            NSLog(@"%@",[NSString stringWithFormat:@"%@",weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"oldCaddyNum"]]);
-            taskViewController.taskCaddyNum   = [NSString stringWithFormat:@"%@",weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"oldCaddy"]];
+            NSString *willChangeCaddyCode = [NSString stringWithFormat:@"%@",weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"oldCaddyCode"]];
+            NSArray *allCaddiesArray = weakSelf.allCaddyInfo.Rows;
+            for (NSDictionary *eachCaddy in allCaddiesArray) {
+                if ([eachCaddy[@"empcod"] isEqualToString:willChangeCaddyCode]) {
+                    taskViewController.taskCaddyNum = [NSString stringWithFormat:@"%@ %@",eachCaddy[@"cadnum"],eachCaddy[@"cadnam"]];
+                    break;
+                }
+            }
             
         }
         

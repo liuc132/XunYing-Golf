@@ -23,7 +23,6 @@
 		5B13BB571C22671D00D1B8D9 /* NoResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB561C22671D00D1B8D9 /* NoResultMode.m */; };
 		5B13BB5A1C22682900D1B8D9 /* HaveResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB591C22682900D1B8D9 /* HaveResultMode.m */; };
 		5B13BB5D1C22687000D1B8D9 /* CellViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */; };
-		5B3283731C28F8EA0054522D /* DetailInformationTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3283721C28F8EA0054522D /* DetailInformationTableView.m */; };
 		5B33ACF71C27F6D60073737F /* SlowBallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33ACF61C27F6D60073737F /* SlowBallViewController.m */; };
 		5B33DDE91C2136AE00C62DF7 /* HeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE61C2136AE00C62DF7 /* HeadView.m */; };
 		5B33DDEA1C2136AE00C62DF7 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE81C2136AE00C62DF7 /* MessageCell.m */; };
@@ -102,6 +101,7 @@
 		5BEC66E61BC7506F001C70FE /* CustomerGroupInfViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEC66E51BC7506F001C70FE /* CustomerGroupInfViewController.m */; };
 		5BEE08391C190ACC0058508C /* ArcGIS.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BEE08381C190ACC0058508C /* ArcGIS.bundle */; };
 		5BEE083B1C190B130058508C /* offlineMapData.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BEE083A1C190B130058508C /* offlineMapData.bundle */; };
+		5BF0738A1C2BCE010063747A /* TaskCenterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF073891C2BCE010063747A /* TaskCenterTableViewCell.m */; };
 		5BF0CE6E1BC6100300009BED /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF0CE6D1BC6100300009BED /* KxMenu.m */; };
 		5BF0ECA31C2156DD00945877 /* messages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5BF0ECA21C2156DD00945877 /* messages.plist */; };
 		5BF0ECA51C21698A00945877 /* noResult.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BF0ECA41C21698A00945877 /* noResult.xib */; };
@@ -158,8 +158,6 @@
 		5B13BB591C22682900D1B8D9 /* HaveResultMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HaveResultMode.m; path = viewController/HaveResultMode.m; sourceTree = "<group>"; };
 		5B13BB5B1C22687000D1B8D9 /* CellViewNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellViewNode.h; path = viewController/CellViewNode.h; sourceTree = "<group>"; };
 		5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellViewNode.m; path = viewController/CellViewNode.m; sourceTree = "<group>"; };
-		5B3283711C28F8EA0054522D /* DetailInformationTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailInformationTableView.h; sourceTree = "<group>"; };
-		5B3283721C28F8EA0054522D /* DetailInformationTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailInformationTableView.m; sourceTree = "<group>"; };
 		5B33ACF51C27F6D60073737F /* SlowBallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlowBallViewController.h; path = viewController/SlowBallViewController.h; sourceTree = "<group>"; };
 		5B33ACF61C27F6D60073737F /* SlowBallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlowBallViewController.m; path = viewController/SlowBallViewController.m; sourceTree = "<group>"; };
 		5B33DDE51C2136AE00C62DF7 /* HeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadView.h; sourceTree = "<group>"; };
@@ -303,6 +301,8 @@
 		5BEC66E51BC7506F001C70FE /* CustomerGroupInfViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomerGroupInfViewController.m; path = viewController/CustomerGroupInfViewController.m; sourceTree = "<group>"; };
 		5BEE08381C190ACC0058508C /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ArcGIS.bundle; sourceTree = "<group>"; };
 		5BEE083A1C190B130058508C /* offlineMapData.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = offlineMapData.bundle; sourceTree = "<group>"; };
+		5BF073881C2BCE010063747A /* TaskCenterTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskCenterTableViewCell.h; path = viewController/TaskCenterTableViewCell.h; sourceTree = "<group>"; };
+		5BF073891C2BCE010063747A /* TaskCenterTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskCenterTableViewCell.m; path = viewController/TaskCenterTableViewCell.m; sourceTree = "<group>"; };
 		5BF0CE6C1BC6100300009BED /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxMenu.h; path = XunYing_Golf/viewController/Menu/KxMenu.h; sourceTree = "<group>"; };
 		5BF0CE6D1BC6100300009BED /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxMenu.m; path = XunYing_Golf/viewController/Menu/KxMenu.m; sourceTree = "<group>"; };
 		5BF0ECA21C2156DD00945877 /* messages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = messages.plist; sourceTree = "<group>"; };
@@ -541,8 +541,6 @@
 			children = (
 				5B4B2EE71C27900D0058A713 /* TaskDetailViewController.h */,
 				5B4B2EE81C27900D0058A713 /* TaskDetailViewController.m */,
-				5B3283711C28F8EA0054522D /* DetailInformationTableView.h */,
-				5B3283721C28F8EA0054522D /* DetailInformationTableView.m */,
 			);
 			name = detailViewController;
 			sourceTree = "<group>";
@@ -959,6 +957,8 @@
 				5B13BB591C22682900D1B8D9 /* HaveResultMode.m */,
 				5B13BB5B1C22687000D1B8D9 /* CellViewNode.h */,
 				5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */,
+				5BF073881C2BCE010063747A /* TaskCenterTableViewCell.h */,
+				5BF073891C2BCE010063747A /* TaskCenterTableViewCell.m */,
 			);
 			name = cellXibview;
 			sourceTree = "<group>";
@@ -1134,7 +1134,6 @@
 				5BF3213C1C1FFD5C005A0DF6 /* MessageModel.m in Sources */,
 				5B11C5271B8EDD4700382C9B /* AppDelegate.m in Sources */,
 				5BC76F4F1B9FD74C004ABBAF /* ActivityIndicatorView.m in Sources */,
-				5B3283731C28F8EA0054522D /* DetailInformationTableView.m in Sources */,
 				5BEA92721BB1077200EAC9BE /* NSString+FontAwesome.m in Sources */,
 				5B03A8571C05D24100207D59 /* BackToMainViewController.m in Sources */,
 				5B9ECB0E1BABF40900612474 /* CreateGroupViewController.m in Sources */,
@@ -1163,6 +1162,7 @@
 				5BE599621C2900480071D062 /* LaunchViewController.m in Sources */,
 				5B93C80D1BBBB39A0081FBAF /* BackMainInterfaceViewController.m in Sources */,
 				5B13BB5D1C22687000D1B8D9 /* CellViewNode.m in Sources */,
+				5BF0738A1C2BCE010063747A /* TaskCenterTableViewCell.m in Sources */,
 				5BD6D6921BD63311001524DB /* AFNetworkReachabilityManager.m in Sources */,
 				5BEC66E61BC7506F001C70FE /* CustomerGroupInfViewController.m in Sources */,
 				5B4481051BFB25B10085A2E7 /* ChangeCaddyViewController.m in Sources */,

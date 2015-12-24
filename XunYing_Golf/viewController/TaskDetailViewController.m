@@ -53,9 +53,12 @@
 @property (strong, nonatomic) IBOutlet UILabel *fourLineReqDetail;//请求事件详情
 @property (strong, nonatomic) IBOutlet UILabel *fourLineHandleName;//处理结果名称
 @property (strong, nonatomic) IBOutlet UILabel *fourLineHandleResult;//处理结果详情
-@property (strong, nonatomic) IBOutlet UITableView *fourLineTableView;
+@property (strong, nonatomic) IBOutlet UIImageView *fourLineImage;
+@property (strong, nonatomic) IBOutlet UIButton *fourLineButtonView;
 
+- (IBAction)fourLineDismissShow:(UIButton *)sender;
 
+@property (strong, nonatomic) IBOutlet UIView *fourLineView;
 
 //五行事件视图
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineReqTime;//请求时间
@@ -66,14 +69,21 @@
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineHandleDetail;//事件处理结果详情
 @property (strong, nonatomic) IBOutlet UILabel *rebackHandleName;//恢复事件名称
 @property (strong, nonatomic) IBOutlet UILabel *rebackHandleDetail;//恢复事件详情
-@property (strong, nonatomic) IBOutlet UITableView *fiveLineTableView;
+@property (strong, nonatomic) IBOutlet UIImageView *fiveLineImage;
+@property (strong, nonatomic) IBOutlet UIButton *fiveLineButtonView;
 
+- (IBAction)fiveLineDismissShow:(UIButton *)sender;
 
-@property (strong, nonatomic) IBOutlet UITableView *detailInfoTableView;
+@property (strong, nonatomic) IBOutlet UIView *fiveLineView;
 
 
 //
 - (IBAction)backToTaskList:(UIBarButtonItem *)sender;
+
+@property (strong, nonatomic) DBCon *lcDbCon;
+@property (strong, nonatomic) DataTable *allTaskInfo;
+
+
 
 @end
 
@@ -82,15 +92,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    
-    
-    
+    self.lcDbCon = [[DBCon alloc] init];
+    self.allTaskInfo = [[DataTable alloc] init];
+    //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
-    
-//    self.threeLineTableView.frame = CGRectMake(0, self.theNav.frame.size.height + self.theNav.frame.origin.y + self.statusDisLabel.frame.size.height + self.statusDisLabel.frame.origin.y, self.threeLineTableView.frame.size.width, self.threeLineTableView.frame.size.height);
-//    
-//    [self.view addSubview:self.threeLineTableView];
+    //查询数据库
+    self.allTaskInfo = [self.lcDbCon ExecDataTable:@"select *from tbl_taskInfo"];
     
     //0.加载数据
     [self loadData];
@@ -113,10 +120,32 @@
     self.threeLineReqTime.text = self.taskRequstTime;
     self.threeLineReqPerson.text = self.taskRequestPerson;
     self.taskReqName.text        = self.taskDetailName;
-//    self.taskReqDetail.text      = self.taskCartNum;//待更换球车号
-//    self.taskReqDetail.text      = self.taskCaddyNum;//待更换球童号
-//    self.taskReqDetail.text        = self.taskJumpHoleNum;//选择跳过的球洞
-    self.taskReqDetail.text        = self.taskLeaveRebacktime;//离场恢复时间
+    //
+    NSDictionary *theLastData = [self.allTaskInfo.Rows lastObject];
+    NSString *detailStr = [[NSString alloc] init];
+    switch ([theLastData[@"evetyp"] intValue]) {
+        case 1://换球车
+            detailStr = self.taskCartNum;
+            break;
+        case 2://换球童
+            detailStr = self.taskCaddyNum;
+            break;
+        case 3://跳洞
+            detailStr = self.taskJumpHoleNum;
+            break;
+        case 4://补洞
+            detailStr = self.taskMendHoleNum;
+            break;
+        case 5://点餐
+            
+            break;
+        case 6://离场休息
+            detailStr = self.taskLeaveRebacktime;
+            break;
+        default:
+            break;
+    }
+    self.taskReqDetail.text = detailStr;
     [self.view addSubview:self.threeLineDetailView];
     //
     [self.view addSubview:self.theNav];
@@ -370,5 +399,9 @@
         }];
     }
     
+}
+- (IBAction)fiveLineDismissShow:(UIButton *)sender {
+}
+- (IBAction)fourLineDismissShow:(UIButton *)sender {
 }
 @end

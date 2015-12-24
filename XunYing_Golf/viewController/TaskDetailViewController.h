@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSString *taskCartNum;
 @property (strong, nonatomic) NSString *taskCaddyNum;
 @property (strong, nonatomic) NSString *taskJumpHoleNum;
+@property (strong, nonatomic) NSString *taskMendHoleNum;
 @property (strong, nonatomic) NSString *taskLeaveRebacktime;
 
 

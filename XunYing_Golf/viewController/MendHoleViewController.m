@@ -46,6 +46,7 @@
 
 @property (strong, nonatomic) DataTable *logPerson;
 @property (strong, nonatomic) DataTable *holesInf;
+@property (strong, nonatomic) DataTable *mendHoleResult;
 @property (strong, nonatomic) DBCon     *lcDBCon;
 @property (strong, nonatomic) NSMutableArray *needMendHoles;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
@@ -61,6 +62,7 @@
     self.lcDBCon = [[DBCon alloc] init];
     self.logPerson = [[DataTable alloc] init];
     self.holesInf  = [[DataTable alloc] init];
+    self.mendHoleResult = [[DataTable alloc] init];
     //在本地数据库中查询数据
     self.logPerson = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
     self.holesInf  = [self.lcDBCon ExecDataTable:@"select *from tbl_holeInf"];
@@ -141,11 +143,16 @@
         NSLog(@"returnMsg:%@",recDictionary[@"Msg"]);
         
         //
-        if (recDictionary[@"Code"] > 0) {
+        if ([recDictionary[@"Code"] intValue]> 0) {
             NSDictionary *allMsg = recDictionary[@"Msg"];
+            //tbl_taskMendHoleInfo(evecod text,everea text,result text,evesta text,subtim text,mendHoleNum text)
+//            NSMutableArray *mendHoleBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],allMsg[@"subtim"],@"", nil];
+//            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskMendHoleInfo(evecod,everea,result,evesta,subtim,mendHoleNum) values(?,?,?,?,?,?)" forParameter:mendHoleBackInfo];
+//
+            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"4",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.logPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
             
-            
-            [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];                                                                                    
+            [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
         }
         else if([recDictionary[@"Code"] intValue] == -5)
         {
@@ -174,8 +181,40 @@
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    __weak typeof(self) weakSelf = self;
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"补洞详情";
+    taskViewController.taskStatus   = @"待处理";
+    //查询数据库
+    self.mendHoleResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskMendHoleInfo"];
+    //
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        if ([weakSelf.mendHoleResult.Rows count]) {
+            NSString *resultStr = [[NSString alloc] init];
+            switch ([weakSelf.mendHoleResult.Rows[0][@"result"] intValue]) {
+                case 0:
+                    resultStr = @"待处理";
+                    break;
+                case 1:
+                    resultStr = @"同意";
+                    break;
+                case 2:
+                    resultStr = @"不同意";
+                    break;
+                default:
+                    break;
+            }
+            
+            taskViewController.taskStatus = resultStr;
+            taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.logPerson.Rows[0][@"number"],weakSelf.logPerson.Rows[0][@"name"]];
+            NSString *subtime = weakSelf.mendHoleResult.Rows[[weakSelf.mendHoleResult.Rows count] - 1][@"subtim"];
+            taskViewController.taskRequstTime = [subtime substringFromIndex:11];
+            taskViewController.taskDetailName = @"待补打球洞";
+            taskViewController.taskMendHoleNum = @"";
+        }
+        
+    });
+    
     
 }
 
