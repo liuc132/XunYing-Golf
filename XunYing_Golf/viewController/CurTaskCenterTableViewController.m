@@ -14,6 +14,7 @@
 #import "DBCon.h"
 #import "DataTable.h"
 #import "UIColor+UICon.h"
+#import "TaskDetailViewController.h"
 
 
 //定义所有事务的背景颜色
@@ -31,6 +32,9 @@
 //
 @property (strong, nonatomic) DBCon          *lcDbCon;
 @property (strong, nonatomic) DataTable      *allTaskInfo;
+@property (strong, nonatomic) DataTable      *requestPerson;
+@property (nonatomic)   BOOL                 goToDetailView;
+@property (nonatomic)           NSInteger    whichRowData;
 
 
 @property (strong, nonatomic) IBOutlet UIView *displayNoTask;
@@ -47,22 +51,31 @@
     //
     self.lcDbCon = [[DBCon alloc] init];
     self.allTaskInfo = [[DataTable alloc] init];
-    
-    
-//    [self displayNoTaskView];
+    self.requestPerson = [[DataTable alloc] init];
+    //
+    self.goToDetailView = NO;
     
     //初始化一个通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTaskResult:) name:@"displayTaskResult" object:nil];
-    
+    //查询数据库
+    self.requestPerson = [self.lcDbCon ExecDataTable:@"select *from tbl_logPerson"];
     
 }
 #pragma -mark
 - (void)getTaskResult:(NSNotification *)sender
 {
-    NSLog(@"sender Info:%@",sender.userInfo);
-    //根据所获得的数据来组装参数
-    [self.tableView reloadData];
-    
+    if ([sender.name isEqualToString:@"displayTaskResult"]) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.allTaskInfo = [self.lcDbCon ExecDataTable:@"select *from tbl_taskInfo"];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.displayArray = self.allTaskInfo.Rows;
+                //根据所获得的数据来组装参数
+                [self.tableView reloadData];
+            });
+            
+        });
+    }
 }
 
 
@@ -90,9 +103,51 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    NSLog(@"row:%ld and thedata:%@",indexPath.row,self.displayArray[[self.displayArray count] - indexPath.row - 1]);
+    self.whichRowData   = [self.displayArray count] - indexPath.row - 1;
+    self.goToDetailView = YES;
+    [self performSegueWithIdentifier:@"listToTaskDetail" sender:nil];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    TaskDetailViewController *taskDetailVC = segue.destinationViewController;
+    if (self.goToDetailView) {
+        NSDictionary *curRowDic = self.displayArray[self.whichRowData];
+        taskDetailVC.taskStatus = ([curRowDic[@"result"] intValue] == 0)?@"待处理":([curRowDic[@"result"] intValue] == 1)?@"同意":([curRowDic[@"result"] intValue] == 2)?@"不同意":@"";
+        taskDetailVC.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",self.requestPerson.Rows[0][@"number"],self.requestPerson.Rows[0][@"name"]];
+        NSString *reqTime = curRowDic[@"subtim"];
+        taskDetailVC.taskRequstTime = [reqTime substringFromIndex:11];
+        NSString *taskNameType = [[NSString alloc] init];
+        switch ([curRowDic[@"evetyp"] intValue]) {
+            case 1:
+                taskNameType = @"待更换球车";
+                //查询数据库
+                taskDetailVC.taskDetailName = curRowDic[@""];
+                break;
+            case 2:
+                taskNameType = @"待更换球童";
+                break;
+            case 3:
+                taskNameType = @"跳过球洞";
+                break;
+            case 4:
+                taskNameType = @"待补打球洞";
+                break;
+            case 5:
+                taskNameType = @"";
+                break;
+            case 6:
+                taskNameType = @"申请的恢复时间";
+                break;
+            default:
+                break;
+        }
+        //事务类型
+        taskDetailVC.taskDetailName = taskNameType;
+        taskDetailVC.whichInterfaceFrom = 2;
+    }
+}
 
 - (TaskCenterTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"listAllTask";

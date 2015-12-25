@@ -102,9 +102,10 @@ typedef enum ChangeReason{
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //查询申请人的信息
+    //查询申请人的信息 tbl_caddyInf
     self.requestPerson = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
     self.groInfo       = [self.lcDBCon ExecDataTable:@"select *from tbl_groupInf"];
+    self.allCaddyInfo  = [self.lcDBCon ExecDataTable:@"select *from tbl_caddyInf"];
     //
     dispatch_async(dispatch_get_main_queue(), ^{
         //setting default reason color
@@ -315,12 +316,21 @@ typedef enum ChangeReason{
         [alert show];
         return;
     }
+    //根据职员编号查询球童号
+    NSString *caddyCode = [[NSString alloc] init];
+    for (NSDictionary *eachCaddy in self.allCaddyInfo.Rows) {
+        if ([eachCaddy[@"empcod"] isEqualToString:self.requestPerson.Rows[0][@"code"]]) {
+            caddyCode = eachCaddy[@"cadcod"];
+        }
+    }
+    
     //获取到当前系统的时间，并生成相应的格式
     NSDateFormatter *dateFarmatter = [[NSDateFormatter alloc] init];
     [dateFarmatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
     //构建参数
-    NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.requestPerson.Rows[0][@"code"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",self.changeReasonStr,@"reason",self.requestPerson.Rows[0][@"code"],@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
+    NSString *reasonStr = [NSString stringWithFormat:@"%@;",self.changeReasonStr];
+    NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.requestPerson.Rows[0][@"code"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",reasonStr,@"reason",caddyCode,@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
     
     //进行HTTP请求，并在收到正确的消息之后返回
     [HttpTools getHttp:ChangeCaddyURL forParams:changeCaddyParam success:^(NSData *nsData){
@@ -332,8 +342,7 @@ typedef enum ChangeReason{
             //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
             
             NSDictionary *allMsg = recDic[@"Msg"];
-//            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],weakSelf.requestPerson.Rows[0][@"number"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",allMsg[@"subtim"], nil];
-//            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskChangeCaddyInfo(evecod,everea,result,evesta,oldCaddy,oldCaddyCode,newCaddy,newCaddyCode,subtim) values(?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+            //
             NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"2",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
             [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
             
@@ -364,7 +373,6 @@ typedef enum ChangeReason{
     taskViewController.taskTypeName = @"更换球童详情";
     //查询数据库
     self.changeCaddyResult = [self.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
-    self.allCaddyInfo      = [self.lcDBCon ExecDataTable:@"select *from tbl_caddyInf"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         if ([weakSelf.changeCaddyResult.Rows count]) {
             NSString *resultStr = [[NSString alloc] init];
@@ -381,6 +389,7 @@ typedef enum ChangeReason{
                 default:
                     break;
             }
+            taskViewController.whichInterfaceFrom = 1;
             
             taskViewController.taskStatus = resultStr;
             taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.requestPerson.Rows[0][@"number"],weakSelf.requestPerson.Rows[0][@"name"]];

@@ -332,6 +332,7 @@ typedef enum ChangeReason{
                     break;
             }
             
+            taskViewController.whichInterfaceFrom = 1;
             taskViewController.taskStatus = resultStr;
             taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.logPerson.Rows[0][@"number"],weakSelf.logPerson.Rows[0][@"name"]];
             NSString *subtime = weakSelf.changeCartResult.Rows[[weakSelf.changeCartResult.Rows count] - 1][@"subtim"];

@@ -222,6 +222,7 @@
                 default:
                     break;
             }
+            taskViewController.whichInterfaceFrom = 1;
             
             taskViewController.taskStatus = resultStr;
             taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.logPerson.Rows[0][@"number"],weakSelf.logPerson.Rows[0][@"name"]];

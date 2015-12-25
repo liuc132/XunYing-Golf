@@ -119,32 +119,43 @@
     self.showOrDismissThreeLine.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor lightGrayColor]);
     self.threeLineReqTime.text = self.taskRequstTime;
     self.threeLineReqPerson.text = self.taskRequestPerson;
+    //事件详情名称
     self.taskReqName.text        = self.taskDetailName;
     //
-    NSDictionary *theLastData = [self.allTaskInfo.Rows lastObject];
+    NSInteger taskNumber;
     NSString *detailStr = [[NSString alloc] init];
-    switch ([theLastData[@"evetyp"] intValue]) {
-        case 1://换球车
-            detailStr = self.taskCartNum;
-            break;
-        case 2://换球童
-            detailStr = self.taskCaddyNum;
-            break;
-        case 3://跳洞
-            detailStr = self.taskJumpHoleNum;
-            break;
-        case 4://补洞
-            detailStr = self.taskMendHoleNum;
-            break;
-        case 5://点餐
-            
-            break;
-        case 6://离场休息
-            detailStr = self.taskLeaveRebacktime;
-            break;
-        default:
-            break;
+    if (self.whichInterfaceFrom == 1) {
+        NSDictionary *theLastData = [self.allTaskInfo.Rows lastObject];
+        taskNumber  = [theLastData[@"evetyp"] intValue];
+        
+        switch (taskNumber) {
+            case 1://换球车
+                detailStr = self.taskCartNum;
+                break;
+            case 2://换球童
+                detailStr = self.taskCaddyNum;
+                break;
+            case 3://跳洞
+                detailStr = self.taskJumpHoleNum;
+                break;
+            case 4://补洞
+                detailStr = self.taskMendHoleNum;
+                break;
+            case 5://点餐
+                
+                break;
+            case 6://离场休息
+                detailStr = self.taskLeaveRebacktime;
+                break;
+            default:
+                break;
+        }
     }
+    else if (self.whichInterfaceFrom == 2)
+    {
+        detailStr = self.taskTypeName;
+    }
+    //
     self.taskReqDetail.text = detailStr;
     [self.view addSubview:self.threeLineDetailView];
     //

@@ -194,35 +194,95 @@ typedef enum eventOrder{
                     
                     NSLog(@"eventDic:%@",eventDic);
                     NSDictionary *newCart = [[NSDictionary alloc] init];
+                    NSString *value = [[NSString alloc] init];
+                    NSString *cartValue = [[NSString alloc] init];
+                    NSString *decideValue = [[NSString alloc] init];
                     //
                     switch ([eventDic[@"evetyp"] intValue]) {
                         case changeCaddy:
                             observerName = self.observerNameArray[_caddy];
                             //更新相应的数据
-//                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"update tbl_taskInfo SET newCaddyCode = %@ where evecod = %@",]];
+                            //
+                            value = [eventDic objectForKey:@"hantim"];
+                            if (value != nil) {
+                                //
+                                newCart = eventDic[@"everes"];
+                                cartValue = [newCart objectForKey:@"newcad"];
+                                if ((NSNull *)cartValue != [NSNull null]) {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET newCaddyCode = '%@' , result = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"newcad"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                else
+                                {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                //
+                                
+                            }
                             
                             break;
                         case changeCart:
                             observerName = self.observerNameArray[_cart];
                             //更新相应的数据
-                            newCart = eventDic[@"everes"][@"newcar"];
-                            for (id key in newCart) {
-                                if (key != [NSNull null]) {
-                                    NSLog(@"result:%@",[NSString stringWithFormat:@"update tbl_taskInfo SET newCartCode = '%@' , result = '%@' where evecod = '%@'",eventDic[@"everes"][@"newcar"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"evecod"]]);
-                                    
-                                    
-                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"update tbl_taskInfo SET newCartCode = %@ result = %@ where evecod = %@",eventDic[@"everes"][@"newcar"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"evecod"]]];
+                            value = [eventDic objectForKey:@"hantim"];
+                            if (value != nil) {
+                                //
+                                newCart = eventDic[@"everes"];
+                                cartValue = [newCart objectForKey:@"newcar"];
+                                if ((NSNull *)cartValue != [NSNull null]) {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET newCartCode = '%@' , result = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"newcar"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
                                 }
+                                else
+                                {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                //
+                                
                             }
+//                            table12 = [weakSelf.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
+//                            NSLog(@"table12:%@",table12.Rows);
                             
                             break;
                         case jumpHole:
                             observerName = self.observerNameArray[_jump];
-                            
+                            value = [eventDic objectForKey:@"hantim"];
+                            if (value != nil) {
+                                //
+                                newCart = eventDic[@"everes"];
+                                cartValue = [newCart objectForKey:@"desthole"];
+                                if ((NSNull *)cartValue != [NSNull null]) {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET toHoleCode = '%@' , result = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"desthole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                else
+                                {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                //
+                                
+                            }
                             
                             break;
                         case mendHole:
                             observerName = self.observerNameArray[_mend];
+                            value = [eventDic objectForKey:@"hantim"];
+                            if (value != nil) {
+                                //
+                                newCart = eventDic[@"everes"];
+                                cartValue = [newCart objectForKey:@"ratifyhole"];
+                                if ((NSNull *)cartValue != [NSNull null]) {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET ratifyHoleCode = '%@' , result = '%@' , ratifyinTime = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"ratifyhole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"everes"][@"ratifyintime"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                else
+                                {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                //
+                                decideValue = [newCart objectForKey:@"selectedhole"];
+                                if ((NSNull *)decideValue != [NSNull null]) {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET selectedHoleCode = '%@' , result = '%@' where evecod = '%@'",eventDic[@"everes"][@"selectedhole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"evecod"]]];
+                                    
+                                }
+                                
+                            }
                             
                             break;
                         case order:
@@ -231,6 +291,23 @@ typedef enum eventOrder{
                             break;
                         case leaveToRest:
                             observerName = self.observerNameArray[_leave];
+                            value = [eventDic objectForKey:@"hantim"];
+                            if (value != nil) {
+                                //
+                                newCart = eventDic[@"everes"];
+                                cartValue = [newCart objectForKey:@"rehole"];
+                                if ((NSNull *)cartValue != [NSNull null]) {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET reHoleCode = '%@' , result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"rehole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                else
+                                {
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                }
+                                //
+                                
+                                
+                                
+                            }
                             
                             break;
                         default:
@@ -238,15 +315,16 @@ typedef enum eventOrder{
                     }
                     
                     
-                    
                     //保存数据 tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,retime text,newCartNum text,rehole text)
-                    
-                    //通过通知发送到相应的界面中去
-                    [[NSNotificationCenter defaultCenter] postNotificationName:observerName object:nil userInfo:eventDic];
-                    //发送到事务通讯主界面中去 displayTaskResult
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"displayTaskResult" object:eventDic];
-                    //同时还得把数据给保存下来，在回场之后将相应的内存清空
-                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        DataTable *table111 = [[DataTable alloc] init];
+//                        table111 = [weakSelf.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
+//                        NSLog(@"table111:%@",table111);
+                        //通过通知发送到相应的界面中去
+                        [[NSNotificationCenter defaultCenter] postNotificationName:observerName object:nil userInfo:eventDic];
+                        //发送到事务通讯主界面中去 displayTaskResult
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"displayTaskResult" object:nil userInfo:eventDic];
+                    });
                 }
                 
                 //

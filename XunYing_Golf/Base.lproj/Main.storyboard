@@ -774,7 +774,7 @@
                         <segue destination="Frl-Xq-En9" kind="modal" identifier="toChangeCaddy" id="CHG-lf-aUa"/>
                         <segue destination="Xfp-I1-G1q" kind="modal" identifier="toChangeCart" id="Cuj-C5-P19"/>
                         <segue destination="9aT-LR-RH5" kind="modal" identifier="toLeaveToRest" id="bwg-K2-6lu"/>
-                        <segue destination="WZj-8c-E0b" kind="modal" identifier="toTaskDetail" id="puy-a0-Cu5"/>
+                        <segue destination="WZj-8c-E0b" kind="modal" identifier="listToTaskDetail" id="puy-a0-Cu5"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zMI-dG-CuJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2092,7 +2092,7 @@
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9sr-yy-L5K">
                                         <rect key="frame" x="60" y="150" width="44" height="44"/>
-                                        <color key="backgroundColor" red="0.94509803921568625" green="0.20000000000000001" blue="0.14509803921568629" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.74509803921568629" green="0.74509803921568629" blue="0.74509803921568629" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="IFm-vf-t3K"/>
                                             <constraint firstAttribute="width" secondItem="9sr-yy-L5K" secondAttribute="height" multiplier="1:1" id="OUg-WI-cXt"/>
@@ -2215,7 +2215,7 @@
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yWY-9C-2DV">
                                         <rect key="frame" x="112" y="202" width="44" height="44"/>
-                                        <color key="backgroundColor" red="0.94117647058823528" green="0.21176470588235294" blue="0.12549019607843137" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.74509803921568629" green="0.74509803921568629" blue="0.74509803921568629" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="yWY-9C-2DV" secondAttribute="height" multiplier="1:1" id="dWJ-Lv-YkM"/>
                                         </constraints>
@@ -2247,7 +2247,7 @@
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KYK-aC-8Mr">
                                         <rect key="frame" x="216" y="202" width="44" height="44"/>
-                                        <color key="backgroundColor" red="0.94117647058823528" green="0.21176470588235294" blue="0.12549019607843137" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.74509803921568629" green="0.74509803921568629" blue="0.74509803921568629" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="KYK-aC-8Mr" secondAttribute="height" multiplier="1:1" id="AfJ-3T-mZ7"/>
                                         </constraints>
@@ -6481,10 +6481,10 @@
         <image name="taskCum" width="80" height="64"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="eAv-ry-xts"/>
-        <segue reference="Cwp-q1-4Vu"/>
-        <segue reference="KFB-gR-Lkf"/>
         <segue reference="1mO-O2-q3U"/>
         <segue reference="puy-a0-Cu5"/>
+        <segue reference="KFB-gR-Lkf"/>
+        <segue reference="Cwp-q1-4Vu"/>
+        <segue reference="eAv-ry-xts"/>
     </inferredMetricsTieBreakers>
 </document>

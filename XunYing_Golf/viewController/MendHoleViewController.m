@@ -12,6 +12,10 @@
 #import "DBCon.h"
 #import "XunYingPre.h"
 #import "TaskDetailViewController.h"
+#import "UIColor+UICon.h"
+
+#define NotNeedMendColor    @"cacaca"//gray
+#define NeedMendColor       @"f74c30"//red
 
 @interface MendHoleViewController ()
 
@@ -50,6 +54,7 @@
 @property (strong, nonatomic) DBCon     *lcDBCon;
 @property (strong, nonatomic) NSMutableArray *needMendHoles;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
+@property (strong, nonatomic) NSMutableArray   *needMendHoleInfoArray;
 
 @end
 
@@ -63,17 +68,41 @@
     self.logPerson = [[DataTable alloc] init];
     self.holesInf  = [[DataTable alloc] init];
     self.mendHoleResult = [[DataTable alloc] init];
+    
     //在本地数据库中查询数据
     self.logPerson = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
     self.holesInf  = [self.lcDBCon ExecDataTable:@"select *from tbl_holeInf"];
     //测试用，初始化数据
-    self.needMendHoles = [[NSMutableArray alloc] initWithObjects:@"2",@"9",@"11", nil];
+    self.needMendHoles = [[NSMutableArray alloc] init];
     //
     self.mendHoleScrollView.scrollEnabled = YES;
     self.mendHoleScrollView.directionalLockEnabled = YES;
     self.mendHoleScrollView.alwaysBounceVertical = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"mendHole" object:nil];
-    
+    //将所有球洞状态切换成未选
+    [self initAllHoleColor];
+}
+
+- (void)initAllHoleColor
+{
+    self.hole1.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole2.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole3.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole4.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole5.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole6.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole7.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole8.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole9.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole10.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole11.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole12.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole13.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole14.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole15.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole16.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole17.backgroundColor = [UIColor HexString:NotNeedMendColor];
+    self.hole18.backgroundColor = [UIColor HexString:NotNeedMendColor];
 }
 
 - (void)getEventFromHeart:(NSNotification *)sender
@@ -88,9 +117,46 @@
 {
     [super viewWillAppear:animated];
     //
+    __weak typeof(self) weakSelf = self;
+    
     if ([self.logPerson.Rows count]) {
         self.requestMendUser.text = [NSString stringWithFormat:@"%@ %@",self.logPerson.Rows[0][@"number"],self.logPerson.Rows[0][@"name"]];
     }
+    //清除掉所有的数据
+    self.needMendHoleInfoArray = [[NSMutableArray alloc] init];
+    //
+    NSMutableDictionary *getNeedMendHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
+    //在此进行读取当前的需要补打的球洞的信息
+    [HttpTools getHttp:GetNeedMendHoleURL forParams:getNeedMendHoleParam success:^(NSData *nsData){
+        NSDictionary *needMendHoleDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+        NSLog(@"needMend:%@",needMendHoleDic);
+        //
+        if ([needMendHoleDic[@"Code"] intValue] > 0) {
+            NSArray *allNeedMend = needMendHoleDic[@"Msg"];
+            for (NSDictionary *eachNeedMendInfo in allNeedMend) {
+                NSMutableDictionary *getNeedInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:eachNeedMendInfo[@"holcod"],@"holcod",eachNeedMendInfo[@"holnum"],@"holnum", nil];
+                [weakSelf.needMendHoleInfoArray addObject:getNeedInfo];
+            }
+            //调用颜色显示方法来根据相应的各个球洞的状态显示出来
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf refreshHoleStateDis];
+            });
+            
+        }
+        else if ([needMendHoleDic[@"Code"] intValue] == -5)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"没有需要补打的球洞" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            //同时执行跳转程序
+            [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
+        }
+        
+        
+    }failure:^(NSError *err){
+        NSLog(@"getMendHole Failed");
+        
+        
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -98,37 +164,91 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)refreshHoleStateDis
+{
+    for (NSDictionary *eachNeedMend in self.needMendHoleInfoArray) {
+        //需要补打的球洞添加
+        [self.needMendHoles addObject:eachNeedMend[@"holcod"]];
+        //切换显示颜色
+        switch ([eachNeedMend[@"holnum"] intValue]) {
+            case 1:
+                self.hole1.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 2:
+                self.hole2.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 3:
+                self.hole3.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 4:
+                self.hole4.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 5:
+                self.hole5.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 6:
+                self.hole6.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 7:
+                self.hole7.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 8:
+                self.hole8.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 9:
+                self.hole9.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 10:
+                self.hole10.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 11:
+                self.hole11.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 12:
+                self.hole12.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 13:
+                self.hole13.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 14:
+                self.hole14.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 15:
+                self.hole15.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 16:
+                self.hole16.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 17:
+                self.hole17.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            case 18:
+                self.hole18.backgroundColor = [UIColor HexString:NeedMendColor];
+                break;
+            default:
+                break;
+        }
+    }
 }
-*/
 
 - (IBAction)requestMendHole:(UIButton *)sender {
     NSLog(@"requestMendHole");
     //通过代理，读取到总共跳过了哪些球洞，NSMutableArray类型的数据来存储数据
     NSString *mendHoles = [[NSString alloc] init];
-    NSMutableArray *theseHoles = [[NSMutableArray alloc] init];
+//    NSMutableArray *theseHoles = [[NSMutableArray alloc] init];
     if([self.needMendHoles count] > 1)
     {
-        for(unsigned char i = 0;i < [self.needMendHoles count];i++)
-        {
-            NSLog(@"%d",[self.needMendHoles[i] intValue]);
-            [theseHoles addObject:self.holesInf.Rows[[self.needMendHoles[i] intValue]][@"holcod"]];
+        //先添加第一个
+        mendHoles = [NSString stringWithFormat:@"%@",self.needMendHoles[0]];
+        //将剩余的添加进来
+        for (unsigned char i = 1; i < [self.needMendHoles count]; i++) {
+            mendHoles = [mendHoles stringByAppendingString:[NSString stringWithFormat:@",%@",self.needMendHoles[i]]];
         }
-        mendHoles = [NSString stringWithFormat:@"%@",theseHoles[0]];//先添加第一个到字符中
-        //之后将剩下的给添加进去（带有逗号","）
-        for (unsigned char j = 1; j < [theseHoles count]; j++) {
-            mendHoles = [mendHoles stringByAppendingString:[NSString stringWithFormat:@",%@",theseHoles[j]]];
-        }
+        
     }
     else
     {
-        mendHoles = self.holesInf.Rows[[self.needMendHoles.firstObject intValue]][@"holcod"];
+        mendHoles = [NSString stringWithFormat:@"%@",self.needMendHoles[0]];//self.holesInf.Rows[[self.needMendHoles.firstObject intValue]][@"holnum"];
     }
     NSLog(@"mendHoles:%@",mendHoles);
     //组建补洞参数
@@ -204,6 +324,7 @@
                 default:
                     break;
             }
+            taskViewController.whichInterfaceFrom = 1;
             
             taskViewController.taskStatus = resultStr;
             taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.logPerson.Rows[0][@"number"],weakSelf.logPerson.Rows[0][@"name"]];

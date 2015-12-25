@@ -22,8 +22,8 @@
  
  */
 
-#define MainURL                             @"http:www.hdch.net"
-#define PortNum                             @":8089"
+#define MainURL                             @"http://192.168.1.66"
+#define PortNum                             @":8111"
 
 
 #define HeartBeatURL                        [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/appheartbeat.htm"]
@@ -63,6 +63,8 @@
 #define RequestAddDeviceURL                 [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/addPad.htm"]
 //球洞状态更改
 #define MakeHoleCompleteStateURL            [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/completeHole.htm"]
+//获取指定小组需要补洞的接口
+#define GetNeedMendHoleURL                  [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getMendhole.htm"]
 
 
 //#define testChangeInterface                 1

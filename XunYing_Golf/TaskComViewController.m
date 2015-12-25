@@ -86,7 +86,7 @@ typedef enum jobType{
         
         if ([weakSelf.empInfo.Rows count]) {
             NSArray *allempsInfo = weakSelf.empInfo.Rows;
-            static unsigned char onlineall,onlinemanager,onlinedispatch,onlinetourfield,onlinereception,onlinerestaurant;
+            static NSInteger onlineall,onlinemanager,onlinedispatch,onlinetourfield,onlinereception,onlinerestaurant;
             onlineall = 0;
             onlinemanager = 0;
             onlinedispatch = 0;
@@ -178,11 +178,11 @@ typedef enum jobType{
                 }
             }
             //
-            NSString *managerOnlineCount = [NSString stringWithFormat:@"%c",onlinemanager];
-            NSString *dispatchOnlineCount = [NSString stringWithFormat:@"%c",onlinedispatch];
-            NSString *tourfieldOnlineCount = [NSString stringWithFormat:@"%c",onlinetourfield];
-            NSString *receptionOnlineCount = [NSString stringWithFormat:@"%c",onlinereception];
-            NSString *restaurantOnlineCount = [NSString stringWithFormat:@"%c",onlinerestaurant];
+            NSString *managerOnlineCount = [NSString stringWithFormat:@"%ld",(long)onlinemanager];
+            NSString *dispatchOnlineCount = [NSString stringWithFormat:@"%ld",(long)onlinedispatch];
+            NSString *tourfieldOnlineCount = [NSString stringWithFormat:@"%ld",(long)onlinetourfield];
+            NSString *receptionOnlineCount = [NSString stringWithFormat:@"%ld",(long)onlinereception];
+            NSString *restaurantOnlineCount = [NSString stringWithFormat:@"%ld",(long)onlinerestaurant];
             //将数据组装到数组中onlinemanager
             [self.employeesArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:partInfoEmpManager,@"friends",@"管理员",@"name",managerOnlineCount,@"online", nil]];
             //

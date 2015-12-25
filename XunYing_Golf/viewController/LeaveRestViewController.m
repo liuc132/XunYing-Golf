@@ -113,8 +113,12 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请求异常" message:@"参数为空" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
     }
+    //获取到当前系统的时间，并生成相应的格式
+    NSDateFormatter *dateFarmatter = [[NSDateFormatter alloc] init];
+    [dateFarmatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
     //组装数据,恢复时间以及已经完成的球洞规划表编码（这个目前设计中为空） 设置为空
-    NSMutableDictionary *requestToLeaveParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"empcod",@"",@"finishcods",@"",@"retime", nil];
+    NSMutableDictionary *requestToLeaveParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"empcod",@"",@"finishcods",curDateTime,@"retime", nil];
     //开始请求
     [HttpTools getHttp:RequestLeaveTimeURL forParams:requestToLeaveParam success:^(NSData *nsData){
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
@@ -240,7 +244,7 @@
             default:
                 break;
         }
-        
+        taskViewController.whichInterfaceFrom = 1;
         taskViewController.taskStatus = resultStr;
         taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.logPerson.Rows[0][@"number"],weakSelf.logPerson.Rows[0][@"name"]];
         NSString *subtime = weakSelf.leaveRestResult.Rows[[weakSelf.leaveRestResult.Rows count] - 1][@"subtim"];
