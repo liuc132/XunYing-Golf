@@ -11,7 +11,29 @@
 #import "DBCon.h"
 #import "DataTable.h"
 #import "HttpTools.h"
+#import "UIColor+UICon.h"
 
+#define normalHoleState @"01cc00"
+#define wasFinished     @"a8a8a8"
+#define wasJumped       @"009899"
+#define wasPended       @"11acee"
+#define illegalJumped   @"ff6600"
+#define mendHole        @"3f73bf"
+#define finishMendHole  @"847c7a"
+#define wasMendedHole   @"6f56aa"
+#define wasOrdered      @"cc0098"
+
+typedef enum holeState{
+    normalState = 0,
+    wasFinishedState,
+    wasJumpedState,
+    wasPendedState,
+    illegalJumpedState,
+    mendHoleState,
+    finishMendHoleState,
+    wasMendedHoleState,
+    wasOrderedState
+}holeState;
 
 @interface PlayProcessViewController ()<UIAlertViewDelegate>
 
@@ -100,6 +122,139 @@
     
     
 }
+/*
+normalState = 0,
+wasFinishedState,
+wasJumpedState,
+wasPendedState,
+illegalJumpedState,
+mendHoleState,
+finishMendHoleState,
+wasMendedHoleState,
+wasOrderedState
+ */
+- (void)changeHoleColor:(UIButton *)sender andState:(NSInteger)state
+{
+    switch (state) {
+        case normalState:
+            sender.backgroundColor = [UIColor HexString:normalHoleState];
+            break;
+            
+        case wasFinishedState:
+            sender.backgroundColor = [UIColor HexString:wasFinished];
+            break;
+            
+        case wasJumpedState:
+            sender.backgroundColor = [UIColor HexString:wasJumped];
+            break;
+            
+        case wasPendedState:
+            sender.backgroundColor = [UIColor HexString:wasPended];
+            break;
+            
+        case illegalJumpedState:
+            sender.backgroundColor = [UIColor HexString:illegalJumped];
+            break;
+            
+        case mendHoleState:
+            sender.backgroundColor = [UIColor HexString:mendHole];
+            break;
+            
+        case finishMendHoleState:
+            sender.backgroundColor = [UIColor HexString:finishMendHole];
+            break;
+            
+        case wasMendedHoleState:
+            sender.backgroundColor = [UIColor HexString:wasMendedHole];
+            break;
+            
+        case wasOrderedState:
+            sender.backgroundColor = [UIColor HexString:wasOrdered];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)disTheRightStateHoleNum:(NSInteger)HoleNum andState:(NSInteger)state
+{
+    switch (HoleNum) {
+        case 1:
+            [self changeHoleColor:self.hole1 andState:state];
+            break;
+            
+        case 2:
+            [self changeHoleColor:self.hole2 andState:state];
+            break;
+            
+        case 3:
+            [self changeHoleColor:self.hole3 andState:state];
+            break;
+            
+        case 4:
+            [self changeHoleColor:self.hole4 andState:state];
+            break;
+            
+        case 5:
+            [self changeHoleColor:self.hole5 andState:state];
+            break;
+            
+        case 6:
+            [self changeHoleColor:self.hole6 andState:state];
+            break;
+            
+        case 7:
+            [self changeHoleColor:self.hole7 andState:state];
+            break;
+            
+        case 8:
+            [self changeHoleColor:self.hole8 andState:state];
+            break;
+            
+        case 9:
+            [self changeHoleColor:self.hole9 andState:state];
+            break;
+            
+        case 10:
+            [self changeHoleColor:self.hole10 andState:state];
+            break;
+            
+        case 11:
+            [self changeHoleColor:self.hole11 andState:state];
+            break;
+            
+        case 12:
+            [self changeHoleColor:self.hole12 andState:state];
+            break;
+            
+        case 13:
+            [self changeHoleColor:self.hole13 andState:state];
+            break;
+            
+        case 14:
+            [self changeHoleColor:self.hole14 andState:state];
+            break;
+            
+        case 15:
+            [self changeHoleColor:self.hole15 andState:state];
+            break;
+            
+        case 16:
+            [self changeHoleColor:self.hole16 andState:state];
+            break;
+            
+        case 17:
+            [self changeHoleColor:self.hole17 andState:state];
+            break;
+            
+        case 18:
+            [self changeHoleColor:self.hole18 andState:state];
+            break;
+        default:
+            break;
+    }
+}
+
 #pragma -mark observer
 - (void)hadRefreshSuccess:(NSNotification *)sender
 {
@@ -146,6 +301,14 @@
                                 });
                                 break;
                             }
+                                                    }
+                        for (NSDictionary *eachHolePlan in allgHolePlanArray)
+                        {
+                            //切换各个球洞的现实状态 根据各个球洞的状态
+//                            NSLog(@"we are here liuc");
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self disTheRightStateHoleNum:[eachHolePlan[@"holnum"] integerValue] andState:[eachHolePlan[@"ghsta"] integerValue]];
+                                                            });
                         }
                         //显示当前球洞耗时
                         NSInteger curPlayTime = [weakSelf.cusGroInfEmp.Rows[0][@"pladur"] integerValue];
@@ -289,7 +452,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-//    __weak typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     if (alertView.tag == 1) {
         //
@@ -314,7 +477,7 @@
                     //
                     if ([recDic[@"Code"] intValue] > 0) {
                         NSLog(@"正常");
-                        
+                        [weakSelf GetPlayProcess];
                         
                     }
                     
@@ -364,7 +527,7 @@
     NSInteger hour = totalSeconds/3600;
     NSInteger min  = (totalSeconds%3600)/60;
     NSInteger second = totalSeconds%60;
-    NSString  *standardTime = [[NSString alloc] init];
+    NSString  *standardTime;// = [[NSString alloc] init];
     if (hour > 0) {
         standardTime = [NSString stringWithFormat:@"%ld时%ld分%ld秒",(long)hour,(long)min,(long)second];
     }

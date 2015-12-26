@@ -172,7 +172,7 @@
     //获取球洞组，组编号
     if ([self.groupInfo.Rows count]) {
         //组编号
-        NSString *gropNumStr = [[NSString alloc] init];
+        NSString *gropNumStr;// = [[NSString alloc] init];
         gropNumStr = self.groupInfo.Rows[0][@"gronum"];
         //将组编号显示出来
         if ([gropNumStr hasPrefix:@"_"]) {

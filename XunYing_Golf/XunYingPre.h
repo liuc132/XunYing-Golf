@@ -22,8 +22,8 @@
  
  */
 
-#define MainURL                             @"http://192.168.1.66"
-#define PortNum                             @":8111"
+#define MainURL                             @"http://192.168.1.119"
+#define PortNum                             @":8089"
 
 
 #define HeartBeatURL                        [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/appheartbeat.htm"]

@@ -86,11 +86,15 @@
     UIGraphicsEndImageContext();
     
     //内存泄漏
-    UIImage * tempImg = [UIImage imageWithCGImage:subImageRef];
-    UIImage* smallImage =nil;
-    smallImage=tempImg;
+    __block UIImage* smallImage =nil;
     
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        UIImage * tempImg = [UIImage imageWithCGImage:subImageRef];
+        
+        smallImage=tempImg;
+    });
+    //
     return smallImage;
 }
 
@@ -184,20 +188,30 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     int w = size.width;
     int h = size.height;
     
-    UIImage *img = image;
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedFirst);
-    CGRect rect = CGRectMake(0, 0, w, h);
+    __block UIImage *retImage;
     
-    CGContextBeginPath(context);
-    addRoundedRectToPath(context, rect, radius, radius);
-    CGContextClosePath(context);
-    CGContextClip(context);
-    CGContextDrawImage(context, CGRectMake(0, 0, w, h), img.CGImage);
-    CGImageRef imageMasked = CGBitmapContextCreateImage(context);
-    CGContextRelease(context);
-    CGColorSpaceRelease(colorSpace);
-    return [UIImage imageWithCGImage:imageMasked];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIImage *img = image;
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedFirst);
+        CGRect rect = CGRectMake(0, 0, w, h);
+        
+        CGContextBeginPath(context);
+        addRoundedRectToPath(context, rect, radius, radius);
+        CGContextClosePath(context);
+        CGContextClip(context);
+        CGContextDrawImage(context, CGRectMake(0, 0, w, h), img.CGImage);
+        CGImageRef imageMasked = CGBitmapContextCreateImage(context);
+        CGContextRelease(context);
+        CGColorSpaceRelease(colorSpace);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            retImage = [UIImage imageWithCGImage:imageMasked];
+        });
+        
+    });
+    
+    
+    return retImage;
 }
 
 

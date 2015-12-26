@@ -193,17 +193,18 @@ typedef enum eventOrder{
                     //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
                     
                     NSLog(@"eventDic:%@",eventDic);
-                    NSDictionary *newCart = [[NSDictionary alloc] init];
-                    NSString *value = [[NSString alloc] init];
-                    NSString *cartValue = [[NSString alloc] init];
-                    NSString *decideValue = [[NSString alloc] init];
+                    NSDictionary *newCart;// = [[NSDictionary alloc] init];
+                    NSString *value;// = [[NSString alloc] init];
+                    NSString *cartValue;// = [[NSString alloc] init];
+                    NSString *decideValue;// = [[NSString alloc] init];
+                    value = [eventDic objectForKey:@"hantim"];
                     //
                     switch ([eventDic[@"evetyp"] intValue]) {
                         case changeCaddy:
                             observerName = self.observerNameArray[_caddy];
                             //更新相应的数据
                             //
-                            value = [eventDic objectForKey:@"hantim"];
+//                            value = [eventDic objectForKey:@"hantim"];
                             if (value != nil) {
                                 //
                                 newCart = eventDic[@"everes"];
@@ -223,7 +224,7 @@ typedef enum eventOrder{
                         case changeCart:
                             observerName = self.observerNameArray[_cart];
                             //更新相应的数据
-                            value = [eventDic objectForKey:@"hantim"];
+//                            value = [eventDic objectForKey:@"hantim"];
                             if (value != nil) {
                                 //
                                 newCart = eventDic[@"everes"];
@@ -244,7 +245,7 @@ typedef enum eventOrder{
                             break;
                         case jumpHole:
                             observerName = self.observerNameArray[_jump];
-                            value = [eventDic objectForKey:@"hantim"];
+//                            value = [eventDic objectForKey:@"hantim"];
                             if (value != nil) {
                                 //
                                 newCart = eventDic[@"everes"];
@@ -263,7 +264,7 @@ typedef enum eventOrder{
                             break;
                         case mendHole:
                             observerName = self.observerNameArray[_mend];
-                            value = [eventDic objectForKey:@"hantim"];
+//                            value = [eventDic objectForKey:@"hantim"];
                             if (value != nil) {
                                 //
                                 newCart = eventDic[@"everes"];
@@ -291,7 +292,7 @@ typedef enum eventOrder{
                             break;
                         case leaveToRest:
                             observerName = self.observerNameArray[_leave];
-                            value = [eventDic objectForKey:@"hantim"];
+//                            value = [eventDic objectForKey:@"hantim"];
                             if (value != nil) {
                                 //
                                 newCart = eventDic[@"everes"];

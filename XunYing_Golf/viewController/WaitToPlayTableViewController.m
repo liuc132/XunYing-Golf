@@ -138,7 +138,7 @@ extern BOOL          allowDownCourt;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 //#warning Incomplete implementation, return the number of rows
     NSInteger eachSectionRow;
-    
+    eachSectionRow = 0;
     switch (section) {
         case 0:
             eachSectionRow = self.QRCodeEnable?[self.cusCardNumArray count]:self.customerCounts + 1;

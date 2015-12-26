@@ -89,7 +89,7 @@ extern BOOL allowDownCourt;
 //    [self.hostReachability startNotifier];
 //    [self updateInterfaceWithReachability:self.hostReachability];
     
-    NSString *remoteHostName = @"http://192.168.1.119:8081/XYGolfManage";
+    NSString *remoteHostName = @"http://www.baidu.com";
     
     self.hostReachability = [Reachability reachabilityWithHostName:remoteHostName];
     [self.hostReachability startNotifier];
@@ -318,7 +318,7 @@ extern BOOL allowDownCourt;
         //    DataTable *table = [[DataTable alloc] init];
         //    table = [dbCon ExecDataTable:@"select *from tbl_logPerson"];
         //    NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
-        DataTable *threeHolesInf = [[DataTable alloc]init];
+        DataTable *threeHolesInf;// = [[DataTable alloc]init];
         threeHolesInf = [self.dbCon ExecDataTable:@"select *from tbl_threeTypeHoleInf"];
         //NSLog(@"top9:%@\n down9:%@\n all:%@",threeHolesInf.Rows[0],threeHolesInf.Rows[1],threeHolesInf.Rows[2]);
         NSLog(@"holeInf:%@",threeHolesInf);
@@ -346,7 +346,7 @@ extern BOOL allowDownCourt;
         NSLog(@"request successfully");
         NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         //
-        NSString *cusNumberString = [[NSString alloc] init];
+        NSString *cusNumberString;// = [[NSString alloc] init];
         cusNumberString = receiveDic[@"Msg"];
         NSArray *cusNumberArray = [cusNumberString componentsSeparatedByString:@";"];//拆分接收到的数据
         //将数据加载到创建的数据库中
@@ -570,7 +570,7 @@ extern BOOL allowDownCourt;
                 [self.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
                 
                 //执行查询功能
-                DataTable *table = [[DataTable alloc] init];
+                DataTable *table;// = [[DataTable alloc] init];
                 table = [self.dbCon ExecDataTable:@"select *from tbl_logPerson"];
                 NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
                 
@@ -736,7 +736,7 @@ extern BOOL allowDownCourt;
                     //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
                     [strongSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
                     //
-                    DataTable *table = [[DataTable alloc] init];
+                    DataTable *table;// = [[DataTable alloc] init];
                     
                     table = [strongSelf.dbCon ExecDataTable:@"select *from tbl_groupInf"];
                     NSLog(@"table:%@",table);

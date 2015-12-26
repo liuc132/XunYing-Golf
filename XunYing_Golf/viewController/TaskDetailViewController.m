@@ -111,12 +111,11 @@
     //添加当前事务详情的状态栏
     [self.statusDisLabel setFrame:CGRectMake(0, self.theNav.frame.origin.y + self.theNav.frame.size.height, ScreenWidth, self.statusDisLabel.frame.size.height)];
     
-    [self.view addSubview:self.statusDisLabel];
     //
     self.statusDisLabel.text = self.taskStatus;
     //添加当前事务详情的详细列表
     [self.threeLineDetailView setFrame:CGRectMake(0, self.statusDisLabel.frame.origin.y + self.statusDisLabel.frame.size.height, ScreenWidth, self.threeLineDetailView.frame.size.height)];
-    self.showOrDismissThreeLine.layer.borderColor = (__bridge CGColorRef _Nullable)([UIColor lightGrayColor]);
+    
     self.threeLineReqTime.text = self.taskRequstTime;
     self.threeLineReqPerson.text = self.taskRequestPerson;
     //事件详情名称
@@ -158,6 +157,8 @@
     //
     self.taskReqDetail.text = detailStr;
     [self.view addSubview:self.threeLineDetailView];
+    [self.view addSubview:self.statusDisLabel];
+    
     //
     [self.view addSubview:self.theNav];
     
@@ -394,7 +395,8 @@
     if (!showEnable) {
         showEnable = !showEnable;
         //
-        CGFloat moveYN = 0 - self.threeLineDetailView.frame.size.height;
+        
+        CGFloat moveYN = self.statusDisLabel.frame.size.height - self.threeLineDetailView.frame.size.height;
         //
         [UIView animateWithDuration:0.1 animations:^{
             weakSelf.threeLineDetailView.transform = CGAffineTransformMakeTranslation(0, moveYN);
@@ -403,10 +405,10 @@
     else
     {
         showEnable = !showEnable;
-        CGFloat moveYP = self.threeLineDetailView.frame.size.height;
+        CGFloat moveYP = self.threeLineDetailView.frame.size.height - self.statusDisLabel.frame.size.height;
         //
         [UIView animateWithDuration:0.1 animations:^{
-            weakSelf.threeLineDetailView.transform = CGAffineTransformMakeTranslation(0, moveYP/6);
+            weakSelf.threeLineDetailView.transform = CGAffineTransformMakeTranslation(0, moveYP/8);
         }];
     }
     

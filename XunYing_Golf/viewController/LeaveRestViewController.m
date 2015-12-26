@@ -159,7 +159,7 @@
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     NSInteger _row;
-    
+    _row = 0; 
     switch (component) {
         case 0:
             _row = [hourString count];

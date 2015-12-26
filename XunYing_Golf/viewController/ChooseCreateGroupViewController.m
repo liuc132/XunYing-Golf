@@ -235,8 +235,8 @@ extern unsigned char ucHolePosition;
                 [holesInf addObject:eachHoleInf];
             }
             //
-            DataTable *table = [[DataTable alloc] init];
-            table = [strongSelf.LogDbcon ExecDataTable:@"select *from tbl_holeInf"];
+//            DataTable *table;// = [[DataTable alloc] init];
+//            table = [strongSelf.LogDbcon ExecDataTable:@"select *from tbl_holeInf"];
             //
 //            NSString *groupValue = [recDic[@"Msg"] objectForKey:@"group"];
 //            if([(NSNull *)groupValue isEqual: @"null"])//
@@ -276,10 +276,10 @@ extern unsigned char ucHolePosition;
                     //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
                     [strongSelf.LogDbcon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
                     //
-                    DataTable *table = [[DataTable alloc] init];
-                    
-                    table = [strongSelf.LogDbcon ExecDataTable:@"select *from tbl_groupInf"];
-                    NSLog(@"table:%@",table);
+//                    DataTable *table = [[DataTable alloc] init];
+//                    
+//                    table = [strongSelf.LogDbcon ExecDataTable:@"select *from tbl_groupInf"];
+//                    NSLog(@"table:%@",table);
                     //
                     HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
                     [HeartBeatAndDetectState disableHeartBeat];//disable heartBeat
@@ -396,8 +396,8 @@ extern unsigned char ucHolePosition;
                     NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
                     [weakSelf.LogDbcon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
                 }
-                DataTable *table11 = [[DataTable alloc] init];
-                table11 = [weakSelf.LogDbcon ExecDataTable:@"select *from tbl_selectCart"];
+//                DataTable *table11;// = [[DataTable alloc] init];
+//                table11 = [weakSelf.LogDbcon ExecDataTable:@"select *from tbl_selectCart"];
                 //建组成功之后，进入心跳处理类中，开始心跳功能
                 HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
                 if (![heartBeat checkState]) {

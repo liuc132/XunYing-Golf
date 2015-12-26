@@ -221,6 +221,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 -(NSString *)constructCustomers:(cusNumbers)cusNum andAllCustomers:(DataTable *)allCusData
 {
     NSString *customers = [[NSString alloc] init];
+    NSLog(@"%@",customers);
     //
     switch (cusNum) {
         case 0:

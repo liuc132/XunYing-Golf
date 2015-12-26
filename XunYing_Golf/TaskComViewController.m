@@ -95,13 +95,11 @@ typedef enum jobType{
             onlinerestaurant = 0;
             for (NSDictionary *eachEmp in allempsInfo) {
                 //
-                NSString *sectionName = [[NSString alloc] init];
-                NSString *iconStr = [[NSString alloc] init];
-                NSDictionary *eachEmpPartInfo = [[NSDictionary alloc] init];
+                NSString *iconStr;// = [[NSString alloc] init];
+                NSDictionary *eachEmpPartInfo;// = [[NSDictionary alloc] init];
                 
                 switch ([eachEmp[@"empjob"] intValue]) {
                     case allJob:
-                        sectionName = @"所有岗位";
                         //确定是否离线
                         iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
                         if ([eachEmp[@"online"] boolValue]) {
@@ -113,7 +111,6 @@ typedef enum jobType{
                         
                         break;
                     case manager:
-                        sectionName = @"管理员";
                         //确定是否离线
                         iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
                         if ([eachEmp[@"online"] boolValue]) {
@@ -125,7 +122,6 @@ typedef enum jobType{
                         
                         break;
                     case dispatch:
-                        sectionName = @"调度";
                         //确定是否离线
                         iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
                         if ([eachEmp[@"online"] boolValue]) {
@@ -137,7 +133,6 @@ typedef enum jobType{
                         
                         break;
                     case tourField:
-                        sectionName = @"巡场";
                         //确定是否离线
                         iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
                         if ([eachEmp[@"online"] boolValue]) {
@@ -149,7 +144,6 @@ typedef enum jobType{
                         
                         break;
                     case reception:
-                        sectionName = @"前台";
                         //确定是否离线
                         iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
                         if ([eachEmp[@"online"] boolValue]) {
@@ -161,7 +155,6 @@ typedef enum jobType{
                         
                         break;
                     case restaurant:
-                        sectionName = @"餐厅";
                         //确定是否离线
                         iconStr = [NSString stringWithFormat:@"%@",([eachEmp[@"online"] boolValue]?@"online.png":@"offline.png")];
                         if ([eachEmp[@"online"] boolValue]) {
