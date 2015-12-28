@@ -64,11 +64,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineReqTime;//请求时间
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineReqPerson;//请求人
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineReqName;//事件请求名称
-@property (strong, nonatomic) IBOutlet UILabel *fiveLineReqDetail;//事件请求详情
+@property (strong, nonatomic) IBOutlet UILabel *fiveLineReqDetail;//事件请求详情 申请恢复时间
 @property (strong, nonatomic) IBOutlet UILabel *fiveLineHandleName;//事件处理结果名称
-@property (strong, nonatomic) IBOutlet UILabel *fiveLineHandleDetail;//事件处理结果详情
+@property (strong, nonatomic) IBOutlet UILabel *fiveLineHandleDetail;//事件处理结果详情 后台推荐恢复时间
 @property (strong, nonatomic) IBOutlet UILabel *rebackHandleName;//恢复事件名称
-@property (strong, nonatomic) IBOutlet UILabel *rebackHandleDetail;//恢复事件详情
+@property (strong, nonatomic) IBOutlet UILabel *rebackHandleDetail;//恢复事件详情 复场起始球洞号
 @property (strong, nonatomic) IBOutlet UIImageView *fiveLineImage;
 @property (strong, nonatomic) IBOutlet UIButton *fiveLineButtonView;
 
@@ -82,7 +82,9 @@
 
 @property (strong, nonatomic) DBCon *lcDbCon;
 @property (strong, nonatomic) DataTable *allTaskInfo;
-
+@property (strong, nonatomic) DataTable *allCartsInfo;
+@property (strong, nonatomic) DataTable *allCaddiesInfo;
+@property (strong, nonatomic) DataTable *allHolesInfo;
 
 
 @end
@@ -94,10 +96,16 @@
     // Do any additional setup after loading the view.
     self.lcDbCon = [[DBCon alloc] init];
     self.allTaskInfo = [[DataTable alloc] init];
+    self.allCartsInfo = [[DataTable alloc] init];
+    self.allCaddiesInfo = [[DataTable alloc] init];
+    self.allHolesInfo   = [[DataTable alloc] init];
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
     //查询数据库
     self.allTaskInfo = [self.lcDbCon ExecDataTable:@"select *from tbl_taskInfo"];
+    self.allCaddiesInfo = [self.lcDbCon ExecDataTable:@"select *from tbl_caddyInf"];
+    self.allCartsInfo   = [self.lcDbCon ExecDataTable:@"select *from tbl_cartInf"];
+    self.allHolesInfo   = [self.lcDbCon ExecDataTable:@"select *from tbl_holeInf"];
     
     //0.加载数据
     [self loadData];
@@ -113,61 +121,206 @@
     
     //
     self.statusDisLabel.text = self.taskStatus;
-    //添加当前事务详情的详细列表
-    [self.threeLineDetailView setFrame:CGRectMake(0, self.statusDisLabel.frame.origin.y + self.statusDisLabel.frame.size.height, ScreenWidth, self.threeLineDetailView.frame.size.height)];
     
-    self.threeLineReqTime.text = self.taskRequstTime;
-    self.threeLineReqPerson.text = self.taskRequestPerson;
-    //事件详情名称
-    self.taskReqName.text        = self.taskDetailName;
-    //
-    NSInteger taskNumber;
-    NSString *detailStr = [[NSString alloc] init];
-    if (self.whichInterfaceFrom == 1) {
-        NSDictionary *theLastData = [self.allTaskInfo.Rows lastObject];
-        taskNumber  = [theLastData[@"evetyp"] intValue];
-        
-        switch (taskNumber) {
-            case 1://换球车
-                detailStr = self.taskCartNum;
-                break;
-            case 2://换球童
-                detailStr = self.taskCaddyNum;
-                break;
-            case 3://跳洞
-                detailStr = self.taskJumpHoleNum;
-                break;
-            case 4://补洞
-                detailStr = self.taskMendHoleNum;
-                break;
-            case 5://点餐
-                
-                break;
-            case 6://离场休息
-                detailStr = self.taskLeaveRebacktime;
-                break;
-            default:
-                break;
-        }
-    }
-    else if (self.whichInterfaceFrom == 2)
-    {
-        detailStr = self.taskTypeName;
-    }
-    //
-    self.taskReqDetail.text = detailStr;
-    [self.view addSubview:self.threeLineDetailView];
+    
+    [self switchTheDisView];
+    
+//    [self.view addSubview:theDetailListView];
     [self.view addSubview:self.statusDisLabel];
+    //
     
     //
     [self.view addSubview:self.theNav];
+    //添加通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDataByNotification:) name:@"detailRefresh"object:nil];
+}
+
+- (void)refreshDataByNotification:(NSNotification *)sender
+{
+    [self.view setNeedsDisplay];
+    //
+    //查询数据库
+    self.allTaskInfo = [self.lcDbCon ExecDataTable:@"select *from tbl_taskInfo"];
+    //
+    NSLog(@"%@",sender.userInfo);
+    if ([sender.userInfo[@"evecod"] isEqualToString:[NSString stringWithFormat:@"%@",self.allTaskInfo.Rows[self.selectRowNum][@"evecod"]]]) {
+        [self switchTheDisView];
+    }
+    
+}
+
+- (void)switchTheDisView
+{
+    NSLog(@"whichRowData:%@",self.allTaskInfo.Rows[self.selectRowNum]);
+    NSDictionary *theSelectTaskRow = self.allTaskInfo.Rows[self.selectRowNum];
+    NSString *detailStr;
+    NSString *detailStrNew;
+    NSString *taskTypeNameStr;
+    NSString *navTaskTypeName;
+    NSString *handleResultName;
+    //选择相应的详情视图
+    //根据状态来切换相遇的视图
+    switch ([self.allTaskInfo.Rows[self.selectRowNum][@"result"] intValue]) {
+        case 0://待处理
+        case 2://不同意
+            [self.threeLineDetailView setFrame:CGRectMake(0, self.statusDisLabel.frame.origin.y + self.statusDisLabel.frame.size.height, ScreenWidth, self.threeLineDetailView.frame.size.height)];
+            [self.view addSubview:self.threeLineDetailView];
+            break;
+            
+        case 1://同意
+            
+            if ([self.allTaskInfo.Rows[self.selectRowNum][@"evetyp"] intValue] == 6) {
+                [self.fiveLineView setFrame:CGRectMake(0, self.statusDisLabel.frame.origin.y + self.statusDisLabel.frame.size.height, ScreenWidth, self.fiveLineView.frame.size.height)];
+                [self.view addSubview:self.fiveLineView];
+            }
+            else
+            {
+                [self.fourLineView setFrame:CGRectMake(0, self.statusDisLabel.frame.origin.y + self.statusDisLabel.frame.size.height, ScreenWidth, self.fourLineView.frame.size.height)];
+                [self.view addSubview:self.fourLineView];
+            }
+            
+            break;
+        default:
+            break;
+    }
+    //
+    switch ([theSelectTaskRow[@"evetyp"] intValue]) {
+        case 1://换球车
+            for (NSDictionary *eachCart in self.allCartsInfo.Rows) {
+                if ([eachCart[@"carcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"newCartCode"]]]) {
+                    detailStr = eachCart[@"carnum"];
+                }
+                if ([eachCart[@"carcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"oldCartCode"]]]) {
+                    detailStrNew = eachCart[@"carnum"];
+                }
+            }
+            navTaskTypeName = @"更换球车详情";
+            taskTypeNameStr = @"待更换球车";
+            handleResultName = @"已更换新球车";
+            break;
+        case 2://换球童
+            for (NSDictionary *eachCaddy in self.allCaddiesInfo.Rows) {
+                if ([eachCaddy[@"cadcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"newCaddyCode"]]]) {
+                    detailStr = [NSString stringWithFormat:@"%@ %@",eachCaddy[@"cadnum"],eachCaddy[@"cadnam"]];
+                }
+                if ([eachCaddy[@"cadcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"oldCaddyCode"]]]) {
+                    detailStrNew = [NSString stringWithFormat:@"%@ %@",eachCaddy[@"cadnum"],eachCaddy[@"cadnam"]];
+                }
+            }
+            
+            navTaskTypeName = @"更换球童详情";
+            taskTypeNameStr = @"待换球童";
+            handleResultName = @"替换球童";
+            break;
+        case 3://跳洞
+            for (NSDictionary *eachHole in self.allHolesInfo.Rows) {
+                if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"toHoleCode"]]]) {
+                    detailStr = eachHole[@"holenum"];
+                }
+                if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"jumpHoleCode"]]]) {
+                    detailStrNew = eachHole[@"holenum"];
+                }
+            }
+            
+            navTaskTypeName = @"跳洞详情";
+            taskTypeNameStr = @"跳过球洞";
+            handleResultName = @"跳到球洞";
+            break;
+        case 4://补洞
+            for (NSDictionary *eachHole in self.allHolesInfo.Rows) {
+                if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"mendHoleCode"]]]) {
+                    detailStr = eachHole[@"holenum"];
+                }
+                if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"reHoleCode"]]]) {
+                    detailStrNew = eachHole[@"holenum"];
+                }
+            }
+            
+            navTaskTypeName = @"补洞详情";
+            taskTypeNameStr = @"待补打球洞";
+            handleResultName = @"补打球洞";
+            break;
+        case 5://点餐
+            
+            break;
+        case 6://离场休息
+            detailStr = self.taskLeaveRebacktime;
+            navTaskTypeName = @"离场休息详情";
+            taskTypeNameStr = @"申请的恢复时间";
+            //
+            for (NSDictionary *eachHole in self.allHolesInfo.Rows) {
+                if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"reHoleCode"]]]) {
+                    detailStr = eachHole[@"holenum"];
+                }
+            }
+            detailStrNew = [theSelectTaskRow objectForKey:@"reqBackTime"];
+            
+            if (![detailStrNew  isEqual: @""]) {
+                detailStrNew = theSelectTaskRow[@"reqBackTime"];
+                detailStrNew = [detailStrNew substringWithRange:NSMakeRange(11, 8)];
+            }
+            
+            break;
+        default:
+            break;
+    }
+    self.taskReqDetail.text = detailStr; //当前所选择的事务详情的显示
+    //显示事件状态,同时根据相应的状态切换显示视图
+    switch ([theSelectTaskRow[@"result"] intValue]) {
+        case 0://待处理
+            self.statusDisLabel.text = @"待处理";
+            self.threeLineReqPerson.text    = self.taskRequestPerson;
+            self.threeLineReqTime.text      = self.taskRequstTime;
+            self.taskReqName.text           = taskTypeNameStr;
+            self.navigationItemDetail.title = navTaskTypeName;
+            self.taskReqDetail.text         = detailStrNew;
+            
+            break;
+        case 1://同意
+            self.statusDisLabel.text = @"同意";
+            if ([theSelectTaskRow[@"evetyp"] intValue] == 6) {
+                self.fiveLineReqPerson.text = self.taskRequestPerson;
+                self.fiveLineReqTime.text   = self.taskRequstTime;
+                self.fiveLineReqName.text   = taskTypeNameStr;
+                self.navigationItemDetail.title = navTaskTypeName;
+                self.fiveLineReqDetail.text = self.taskRequstTime;
+                self.fiveLineHandleName.text = @"后台推荐恢复时间";
+                self.rebackHandleName.text   = @"复场起始球洞";
+                self.fiveLineHandleDetail.text  = detailStrNew;
+                self.rebackHandleDetail.text    = detailStr;
+            }
+            else
+            {
+                self.fourLineReqPerson.text = self.taskRequestPerson;
+                self.fourLineReqTime.text   = self.taskRequstTime;
+                self.fourLineReqName.text   = taskTypeNameStr;
+                self.navigationItemDetail.title = navTaskTypeName;
+                self.fourLineReqDetail.text = detailStrNew;
+                self.fourLineHandleName.text    = handleResultName;
+                self.fourLineHandleResult.text  = detailStr;
+            }
+            
+            break;
+        case 2:
+            self.statusDisLabel.text = @"不同意";
+            self.threeLineReqPerson.text    = self.taskRequestPerson;
+            self.threeLineReqTime.text      = self.taskRequstTime;
+            self.taskReqName.text           = taskTypeNameStr;
+            self.navigationItemDetail.title = navTaskTypeName;
+            self.taskReqDetail.text         = detailStrNew;
+            break;
+            
+        default:
+            break;
+    }
+    
     
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationItemDetail.title = self.taskTypeName;
+//    self.navigationItemDetail.title = self.taskTypeName;
     
 }
 /**
@@ -414,7 +567,59 @@
     
 }
 - (IBAction)fiveLineDismissShow:(UIButton *)sender {
+    NSLog(@"enter show or dismiss view");
+    __weak typeof(self) weakSelf = self;
+    static BOOL showEnable = NO;
+    
+    
+    //对事务详情的子视图进行平移
+    if (!showEnable) {
+        showEnable = !showEnable;
+        //
+        
+        CGFloat moveYN = self.statusDisLabel.frame.size.height - self.fiveLineView.frame.size.height;
+        //
+        [UIView animateWithDuration:0.1 animations:^{
+            weakSelf.fiveLineView.transform = CGAffineTransformMakeTranslation(0, moveYN);
+        }];
+    }
+    else
+    {
+        showEnable = !showEnable;
+        CGFloat moveYP = self.fiveLineView.frame.size.height - self.statusDisLabel.frame.size.height;
+        //
+        [UIView animateWithDuration:0.1 animations:^{
+            weakSelf.fiveLineView.transform = CGAffineTransformMakeTranslation(0, moveYP/8);
+        }];
+    }
+    
 }
 - (IBAction)fourLineDismissShow:(UIButton *)sender {
+    NSLog(@"enter show or dismiss view");
+    __weak typeof(self) weakSelf = self;
+    static BOOL showEnable = NO;
+    
+    
+    //对事务详情的子视图进行平移
+    if (!showEnable) {
+        showEnable = !showEnable;
+        //
+        
+        CGFloat moveYN = self.statusDisLabel.frame.size.height - self.fourLineView.frame.size.height;
+        //
+        [UIView animateWithDuration:0.1 animations:^{
+            weakSelf.fourLineView.transform = CGAffineTransformMakeTranslation(0, moveYN);
+        }];
+    }
+    else
+    {
+        showEnable = !showEnable;
+        CGFloat moveYP = self.fourLineView.frame.size.height - self.statusDisLabel.frame.size.height;
+        //
+        [UIView animateWithDuration:0.1 animations:^{
+            weakSelf.fourLineView.transform = CGAffineTransformMakeTranslation(0, moveYP/8);
+        }];
+    }
+    
 }
 @end

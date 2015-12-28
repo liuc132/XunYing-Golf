@@ -333,7 +333,7 @@
             taskViewController.taskDetailName = @"待补打球洞";
             taskViewController.taskMendHoleNum = @"";
         }
-        
+        taskViewController.selectRowNum = [weakSelf.mendHoleResult.Rows count] - 1;
     });
     
     

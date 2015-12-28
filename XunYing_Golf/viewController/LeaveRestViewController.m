@@ -63,6 +63,18 @@
     //
     self.selectTime.dataSource = self;
     self.selectTime.delegate   = self;
+    //
+    NSDateFormatter *dateFarmatter = [[NSDateFormatter alloc] init];
+    [dateFarmatter setDateFormat:@"HH:mm:ss"];
+    NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
+    //
+    NSInteger hourRow = [[curDateTime substringToIndex:2] integerValue];
+    NSRange range = NSMakeRange(3, 2);
+    NSInteger minRow = [[curDateTime substringWithRange:range] integerValue];
+    //
+    
+    [self.selectTime selectRow:hourRow inComponent:0 animated:YES];
+    [self.selectTime selectRow:minRow inComponent:2 animated:YES];
 }
 
 - (void)getEventFromHeart:(NSNotification *)sender
@@ -180,7 +192,7 @@
 }
 //获取到当前选择的参数
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
-    if (component == 0) {
+    if (component == 0 || component == 2) {
         [pickerView reloadComponent:2];
         NSInteger rowOne = [pickerView selectedRowInComponent:0];
         NSInteger rowThree = [pickerView selectedRowInComponent:2];
@@ -251,7 +263,7 @@
         taskViewController.taskRequstTime = [subtime substringFromIndex:11];
         taskViewController.taskDetailName = @"申请的恢复时间";
         taskViewController.taskLeaveRebacktime   = @"";//[NSString stringWithFormat:@"%@",weakSelf.leaveRestResult.Rows[[weakSelf.leaveRestResult.Rows count] - 1][@"oldCaddy"]];
-        
+        taskViewController.selectRowNum = [weakSelf.leaveRestResult.Rows count] - 1;
         
     });
 }

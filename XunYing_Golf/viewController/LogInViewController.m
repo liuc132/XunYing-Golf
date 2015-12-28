@@ -761,6 +761,10 @@ extern BOOL allowDownCourt;
                     });
                     
                 }
+                else
+                {
+                    [self.dbCon ExecNonQuery:@"delete from tbl_taskInfo"];
+                }
                 
             }
         }

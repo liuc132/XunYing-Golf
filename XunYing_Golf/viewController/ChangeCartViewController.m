@@ -345,7 +345,7 @@ typedef enum ChangeReason{
                     taskViewController.taskCartNum  = [NSString stringWithFormat:@"%@",eachCart[@"carnum"]];
                 }
             }
-            
+            taskViewController.selectRowNum = [weakSelf.changeCartResult.Rows count] - 1;
             
         }
         

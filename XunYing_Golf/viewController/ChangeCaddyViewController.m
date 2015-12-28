@@ -404,6 +404,8 @@ typedef enum ChangeReason{
                     break;
                 }
             }
+            //
+            taskViewController.selectRowNum = [weakSelf.changeCaddyResult.Rows count] - 1;
             
         }
         

@@ -298,7 +298,7 @@ typedef enum eventOrder{
                                 newCart = eventDic[@"everes"];
                                 cartValue = [newCart objectForKey:@"rehole"];
                                 if ((NSNull *)cartValue != [NSNull null]) {
-                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET reHoleCode = '%@' , result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"rehole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET reHoleCode = '%@' , reqBackTime = '%@' , result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"rehole"][@"holcod"],eventDic[@"everes"][@"retime2"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
                                 }
                                 else
                                 {
@@ -325,6 +325,8 @@ typedef enum eventOrder{
                         [[NSNotificationCenter defaultCenter] postNotificationName:observerName object:nil userInfo:eventDic];
                         //发送到事务通讯主界面中去 displayTaskResult
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"displayTaskResult" object:nil userInfo:eventDic];
+                        //在详情视图界面也发送通知
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"detailRefresh" object:nil userInfo:eventDic];
                     });
                 }
                 

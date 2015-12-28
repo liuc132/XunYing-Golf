@@ -146,6 +146,7 @@
         //事务类型
         taskDetailVC.taskDetailName = taskNameType;
         taskDetailVC.whichInterfaceFrom = 2;
+        taskDetailVC.selectRowNum       = self.whichRowData;
     }
 }
 

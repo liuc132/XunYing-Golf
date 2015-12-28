@@ -371,6 +371,7 @@ extern unsigned char ucHolePosition;
             }
             else
             {
+                [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_taskInfo"];
                 [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_CustomersInfo"];
                 [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_selectCart"];
                 [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_groupInf"];

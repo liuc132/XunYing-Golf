@@ -23,7 +23,7 @@
 @property (strong, nonatomic) NSString  *taskMendHoleNum;
 @property (strong, nonatomic) NSString  *taskLeaveRebacktime;
 @property (nonatomic)         NSInteger whichInterfaceFrom;//1:from taskList ;2:from eachtaskReqView
-//@property (
+@property (nonatomic)         NSInteger selectRowNum;
 
 
 

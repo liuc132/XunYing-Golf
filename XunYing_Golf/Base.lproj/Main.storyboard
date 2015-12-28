@@ -1114,6 +1114,15 @@
                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="arrow_down" translatesAutoresizingMaskIntoConstraints="NO" id="Ywq-Ra-z14">
+                            <rect key="frame" x="129" y="114" width="62" height="30"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="申请时间" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zSl-6h-r5E">
+                            <rect key="frame" x="8" y="8" width="68" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1IU-Pf-yRY">
                             <rect key="frame" x="0.0" y="113" width="320" height="31"/>
                             <state key="normal">
@@ -1124,22 +1133,13 @@
                                     <integer key="value" value="1"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColorFromUIColor">
-                                    <color key="value" red="0.14032907196969702" green="0.14032907196969702" blue="0.14032907196969702" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="value" red="0.89803921568627454" green="0.89803921568627454" blue="0.89803921568627454" alpha="1" colorSpace="calibratedRGB"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="showOrDismissThreeLine:" destination="WZj-8c-E0b" eventType="touchUpInside" id="xxf-EE-Ejj"/>
                             </connections>
                         </button>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="arrow_down" translatesAutoresizingMaskIntoConstraints="NO" id="Ywq-Ra-z14">
-                            <rect key="frame" x="129" y="114" width="62" height="30"/>
-                        </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="申请时间" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zSl-6h-r5E">
-                            <rect key="frame" x="8" y="8" width="68" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
@@ -1208,10 +1208,18 @@
                             <color key="backgroundColor" red="0.8980392157" green="0.8980392157" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="arrow_down" translatesAutoresizingMaskIntoConstraints="NO" id="rni-KN-cAi">
-                            <rect key="frame" x="144" y="155" width="32" height="15"/>
+                            <rect key="frame" x="128" y="151" width="65" height="30"/>
                         </imageView>
                         <button opaque="NO" alpha="0.10000000000000001" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qWt-S7-7FH">
-                            <rect key="frame" x="0.0" y="151" width="320" height="24"/>
+                            <rect key="frame" x="0.0" y="151" width="320" height="31"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.BorderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColorFromUIColor">
+                                    <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="fourLineDismissShow:" destination="WZj-8c-E0b" eventType="touchUpInside" id="cZv-Iu-TjN"/>
                             </connections>
@@ -1300,10 +1308,18 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="arrow_down" translatesAutoresizingMaskIntoConstraints="NO" id="a2K-VJ-zZ6">
-                            <rect key="frame" x="144" y="193" width="33" height="15"/>
+                            <rect key="frame" x="128" y="190" width="65" height="30"/>
                         </imageView>
                         <button opaque="NO" alpha="0.10000000000000001" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qwt-Lr-RQ0">
-                            <rect key="frame" x="0.0" y="189" width="320" height="24"/>
+                            <rect key="frame" x="0.0" y="190" width="320" height="31"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColorFromUIColor">
+                                    <color key="value" red="0.89803921568627454" green="0.89803921568627454" blue="0.89803921568627454" alpha="1" colorSpace="calibratedRGB"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.BorderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="fiveLineDismissShow:" destination="WZj-8c-E0b" eventType="touchUpInside" id="NrP-H7-f7p"/>
                             </connections>
@@ -1946,6 +1962,24 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="curHoleNum" destination="47x-jO-Veh" id="oPi-JX-pbr"/>
+                        <outlet property="hole1" destination="4Tf-Fo-Hsj" id="NL8-gS-YyJ"/>
+                        <outlet property="hole10" destination="jNr-PM-u1K" id="o3G-F6-ctH"/>
+                        <outlet property="hole11" destination="EKJ-75-raT" id="hN1-IJ-qhz"/>
+                        <outlet property="hole12" destination="pDw-Tr-T8G" id="OpF-gk-5Fx"/>
+                        <outlet property="hole13" destination="1Rr-7t-eg1" id="3Jv-iX-edl"/>
+                        <outlet property="hole14" destination="Skm-hD-HTR" id="JbR-J1-z1f"/>
+                        <outlet property="hole15" destination="sNQ-81-grF" id="F5I-5A-kpI"/>
+                        <outlet property="hole16" destination="UJ2-to-Cfv" id="hoG-wM-mPq"/>
+                        <outlet property="hole17" destination="HVS-MI-DFR" id="nC5-vX-ceK"/>
+                        <outlet property="hole18" destination="TCB-Fg-H5b" id="P8h-3H-aGE"/>
+                        <outlet property="hole2" destination="KGg-st-SzW" id="GHn-CK-f2D"/>
+                        <outlet property="hole3" destination="gGU-f2-PaI" id="RAK-Am-uzF"/>
+                        <outlet property="hole4" destination="b34-1Z-uGn" id="S8P-bb-zpm"/>
+                        <outlet property="hole5" destination="BY8-9q-jtg" id="L2m-on-DdK"/>
+                        <outlet property="hole6" destination="QdO-rA-m9r" id="mXR-Mz-ljW"/>
+                        <outlet property="hole7" destination="uQW-Up-huY" id="paa-E3-aMi"/>
+                        <outlet property="hole8" destination="2Ij-bu-fxX" id="dhm-Tj-Fav"/>
+                        <outlet property="hole9" destination="xJn-op-9EX" id="XDd-ds-0w5"/>
                         <outlet property="jumpHoleBack" destination="pz0-Hk-dPC" id="1gq-4f-HCJ"/>
                         <outlet property="jumpHoleNum" destination="rSe-Kn-oMF" id="lf4-uo-74H"/>
                         <outlet property="jumpHoleScrollView" destination="5gK-4f-mek" id="b08-y7-f78"/>
@@ -6481,10 +6515,10 @@
         <image name="taskCum" width="80" height="64"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="eAv-ry-xts"/>
-        <segue reference="Cwp-q1-4Vu"/>
         <segue reference="KFB-gR-Lkf"/>
         <segue reference="1mO-O2-q3U"/>
-        <segue reference="VEx-N1-DWY"/>
+        <segue reference="sQ6-hn-qBD"/>
+        <segue reference="Cwp-q1-4Vu"/>
+        <segue reference="eAv-ry-xts"/>
     </inferredMetricsTieBreakers>
 </document>
