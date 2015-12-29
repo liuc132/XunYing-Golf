@@ -25,6 +25,9 @@
 @property (strong, nonatomic) DBCon *lcDBCon;
 @property (strong, nonatomic) DataTable *logPerson;
 @property (strong, nonatomic) DataTable *leaveRestResult;
+@property (strong, nonatomic) DataTable *holesPlanInfo;
+@property (strong, nonatomic) DataTable *cusGrpInfo;
+@property (strong, nonatomic) DataTable *grpInfo;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
 
 
@@ -52,14 +55,19 @@
     self.lcDBCon = [[DBCon alloc] init];
     self.logPerson = [[DataTable alloc] init];
     self.leaveRestResult = [[DataTable alloc] init];
+    self.holesPlanInfo       = [[DataTable alloc] init];
+    self.cusGrpInfo      = [[DataTable alloc] init];
+    self.grpInfo         = [[DataTable alloc] init];
     //
     hourString = @[@"00",@"01",@"02",@"03",@"04",@"05",@"06",@"07",@"08",@"09",@"10",@"11",@"12",@"13",@"14",@"15",@"16",@"17",@"18",@"19",@"20",@"21",@"22",@"23"];
     minString = @[@"00",@"01",@"02",@"03",@"04",@"05",@"06",@"07",@"08",@"09",@"10",@"11",@"12",@"13",@"14",@"15",@"16",@"17",@"18",@"19",@"20",@"21",@"22",@"23",@"24",@"25",@"26",@"27",@"28",@"29",@"30",@"31",@"32",@"33",@"34",@"35",@"36",@"37",@"38",@"39",@"40",@"41",@"42",@"43",@"44",@"45",@"46",@"47",@"48",@"49",@"50",@"51",@"52",@"53",@"54",@"55",@"56",@"57",@"58",@"59"];
     separateString = @":";
     //查询申请人的信息
     self.logPerson = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
+    self.grpInfo   = [self.lcDBCon ExecDataTable:@"select *from tbl_groupInf"];
+    
     //init a notificationcenter
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"leaveToRest" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"LocleaveToRest" object:nil];
     //
     self.selectTime.dataSource = self;
     self.selectTime.delegate   = self;
@@ -75,6 +83,26 @@
     
     [self.selectTime selectRow:hourRow inComponent:0 animated:YES];
     [self.selectTime selectRow:minRow inComponent:2 animated:YES];
+    //
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTheLatestInfo:) name:@"LocleaveToRest" object:nil];
+    //
+    [self GetPlayProcess];
+}
+
+- (void)getTheLatestInfo:(NSNotification *)sender
+{
+    self.holesPlanInfo = [self.lcDBCon ExecDataTable:@"select *from tbl_holePlanInfo"];
+    self.cusGrpInfo    = [self.lcDBCon ExecDataTable:@"select *from tbl_CusGroInf"];
+    if ([sender.userInfo[@"hasRefreshedLeaveRest"] isEqualToString:@"1"]) {
+        for (NSDictionary *eachHole in self.holesPlanInfo.Rows) {
+            if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",self.cusGrpInfo.Rows[0][@"nowholcod"]]]) {
+                //查询到当前所在的球洞
+                self.currentHole.text = [NSString stringWithFormat:@"%@号",eachHole[@"holnum"]];
+                break;
+            }
+            
+        }
+    }
 }
 
 - (void)getEventFromHeart:(NSNotification *)sender
@@ -142,8 +170,8 @@
 //            NSMutableArray *leaveRestBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],allMsg[@"everes"][@"everea"],allMsg[@"everes"][@"result"],allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"hantim"],@"", nil];
 //            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskLeaveRest(evecod,everea,result,evesta,subtim,hantim,reholeCode) values(?,?,?,?,?,?,?)" forParameter:leaveRestBackInfo];
             //
-            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"6",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
-            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"6",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
             //
             [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
         }
@@ -266,6 +294,52 @@
         taskViewController.selectRowNum = [weakSelf.leaveRestResult.Rows count] - 1;
         
     });
+}
+
+#pragma -mark GetPlayProcess
+- (void)GetPlayProcess
+{
+    __weak typeof(self) weakSelf = self;
+    //construct request parameter
+    if (![self.grpInfo.Rows count]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"获取数据异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
+    NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.grpInfo.Rows[0][@"grocod"],@"grocod", nil];
+    //start request
+    [HttpTools getHttp:GetPlayProcessURL forParams:refreshParam success:^(NSData *nsData){
+        NSLog(@"success refresh");
+        NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+        if ([latestDataDic[@"Code"] intValue] > 0) {
+            //delete the old data
+            [weakSelf.lcDBCon ExecNonQuery:@"delete from tbl_CusGroInf"];
+            [weakSelf.lcDBCon ExecNonQuery:@"delete from tbl_holePlanInfo"];
+            //
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //客户组对象
+                NSMutableArray *cusGroInfPart = [[NSMutableArray alloc] initWithObjects:latestDataDic[@"Msg"][@"appGroupE"][@"grocod"],latestDataDic[@"Msg"][@"appGroupE"][@"grosta"],latestDataDic[@"Msg"][@"appGroupE"][@"nextgrodistime"],latestDataDic[@"Msg"][@"appGroupE"][@"nowblocks"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholcod"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholnum"],latestDataDic[@"Msg"][@"appGroupE"][@"pladur"],latestDataDic[@"Msg"][@"appGroupE"][@"stahol"],latestDataDic[@"Msg"][@"appGroupE"][@"statim"],latestDataDic[@"Msg"][@"appGroupE"][@"stddur"], nil];
+                //tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
+                [self.lcDBCon ExecNonQuery:@"insert into tbl_CusGroInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGroInfPart];
+                //球洞规划组对象
+                NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
+                for (NSDictionary *eachHoleInf in allGroHoleList) {
+                    NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadur"], nil];
+                    //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
+                    [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
+                }
+                //通知数据已经更新了
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"LocleaveToRest" object:nil userInfo:@{@"hasRefreshedLeaveRest":@"1"}];
+                
+            });
+        }
+        
+    }failure:^(NSError *err){
+        NSLog(@"refresh failled and err:%@",err);
+        
+        
+    }];
+    
 }
 
 @end

@@ -190,7 +190,7 @@ typedef enum eventOrder{
                     NSDictionary *eventDic = eventInfo[0];
                     NSString *observerName = [[NSString alloc] init];
 //                    NSMutableArray *taskInfo = [[NSMutableArray alloc] init];
-                    //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
+                    //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,destintime text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
                     
                     NSLog(@"eventDic:%@",eventDic);
                     NSDictionary *newCart;// = [[NSDictionary alloc] init];
@@ -251,7 +251,7 @@ typedef enum eventOrder{
                                 newCart = eventDic[@"everes"];
                                 cartValue = [newCart objectForKey:@"desthole"];
                                 if ((NSNull *)cartValue != [NSNull null]) {
-                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET toHoleCode = '%@' , result = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"desthole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                    [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET toHoleCode = '%@' , result = '%@' , destintime = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"desthole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"everes"][@"destintime"],eventDic[@"hantim"],eventDic[@"evecod"]]];
                                 }
                                 else
                                 {

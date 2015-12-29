@@ -233,7 +233,7 @@
             break;
     }
     //
-    cell.taskReqTimeDis.text    = [NSString stringWithFormat:@"%@",eachTask[@"subtim"]];
+    cell.taskReqTimeDis.text    = [NSString stringWithFormat:@"%@",[eachTask[@"subtim"] substringWithRange:NSMakeRange(11, 5)]];
     
     return cell;
 }

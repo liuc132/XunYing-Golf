@@ -20,7 +20,7 @@
 //#import "WaitToPlayTableViewController.h"
 extern BOOL allowDownCourt;
 
-@interface LogInViewController ()<UIGestureRecognizerDelegate,UIAlertViewDelegate>
+@interface LogInViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>
 
 //@property(strong, nonatomic) ActivityIndicatorView *activityView;
 @property(nonatomic) BOOL forgetCode;
@@ -42,8 +42,10 @@ extern BOOL allowDownCourt;
 @property (strong, nonatomic) DataTable *logInPerson;
 @property (strong, nonatomic) DataTable *logPersonInf;
 
-@property (strong, nonatomic) IBOutlet UITextView *account;
-@property (strong, nonatomic) IBOutlet UITextView *password;
+@property (strong, nonatomic) IBOutlet UITextField *account;
+
+@property (strong, nonatomic) IBOutlet UITextField *password;
+
 @property (nonatomic) BOOL haveGroupNotDown;
 
 
@@ -61,6 +63,8 @@ extern BOOL allowDownCourt;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     //NSLog(@"enter Login viewcontroller");
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+    //
     
     
     self.tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTap:)];
@@ -106,13 +110,16 @@ extern BOOL allowDownCourt;
     //
     self.logPersonInf = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
     NSLog(@"logPersonInf:%@",self.logInPerson);
-    
-    
+    //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(canDownCourt:) name:@"allowDown" object:nil];
     //
     self.forceLogInAlert = [[UIAlertView alloc]initWithTitle:@"是否强制登录" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     self.forceLogInAlert.tag = 1;
-    
+    //
+    self.password.borderStyle   = UITextBorderStyleNone;
+    self.account.borderStyle    = UITextBorderStyleNone;
+    self.password.delegate      = self;
+    self.account.delegate       = self;
 }
 
 -(void)canDownCourt:(NSNotification *)sender
@@ -239,7 +246,7 @@ extern BOOL allowDownCourt;
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
     //
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -447,15 +454,6 @@ extern BOOL allowDownCourt;
     }
     
 }
-
-//-(void)loadView
-//{
-//    [super loadView];
-//    CGRect rect = [[UIScreen mainScreen] applicationFrame];
-//    UIView *view = [[UIView alloc] initWithFrame:rect];
-//    view.backgroundColor = self.view.backgroundColor;
-//    self.view = view;
-//}
 
 #pragma -mark logInButton
 -(void)logIn
@@ -787,7 +785,38 @@ extern BOOL allowDownCourt;
 #endif
 }
 
+#pragma -mark logTextField keyReturn action
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField == self.account) {
+        [self.self.account resignFirstResponder];
+        [self.self.password becomeFirstResponder];
+    }
+    else if (textField == self.password)
+    {
+        [self checkCurStateOnServer];
+    }
+    
+    return YES;
+}
 
+/**
+ *  键盘发生改变执行
+ */
+- (void)keyboardWillChange:(NSNotification *)note
+{
+    NSLog(@"%@", note.userInfo);
+    NSDictionary *userInfo = note.userInfo;
+    CGFloat duration = [userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
+    
+    CGRect keyFrame = [userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
+    CGFloat moveY = keyFrame.origin.y - self.view.frame.size.height;
+    
+    
+    [UIView animateWithDuration:duration animations:^{
+        self.view.transform = CGAffineTransformMakeTranslation(0, moveY/2);
+    }];
+}
 
 
 @end

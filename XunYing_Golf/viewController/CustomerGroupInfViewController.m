@@ -120,7 +120,7 @@
     if ([self.cusGroupInf.Rows count]) {
         //下场时间
         NSString *downTime = self.cusGroupInf.Rows[0][@"statim"];
-        self.downCourtTime.text = [downTime substringFromIndex:10];
+        self.downCourtTime.text = [downTime substringWithRange:NSMakeRange(11, 5)];
         //打球时长
         NSInteger totalPlayTimeInt = [self.cusGroupInf.Rows[0][@"pladur"] integerValue];
         NSInteger hour = totalPlayTimeInt/3600;

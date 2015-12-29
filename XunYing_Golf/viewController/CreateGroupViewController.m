@@ -35,7 +35,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 };
 
 
-@interface CreateGroupViewController ()<CLLocationManagerDelegate>
+@interface CreateGroupViewController ()<CLLocationManagerDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UIButton *oneCustomer;
@@ -63,8 +63,20 @@ typedef NS_ENUM(NSInteger,holePosition) {
 //
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *getGPSLocation;
+@property (strong, nonatomic) UITapGestureRecognizer *creatGrpTap;
 
 @property (strong, nonatomic) ViewController *mapViewController;
+
+@property (strong, nonatomic) IBOutlet UIScrollView *createGrpScrollView;
+@property (strong, nonatomic) IBOutlet UIScrollView *caddyScrollView;
+@property (strong, nonatomic) IBOutlet UITextField *inputCaddyNum;
+- (IBAction)addCaddy:(UIButton *)sender;
+
+@property (strong, nonatomic) IBOutlet UIScrollView *cartScrollView;
+@property (strong, nonatomic) IBOutlet UITextField *inputCartNum;
+- (IBAction)addCart:(UIButton *)sender;
+
+
 
 @property (strong, nonatomic) IBOutlet UILabel *theCaddy;
 
@@ -141,6 +153,18 @@ typedef NS_ENUM(NSInteger,holePosition) {
     //
     self.holePosName = @"十八洞";
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    //
+    self.creatGrpTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(DissMissKeyBoard:)];
+    self.creatGrpTap.delegate = self;
+    [self.createGrpScrollView addGestureRecognizer:self.creatGrpTap];
+    
+}
+
+- (void)DissMissKeyBoard:(id)sender
+{
+    [self.inputCaddyNum resignFirstResponder];
+    [self.inputCartNum resignFirstResponder];
 }
 
 #pragma -mark navBack
@@ -423,5 +447,43 @@ typedef NS_ENUM(NSInteger,holePosition) {
     [self.heartBeatTime invalidate];
 }
 
-
+/**
+ *  键盘发生改变执行
+ */
+- (void)keyboardWillChange:(NSNotification *)note
+{
+    NSLog(@"%@", note.userInfo);
+    NSDictionary *userInfo = note.userInfo;
+    CGFloat duration = [userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
+    
+    CGRect keyFrame = [userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
+    CGFloat moveY = keyFrame.origin.y - self.view.frame.size.height;
+    
+    
+    [UIView animateWithDuration:duration animations:^{
+        self.createGrpScrollView.transform = CGAffineTransformMakeTranslation(0, moveY);
+    }];
+}
+#define offset  20
+- (IBAction)addCaddy:(UIButton *)sender {
+    NSLog(@"inputNum:%@",self.inputCaddyNum.text);
+    CGFloat _offset;
+    _offset = offset;
+    
+    for (unsigned char i = 0; i < 10; i++) {
+        _offset += offset;
+        //
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(_offset, 0, 20, 20)];
+        view.backgroundColor = [UIColor redColor];
+        [self.caddyScrollView addSubview:view];
+    }
+    
+    
+    
+}
+- (IBAction)addCart:(UIButton *)sender {
+    NSLog(@"inputCart:%@",self.inputCartNum.text);
+    
+    
+}
 @end

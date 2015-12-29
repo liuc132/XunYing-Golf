@@ -17,7 +17,7 @@
 #define CurrentHole     @"5ccd73"
 #define SelectedHole    @"f74c30"
 #define NoSelectedHole  @"cacaca"
-#define canSelect       @"ff6602"
+#define canSelect       @"0197d6"
 #define EitghteenHoles  18
 
 @interface JumpHoleViewController ()
@@ -132,29 +132,33 @@
     self.hole18.backgroundColor = [UIColor HexString:NoSelectedHole];
 }
 
+- (void)disTheRightHoleState
+{
+    //首先查询数据库
+    self.holePlanInfo = [self.locDBCon ExecDataTable:@"select *from tbl_holePlanInfo"];
+    self.cusGroInfEmp = [self.locDBCon ExecDataTable:@"select *from tbl_CusGroInf"];
+//    NSLog(@"%@",self.holePlanInfo.Rows);
+    //
+    for (NSDictionary *eachHole in self.holePlanInfo.Rows) {
+        if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",self.cusGroInfEmp.Rows[0][@"nowholcod"]]]) {
+            //查询到当前所在的球洞
+            [self settingAllHolesRightState:[eachHole[@"holnum"] integerValue] andState:1];
+        }
+        else if([eachHole[@"ghsta"] intValue] == 0)
+        {
+            [self settingAllHolesRightState:[eachHole[@"holnum"] integerValue] andState:3];
+        }
+        else
+        {
+            [self settingAllHolesRightState:[eachHole[@"holnum"] integerValue] andState:0];
+        }
+    }
+}
+
 - (void)getEventFromHeart:(NSNotification *)sender
 {
     if ([sender.userInfo[@"hasRefreshedJumpHole"] isEqualToString:@"1"]) {
-        //首先查询数据库
-        self.holePlanInfo = [self.locDBCon ExecDataTable:@"select *from tbl_holePlanInfo"];
-        self.cusGroInfEmp = [self.locDBCon ExecDataTable:@"select *from tbl_CusGroInf"];
-        NSLog(@"%@",self.holePlanInfo.Rows);
-        //
-        for (NSDictionary *eachHole in self.holePlanInfo.Rows) {
-            if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",self.cusGroInfEmp.Rows[0][@"nowholcod"]]]) {
-                //查询到当前所在的球洞
-                [self settingAllHolesRightState:[eachHole[@"nowholnum"] integerValue] andState:1];
-            }
-            else if([eachHole[@"ghsta"] intValue] == 0)
-            {
-                [self settingAllHolesRightState:[eachHole[@"holnum"] integerValue] andState:3];
-            }
-            else
-            {
-                [self settingAllHolesRightState:[eachHole[@"holnum"] integerValue] andState:0];
-            }
-        }
-        
+        [self disTheRightHoleState];
     }
 }
 
@@ -303,31 +307,39 @@
     
     if(ucOldSelectedHole != sender.tag)
     {
-        //将之前选择的按键颜色给改变一下;初始的时候选择跳过的球洞在当前所在的球洞
-        [self settingBackGoundColor:self.theOldSelectedBtn];
-        
         //记录下之前所选择的球洞按键
         self.theOldSelectedBtn = sender;
-        //
-        NSLog(@"oldSelectedBtn.tag:%ld",(long)self.theOldSelectedBtn.tag);
-        //
-        self.jumpHoleNum.text = [NSString stringWithFormat:@"%ld",(long)sender.tag];
-        //
-        self.selectedJumpNum = sender.tag - 1;
-        //设置被选择上的球洞好的背景色为已选状态
-        [sender setBackgroundColor:[UIColor HexString:SelectedHole]];
-        //确认已经选过了
-        self.whetherSelectHole = YES;
+        //查询当前所选择的球洞是否可操作
+        for (NSDictionary *eachHoleState in self.holePlanInfo.Rows) {
+            if ([eachHoleState[@"holnum"] isEqualToString:[NSString stringWithFormat:@"%ld",(long)sender.tag]]) {
+                if ([eachHoleState[@"ghsta"] intValue] == 0) {//该条件说明该球洞的状态可以被选择
+                    self.jumpHoleNum.text = [NSString stringWithFormat:@"%ld",(long)sender.tag];
+                    //
+                    self.selectedJumpNum = sender.tag - 1;
+                    
+                    //确认已经选过了
+                    self.whetherSelectHole = YES;
+                    
+                    [self disTheRightHoleState];
+                    //设置被选择上的球洞好的背景色为已选状态
+                    [sender setBackgroundColor:[UIColor HexString:SelectedHole]];
+                    break;
+                }
+                else
+                {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该球洞不可选" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                    [alert show];
+                }
+            }
+        }
+        
     }
     
 }
 
 - (IBAction)jumpHoleNavBack:(UIBarButtonItem *)sender {
-    NSLog(@"返回当前事务主页面");
     //
-//    [self performSegueWithIdentifier:@"toMoreMain" sender:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
 
 - (IBAction)requestToJumpHole:(UIButton *)sender {
@@ -339,7 +351,7 @@
         [alert show];
         return;
     }
-    self.whetherSelectHole = NO;
+//    self.whetherSelectHole = NO;
     //组建跳动请求参数
     NSMutableDictionary *jumpHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"code",self.holesInf.Rows[self.selectedJumpNum][@"holcod"],@"aplcod", nil];
     //start request
@@ -354,8 +366,8 @@
             NSDictionary *allMsg = recDic[@"Msg"];
             
             //
-            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"3",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",weakSelf.holesInf.Rows[weakSelf.selectedJumpNum][@"holcod"],@"",@"",@"",@"",@"",@"",@"", nil];
-            [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"3",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",weakSelf.holesInf.Rows[weakSelf.selectedJumpNum][@"holcod"],@"",@"",@"",@"",@"",@"",@"",@"", nil];
+            [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
             
             //执行跳转
             [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];

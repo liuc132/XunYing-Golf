@@ -215,7 +215,7 @@
         case 3://跳洞
             for (NSDictionary *eachHole in self.allHolesInfo.Rows) {
                 if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"toHoleCode"]]]) {
-                    detailStr = eachHole[@"holenum"];
+                    detailStr = [NSString stringWithFormat:@"%@(预计%@开球)",eachHole[@"holenum"],[theSelectTaskRow[@"destintime"] substringWithRange:NSMakeRange(11, 5)]];
                 }
                 if ([eachHole[@"holcod"] isEqualToString:[NSString stringWithFormat:@"%@",theSelectTaskRow[@"jumpHoleCode"]]]) {
                     detailStrNew = eachHole[@"holenum"];
@@ -257,7 +257,7 @@
             
             if (![detailStrNew  isEqual: @""]) {
                 detailStrNew = theSelectTaskRow[@"reqBackTime"];
-                detailStrNew = [detailStrNew substringWithRange:NSMakeRange(11, 8)];
+                detailStrNew = [detailStrNew substringWithRange:NSMakeRange(11, 5)];
             }
             
             break;
@@ -270,7 +270,7 @@
         case 0://待处理
             self.statusDisLabel.text = @"待处理";
             self.threeLineReqPerson.text    = self.taskRequestPerson;
-            self.threeLineReqTime.text      = self.taskRequstTime;
+            self.threeLineReqTime.text      = [self.taskRequstTime substringWithRange:NSMakeRange(0, 5)];
             self.taskReqName.text           = taskTypeNameStr;
             self.navigationItemDetail.title = navTaskTypeName;
             self.taskReqDetail.text         = detailStrNew;
@@ -280,10 +280,10 @@
             self.statusDisLabel.text = @"同意";
             if ([theSelectTaskRow[@"evetyp"] intValue] == 6) {
                 self.fiveLineReqPerson.text = self.taskRequestPerson;
-                self.fiveLineReqTime.text   = self.taskRequstTime;
+                self.fiveLineReqTime.text   = [self.taskRequstTime substringWithRange:NSMakeRange(0, 5)];
                 self.fiveLineReqName.text   = taskTypeNameStr;
                 self.navigationItemDetail.title = navTaskTypeName;
-                self.fiveLineReqDetail.text = self.taskRequstTime;
+                self.fiveLineReqDetail.text = [self.taskRequstTime substringWithRange:NSMakeRange(0, 5)];
                 self.fiveLineHandleName.text = @"后台推荐恢复时间";
                 self.rebackHandleName.text   = @"复场起始球洞";
                 self.fiveLineHandleDetail.text  = detailStrNew;
@@ -292,7 +292,7 @@
             else
             {
                 self.fourLineReqPerson.text = self.taskRequestPerson;
-                self.fourLineReqTime.text   = self.taskRequstTime;
+                self.fourLineReqTime.text   = [self.taskRequstTime substringWithRange:NSMakeRange(0, 5)];
                 self.fourLineReqName.text   = taskTypeNameStr;
                 self.navigationItemDetail.title = navTaskTypeName;
                 self.fourLineReqDetail.text = detailStrNew;
@@ -304,7 +304,7 @@
         case 2:
             self.statusDisLabel.text = @"不同意";
             self.threeLineReqPerson.text    = self.taskRequestPerson;
-            self.threeLineReqTime.text      = self.taskRequstTime;
+            self.threeLineReqTime.text      = [self.taskRequstTime substringWithRange:NSMakeRange(0, 5)];
             self.taskReqName.text           = taskTypeNameStr;
             self.navigationItemDetail.title = navTaskTypeName;
             self.taskReqDetail.text         = detailStrNew;
