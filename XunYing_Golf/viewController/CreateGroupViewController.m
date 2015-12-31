@@ -18,6 +18,7 @@
 #import "HeartBeatAndDetectState.h"
 #import "WaitToPlayTableViewController.h"
 #import "AppDelegate.h"
+#import "subCaddyOrCartView.h"
 
 //
 typedef NS_ENUM(NSInteger,cusNumbers)
@@ -33,9 +34,10 @@ typedef NS_ENUM(NSInteger,holePosition) {
     Down9,
     AllHole,
 };
+//
+#define offset  100
 
-
-@interface CreateGroupViewController ()<CLLocationManagerDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
+@interface CreateGroupViewController ()<CLLocationManagerDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate,UIAlertViewDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UIButton *oneCustomer;
@@ -51,7 +53,19 @@ typedef NS_ENUM(NSInteger,holePosition) {
 @property (strong, nonatomic) DataTable *userData;
 @property (strong, nonatomic) DataTable *theThreeHolesInf;
 @property (strong, nonatomic) DataTable *customFourNum;
-@property (strong, nonatomic) DataTable *groupInformation;
+@property (strong, nonatomic) DataTable *allCartsData;
+@property (strong, nonatomic) DataTable *allCaddiesData;
+//
+@property (strong, nonatomic) NSMutableArray *addCartsArray;
+@property (strong, nonatomic) NSMutableArray *addcaddiesArray;
+@property (nonatomic)         NSInteger      deleteCartRow;
+@property (nonatomic)         NSInteger      deleteCaddyRow;
+
+@property (nonatomic)         NSInteger      caddyIndex;
+@property (nonatomic)         NSInteger      cartIndex;
+
+@property (nonatomic)         CGFloat        _caddyOffset;
+@property (nonatomic)         CGFloat        _cartOffset;
 
 @property (nonatomic) NSInteger theSelectedCusCounts;
 @property (nonatomic) NSInteger theSelectedHolePosition;
@@ -64,21 +78,27 @@ typedef NS_ENUM(NSInteger,holePosition) {
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *getGPSLocation;
 @property (strong, nonatomic) UITapGestureRecognizer *creatGrpTap;
+//@property (strong, nonatomic) UILongPressGestureRecognizer *deleteTheSelectedCaddy;
+//@property (strong, nonatomic) UILongPressGestureRecognizer *deleteTheSelectedCart;
 
 @property (strong, nonatomic) ViewController *mapViewController;
+
+@property (strong, nonatomic) IBOutlet UIView *subDetailView;
+@property (strong, nonatomic) IBOutlet UILabel *detailLabel;
+
 
 @property (strong, nonatomic) IBOutlet UIScrollView *createGrpScrollView;
 @property (strong, nonatomic) IBOutlet UIScrollView *caddyScrollView;
 @property (strong, nonatomic) IBOutlet UITextField *inputCaddyNum;
+@property (strong, nonatomic) IBOutlet UIButton *addCaddyButton;
+
 - (IBAction)addCaddy:(UIButton *)sender;
 
 @property (strong, nonatomic) IBOutlet UIScrollView *cartScrollView;
 @property (strong, nonatomic) IBOutlet UITextField *inputCartNum;
+@property (strong, nonatomic) IBOutlet UIButton *addCartButton;
+
 - (IBAction)addCart:(UIButton *)sender;
-
-
-
-@property (strong, nonatomic) IBOutlet UILabel *theCaddy;
 
 
 - (IBAction)confirmCustomNumbers:(UIButton *)sender;
@@ -113,8 +133,12 @@ typedef NS_ENUM(NSInteger,holePosition) {
     self.userData         = [[DataTable alloc] init];
     self.theThreeHolesInf = [[DataTable alloc] init];
     self.customFourNum    = [[DataTable alloc] init];
-    self.groupInformation = [[DataTable alloc] init];
-
+    self.allCartsData     = [[DataTable alloc] init];
+    self.allCaddiesData   = [[DataTable alloc] init];
+    //
+    self.addCartsArray    = [[NSMutableArray alloc] init];
+    self.addcaddiesArray  = [[NSMutableArray alloc] init];
+    
     //组建客户组，默认的客户人数(1人)以及球洞位置（十八洞）
     self.theSelectedCusCounts = OneCustomer;
     self.theSelectedHolePosition = AllHole;
@@ -123,10 +147,12 @@ typedef NS_ENUM(NSInteger,holePosition) {
     self.eighteen.backgroundColor   = [UIColor HexString:selectedColor];
     //登录人信息
     self.userData = [self.dbCon ExecDataTable:@"select *from tbl_logPerson"];
+    self.allCartsData = [self.dbCon ExecDataTable:@"select *from tbl_cartInf"];
+    self.allCaddiesData = [self.dbCon ExecDataTable:@"select *from tbl_caddyInf"];
 
     //code text,job text,name text,number text,sex text,caddyLogIn text
-    if([self.userData.Rows count])//如果有用户数据则对进行赋值，否则不做处理（处理会报错！）
-        self.theCaddy.text = [NSString stringWithFormat:@"%@  %@",self.userData.Rows[0][@"number"],self.userData.Rows[0][@"name"]];
+//    if([self.userData.Rows count])//如果有用户数据则对进行赋值，否则不做处理（处理会报错！）
+//        self.theCaddy.text = [NSString stringWithFormat:@"%@  %@",self.userData.Rows[0][@"number"],self.userData.Rows[0][@"name"]];
     //
     allowDownCourt = NO;
     //
@@ -158,6 +184,106 @@ typedef NS_ENUM(NSInteger,holePosition) {
     self.creatGrpTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(DissMissKeyBoard:)];
     self.creatGrpTap.delegate = self;
     [self.createGrpScrollView addGestureRecognizer:self.creatGrpTap];
+    //
+    self.caddyIndex = 0;
+    self.cartIndex  = 0;
+    self._caddyOffset = 0;
+    self._cartOffset  = 0;
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    //删除球童
+    if (alertView.tag == 1){
+        switch (buttonIndex) {
+            case 0:
+                
+                break;
+                
+            case 1:
+                self.caddyIndex = 0;
+                self._caddyOffset = 0;
+                [self.addcaddiesArray removeObjectAtIndex:self.deleteCartRow];
+                //
+//                [self.caddyScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                [self displayCurrentCaddies];
+                
+                break;
+                
+            default:
+                break;
+        }
+    }
+    //删除球车
+    if (alertView.tag == 2) {
+        switch (buttonIndex) {
+            case 0:
+                
+                break;
+                
+            case 1:
+                self.cartIndex = 0;
+                self._cartOffset = 0;
+                [self.addCartsArray removeObjectAtIndex:self.deleteCartRow];
+                //
+//                [self.cartScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                [self displayCurrentCarts];
+                
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+
+#pragma -mark DeleteTheSelectedCart
+- (void)deleteCart:(UILongPressGestureRecognizer *)Tap
+{
+    NSInteger deleteRow;
+    deleteRow = Tap.view.tag;
+    self.deleteCartRow = deleteRow - 1;
+    if (Tap.state == UIGestureRecognizerStateBegan) {
+        return;
+    }
+//    NSLog(@"enter delete function and sender:%@ and view.tag:%ld",Tap,deleteRow);
+    if ([self.addCartsArray count] < Tap.view.tag) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
+    
+    NSString *willDeleteDataDisStr = [NSString stringWithFormat:@"%@",self.addCartsArray[deleteRow - 1][@"resultCart"]];
+    UIAlertView *cartAlert = [[UIAlertView alloc] initWithTitle:@"删除该球车" message:willDeleteDataDisStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    cartAlert.tag = 2;
+    [cartAlert show];
+    
+    NSLog(@"haha");
+}
+
+#pragma -mark DeleteTheSelectedCaddy
+- (void)deleteCaddy:(UILongPressGestureRecognizer *)Tap
+{
+    NSInteger deleteRow;
+    deleteRow = Tap.view.tag;
+    self.deleteCaddyRow = deleteRow - 1;
+    //
+    if (Tap.state == UIGestureRecognizerStateBegan) {
+        return;
+    }
+//    NSLog(@"enter delete function and sender:%@ and view.tag:%ld",Tap,deleteRow);
+    //
+    if ([self.addcaddiesArray count] < Tap.view.tag) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
+    //
+    NSString *willDeleteDataDisStr = [NSString stringWithFormat:@"%@",self.addcaddiesArray[deleteRow - 1][@"resultCaddy"]];
+    UIAlertView *caddyAlert = [[UIAlertView alloc] initWithTitle:@"删除该球童" message:willDeleteDataDisStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    caddyAlert.tag = 1;
+    [caddyAlert show];
     
 }
 
@@ -312,7 +438,31 @@ typedef NS_ENUM(NSInteger,holePosition) {
         [userDataAlert show];
         return;
     }
-    NSMutableDictionary *createGroupParameters = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",@"",@"gronum",selectedCus,@"cus",@"",@"car",self.theThreeHolesInf.Rows[self.theSelectedHolePosition][@"pdtag"],@"hole",self.userData.Rows[0][@"number"],@"cad",self.userData.Rows[0][@"caddyLogIn"],@"cadShow",self.userData.Rows[0][@"code"],@"user", nil];
+    //获取到添加的球车，球童号
+    NSString *allAddCaddies;
+    NSString *allAddCarts;
+    //获取到所有的球童号，并且组装起来，多个球童之间用"_"分开
+    for (unsigned char i = 0; i < [self.addcaddiesArray count]; i++) {
+        if (i == 0) {
+            allAddCaddies = [NSString stringWithFormat:@"%@",self.addcaddiesArray[i][@"cadnum"]];
+        }
+        else
+        {
+            allAddCaddies = [allAddCaddies stringByAppendingString:[NSString stringWithFormat:@"_%@",self.addcaddiesArray[i][@"cadnum"]]];
+        }
+    }
+    //获取到所有的球车号，并且组装起来，多个球车之间用"_"分开
+    for (unsigned char j = 0; j < [self.addCartsArray count]; j++) {
+        if (j == 0) {
+            allAddCarts = [NSString stringWithFormat:@"%@",self.addCartsArray[j][@"carnum"]];
+        }
+        else
+        {
+            allAddCarts = [allAddCarts stringByAppendingString:[NSString stringWithFormat:@"_%@",self.addCartsArray[j][@"carnum"]]];
+        }
+    }
+    
+    NSMutableDictionary *createGroupParameters = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",@"",@"gronum",selectedCus,@"cus",allAddCarts,@"car",self.theThreeHolesInf.Rows[self.theSelectedHolePosition][@"pdtag"],@"hole",allAddCaddies,@"cad",self.userData.Rows[0][@"caddyLogIn"],@"cadShow",self.userData.Rows[0][@"code"],@"user", nil];
     //
     __weak typeof(self) weakself = self;
     //
@@ -464,26 +614,203 @@ typedef NS_ENUM(NSInteger,holePosition) {
         self.createGrpScrollView.transform = CGAffineTransformMakeTranslation(0, moveY);
     }];
 }
-#define offset  20
+
+#pragma -mark addCaddy and addCart
 - (IBAction)addCaddy:(UIButton *)sender {
-    NSLog(@"inputNum:%@",self.inputCaddyNum.text);
-    CGFloat _offset;
-    _offset = offset;
-    
-    for (unsigned char i = 0; i < 10; i++) {
-        _offset += offset;
-        //
-        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(_offset, 0, 20, 20)];
-        view.backgroundColor = [UIColor redColor];
-        [self.caddyScrollView addSubview:view];
+//    NSLog(@"inputNum:%@",self.inputCaddyNum.text);
+    if (![self.inputCaddyNum.text boolValue] ) {
+        self.inputCaddyNum.text = @"";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入要添加的球童编号" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
+    //
+    if ([self.addcaddiesArray count] > 3) {//最多只能添加四个球车
+        self.inputCaddyNum.text = @"";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"最多只能添加4个球童" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
     }
     
-    
+    //
+    BOOL hasTheData;
+    hasTheData = NO;
+    NSString *theInputCaddyNum = self.inputCaddyNum.text;//[self.inputCaddyNum.text integerValue];
+    NSString *theResultCaddy;
+    //
+    for (NSDictionary *eachResult in self.addcaddiesArray) {
+        self.inputCaddyNum.text = @"";
+        //
+        if ([eachResult[@"cadnum"] isEqualToString:theInputCaddyNum]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该组中已有该球童" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            return;
+        }
+    }
+    //
+    for (NSDictionary *eachCaddy in self.allCaddiesData.Rows) {
+        if ([eachCaddy[@"cadnum"] isEqualToString:theInputCaddyNum]) {
+            hasTheData = YES;
+            theResultCaddy = [NSString stringWithFormat:@"%@ %@",eachCaddy[@"cadnum"],eachCaddy[@"cadnam"]];
+            NSDictionary *eachCaddyInfo = [[NSDictionary alloc] initWithObjectsAndKeys:theResultCaddy,@"resultCaddy",eachCaddy[@"cadnum"],@"cadnum", nil];
+            [self.addcaddiesArray addObject:eachCaddyInfo];
+            break;
+        }
+    }
+    if (!hasTheData) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"无此球童" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
+    //
+    [self displayCurrentCaddies];
     
 }
+//
+- (void)displayCurrentCaddies
+{
+    static CGFloat _offset = 0;
+    
+//    static unsigned char i = 0;
+    
+    UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(_offset, self.inputCaddyNum.frame.origin.y, self.subDetailView.frame.size.width, self.subDetailView.frame.size.height)];
+    UILabel *detailInf = [[UILabel alloc] initWithFrame:CGRectMake(5, self.detailLabel.frame.origin.y, self.detailLabel.frame.size.width, self.detailLabel.frame.size.height)];
+    detailInf.text = self.addcaddiesArray[self.caddyIndex][@"resultCaddy"];
+        
+    detailInf.textAlignment = NSTextAlignmentCenter;
+    detailInf.font = [UIFont systemFontOfSize:15];
+    [subView addSubview:detailInf];
+        
+    subView.backgroundColor = [UIColor HexString:@"eeeeee"];
+    subView.layer.cornerRadius = 6.0;
+    [self.caddyScrollView addSubview:subView];
+    _offset += offset;
+    //
+    subView.tag = (int)self.caddyIndex + 1;
+    self.caddyIndex++;
+    if (self.caddyIndex == 1) {
+        UITapGestureRecognizer *view1Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+        [subView addGestureRecognizer:view1Gesture];
+    }
+    else if (self.caddyIndex == 2)
+    {
+        UITapGestureRecognizer *view2Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+        [subView addGestureRecognizer:view2Gesture];
+    }
+    else if (self.caddyIndex == 3)
+    {
+        UITapGestureRecognizer *view3Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+        [subView addGestureRecognizer:view3Gesture];
+    }
+    else if (self.caddyIndex == 4)
+    {
+        UITapGestureRecognizer *view4Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+        [subView addGestureRecognizer:view4Gesture];
+    }
+    //
+    self.inputCaddyNum.transform = CGAffineTransformMakeTranslation(_offset, 0);
+    self.addCaddyButton.transform = CGAffineTransformMakeTranslation(_offset, 0);
+    [self.caddyScrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, _offset)];
+    self.inputCaddyNum.text = @"";
+}
+
+#pragma -mark add and display current carts
 - (IBAction)addCart:(UIButton *)sender {
     NSLog(@"inputCart:%@",self.inputCartNum.text);
-    
-    
+    if (![self.inputCartNum.text boolValue] ) {
+        self.inputCartNum.text = @"";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入要添加的球车编号" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
+    //
+    if ([self.addCartsArray count] > 3) {//最多只能添加四个球车
+        self.inputCartNum.text = @"";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"最多只能添加4个球车" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
+    //
+    BOOL hasTheData;
+    hasTheData = NO;
+    NSString *theInputCartNum = self.inputCartNum.text;
+    NSString *theResultCart;
+    //
+    for (NSDictionary *eachResult in self.addCartsArray) {
+        self.inputCartNum.text = @"";
+        //
+        if ([eachResult[@"carnum"] isEqualToString:theInputCartNum]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该组中已有该球车" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            return;
+        }
+    }
+    //
+    for (NSDictionary *eachCart in self.allCartsData.Rows) {
+        if ([eachCart[@"carnum"] isEqualToString:theInputCartNum]) {
+            hasTheData = YES;
+            theResultCart = [NSString stringWithFormat:@"%@   %@座",eachCart[@"carnum"],eachCart[@"carsea"]];
+            NSDictionary *eachCartInfo = [[NSDictionary alloc] initWithObjectsAndKeys:theResultCart,@"resultCart",eachCart[@"carnum"],@"carnum", nil];
+            [self.addCartsArray addObject:eachCartInfo];
+            break;
+        }
+    }
+    if (!hasTheData) {
+        self.inputCartNum.text = @"";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"无此球车" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alert show];
+        return;
+    }
+    //
+    [self displayCurrentCarts];
 }
+//
+- (void)displayCurrentCarts
+{
+//    static CGFloat _offset = 0;
+    
+//    static unsigned char i = 0;
+    
+    
+    UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(self._cartOffset, self.inputCaddyNum.frame.origin.y, self.subDetailView.frame.size.width, self.subDetailView.frame.size.height)];
+    UILabel *detailInf = [[UILabel alloc] initWithFrame:CGRectMake(5, self.detailLabel.frame.origin.y, self.detailLabel.frame.size.width, self.detailLabel.frame.size.height)];
+    detailInf.text = self.addCartsArray[self.cartIndex][@"resultCart"];
+    
+    detailInf.textAlignment = NSTextAlignmentCenter;
+    detailInf.font = [UIFont systemFontOfSize:15];
+    [subView addSubview:detailInf];
+    
+    subView.backgroundColor = [UIColor HexString:@"eeeeee"];
+    subView.layer.cornerRadius = 6.0;
+    [self.cartScrollView addSubview:subView];
+    self._cartOffset += offset;
+    //
+    subView.tag = (int)self.cartIndex + 1;
+    self.cartIndex++;
+    if (self.cartIndex == 1) {
+        UITapGestureRecognizer *view1Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+        [subView addGestureRecognizer:view1Gesture];
+    }
+    else if (self.cartIndex == 2)
+    {
+        UITapGestureRecognizer *view2Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+        [subView addGestureRecognizer:view2Gesture];
+    }
+    else if (self.cartIndex == 3)
+    {
+        UITapGestureRecognizer *view3Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+        [subView addGestureRecognizer:view3Gesture];
+    }
+    else if (self.cartIndex == 4)
+    {
+        UITapGestureRecognizer *view4Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+        [subView addGestureRecognizer:view4Gesture];
+    }
+    
+    self.inputCartNum.transform = CGAffineTransformMakeTranslation(self._cartOffset, 0);
+    self.addCartButton.transform = CGAffineTransformMakeTranslation(self._cartOffset, 0);
+    [self.cartScrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, self._cartOffset)];
+    self.inputCartNum.text = @"";
+}
+
 @end

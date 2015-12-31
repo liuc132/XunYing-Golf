@@ -293,7 +293,7 @@ extern BOOL allowDownCourt;
     //前九洞，后九洞，十八洞
     [self.dbCon ExecNonQuery:@"delete from tbl_threeTypeHoleInf"];
     [self.dbCon ExecNonQuery:@"delete from tbl_cartInf"];
-    [self.dbCon ExecNonQuery:@"delete from tbl_threeTypeHoleInf"];
+    [self.dbCon ExecNonQuery:@"delete from tbl_caddyInf"];
     //start request
     [HttpTools getHttp:CaddyCartInfURL forParams:nil success:^(NSData *nsData){
         NSLog(@"successfully request");

@@ -80,6 +80,7 @@
 		5BB97ACB1B9EC07B00A27809 /* settingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB97ACA1B9EC07B00A27809 /* settingTableViewCell.m */; };
 		5BC136B31B93EFD500FF1CB1 /* TOUCHkitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC136B01B93EFD500FF1CB1 /* TOUCHkitView.m */; };
 		5BC136B41B93EFD500FF1CB1 /* TOUCHOverlayWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC136B21B93EFD500FF1CB1 /* TOUCHOverlayWindow.m */; };
+		5BC6CC811C33660C006B30DC /* subCaddyOrCartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6CC801C33660C006B30DC /* subCaddyOrCartView.m */; };
 		5BC76F4F1B9FD74C004ABBAF /* ActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC76F4E1B9FD74C004ABBAF /* ActivityIndicatorView.m */; };
 		5BC7C5221BA1587A00D9072D /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BC7C5211BA1587A00D9072D /* CoreTelephony.framework */; };
 		5BD6D68F1BD63311001524DB /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6D67D1BD63311001524DB /* AFHTTPRequestOperation.m */; };
@@ -261,6 +262,8 @@
 		5BC136B01B93EFD500FF1CB1 /* TOUCHkitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOUCHkitView.m; sourceTree = "<group>"; };
 		5BC136B11B93EFD500FF1CB1 /* TOUCHOverlayWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOUCHOverlayWindow.h; sourceTree = "<group>"; };
 		5BC136B21B93EFD500FF1CB1 /* TOUCHOverlayWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOUCHOverlayWindow.m; sourceTree = "<group>"; };
+		5BC6CC7F1C33660C006B30DC /* subCaddyOrCartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = subCaddyOrCartView.h; path = viewController/subCaddyOrCartView.h; sourceTree = "<group>"; };
+		5BC6CC801C33660C006B30DC /* subCaddyOrCartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = subCaddyOrCartView.m; path = viewController/subCaddyOrCartView.m; sourceTree = "<group>"; };
 		5BC76F4D1B9FD74C004ABBAF /* ActivityIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityIndicatorView.h; path = viewController/ActivityIndicatorView/ActivityIndicatorView.h; sourceTree = "<group>"; };
 		5BC76F4E1B9FD74C004ABBAF /* ActivityIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ActivityIndicatorView.m; path = viewController/ActivityIndicatorView/ActivityIndicatorView.m; sourceTree = "<group>"; };
 		5BC7C5211BA1587A00D9072D /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -745,6 +748,7 @@
 		5B9ECB0B1BABF3DF00612474 /* createGroup */ = {
 			isa = PBXGroup;
 			children = (
+				5BC6CC7E1C3365CE006B30DC /* subView */,
 				5B9ECB0C1BABF40900612474 /* CreateGroupViewController.h */,
 				5B9ECB0D1BABF40900612474 /* CreateGroupViewController.m */,
 			);
@@ -818,6 +822,15 @@
 				5B03A8481C05A11C00207D59 /* ScoreView */,
 			);
 			name = personalScore;
+			sourceTree = "<group>";
+		};
+		5BC6CC7E1C3365CE006B30DC /* subView */ = {
+			isa = PBXGroup;
+			children = (
+				5BC6CC7F1C33660C006B30DC /* subCaddyOrCartView.h */,
+				5BC6CC801C33660C006B30DC /* subCaddyOrCartView.m */,
+			);
+			name = subView;
 			sourceTree = "<group>";
 		};
 		5BC76F4C1B9FD6F8004ABBAF /* activityIndicator */ = {
@@ -1149,6 +1162,7 @@
 				5B52F4451B9D7C08004BA338 /* UIImage+UICon.m in Sources */,
 				5BD6D6961BD63311001524DB /* AFURLResponseSerialization.m in Sources */,
 				5BB97AC81B9EB8CA00A27809 /* SettingViewController.m in Sources */,
+				5BC6CC811C33660C006B30DC /* subCaddyOrCartView.m in Sources */,
 				5B4E33E81BAFE76C000693B3 /* WaitToPlayTableViewController.m in Sources */,
 				5BF321421C1FFEFD005A0DF6 /* UIImage+ResizeImage.m in Sources */,
 				5B33ACF71C27F6D60073737F /* SlowBallViewController.m in Sources */,
