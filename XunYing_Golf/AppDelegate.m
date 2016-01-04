@@ -160,6 +160,8 @@
     [dbCon ExecDataTable:@"create table if not exists tbl_cartInf(carcod text,carnum text,carsea text)"];
     //当前创建的小组所选择的球车
     [dbCon ExecDataTable:@"create table if not exists tbl_selectCart(carcod text,carnum text,carsea text)"];
+    //当前所创建的小组所添加的球童
+    [dbCon ExecDataTable:@"create table if not exists tbl_addCaddy(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)"];
     //获取心跳中的组信息
     /*
      grocod:小组编码

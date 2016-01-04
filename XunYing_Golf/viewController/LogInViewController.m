@@ -51,6 +51,7 @@ extern BOOL allowDownCourt;
 
 - (IBAction)logInButton:(UIButton *)sender;
 - (IBAction)forgetPassword:(UIButton *)sender;
+- (IBAction)settingIPAddr:(UIBarButtonItem *)sender;
 
 
 
@@ -282,6 +283,12 @@ extern BOOL allowDownCourt;
         //change image
         [sender setImage:[UIImage imageNamed:@"logInSelected.png"] forState:UIControlStateNormal];
     }
+}
+
+- (IBAction)settingIPAddr:(UIBarButtonItem *)sender {
+    self.activityIndicatorView.hidden = YES;
+    
+    [self performSegueWithIdentifier:@"settingIPAddress" sender:nil];
 }
 
 #pragma -mark getCaddyCartInf

@@ -78,8 +78,9 @@ typedef NS_ENUM(NSInteger,holePosition) {
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *getGPSLocation;
 @property (strong, nonatomic) UITapGestureRecognizer *creatGrpTap;
-//@property (strong, nonatomic) UILongPressGestureRecognizer *deleteTheSelectedCaddy;
-//@property (strong, nonatomic) UILongPressGestureRecognizer *deleteTheSelectedCart;
+//
+@property (strong, nonatomic) NSMutableArray         *allCartsViewArray;
+@property (strong, nonatomic) NSMutableArray         *allCaddiesViewArray;
 
 @property (strong, nonatomic) ViewController *mapViewController;
 
@@ -138,6 +139,9 @@ typedef NS_ENUM(NSInteger,holePosition) {
     //
     self.addCartsArray    = [[NSMutableArray alloc] init];
     self.addcaddiesArray  = [[NSMutableArray alloc] init];
+    
+    self.allCaddiesViewArray = [[NSMutableArray alloc] init];
+    self.allCartsViewArray   = [[NSMutableArray alloc] init];
     
     //组建客户组，默认的客户人数(1人)以及球洞位置（十八洞）
     self.theSelectedCusCounts = OneCustomer;
@@ -202,11 +206,22 @@ typedef NS_ENUM(NSInteger,holePosition) {
                 break;
                 
             case 1:
+                [self.addcaddiesArray removeObjectAtIndex:self.deleteCaddyRow];
+                //
+//                [self.theSelectedView removeFromSuperview];
+                self.inputCaddyNum.transform = CGAffineTransformMakeTranslation(-(self._caddyOffset), 0);
+                self.addCaddyButton.transform = CGAffineTransformMakeTranslation(-(self._caddyOffset), 0);
+                
+                for (id eachCaddyView in self.allCaddiesViewArray) {
+                    if ([eachCaddyView isKindOfClass:[UIView class]]) {
+                        [eachCaddyView removeFromSuperview];
+                    }
+                }
+                [self.allCaddiesViewArray removeAllObjects];
+                
                 self.caddyIndex = 0;
                 self._caddyOffset = 0;
-                [self.addcaddiesArray removeObjectAtIndex:self.deleteCartRow];
-                //
-//                [self.caddyScrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                
                 [self displayCurrentCaddies];
                 
                 break;
@@ -223,6 +238,17 @@ typedef NS_ENUM(NSInteger,holePosition) {
                 break;
                 
             case 1:
+//                [self.theSelectedView removeFromSuperview];
+                self.inputCartNum.transform = CGAffineTransformMakeTranslation(-(self._cartOffset), 0);
+                self.addCartButton.transform = CGAffineTransformMakeTranslation(-(self._cartOffset), 0);
+                
+                for (id eachCartView in self.allCartsViewArray) {
+                    if ([eachCartView isKindOfClass:[UIView class]]) {
+                        [eachCartView removeFromSuperview];
+                    }
+                }
+                [self.allCartsViewArray removeAllObjects];
+                
                 self.cartIndex = 0;
                 self._cartOffset = 0;
                 [self.addCartsArray removeObjectAtIndex:self.deleteCartRow];
@@ -243,6 +269,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 {
     NSInteger deleteRow;
     deleteRow = Tap.view.tag;
+//    self.theSelectedView = Tap.view;
     self.deleteCartRow = deleteRow - 1;
     if (Tap.state == UIGestureRecognizerStateBegan) {
         return;
@@ -267,6 +294,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 {
     NSInteger deleteRow;
     deleteRow = Tap.view.tag;
+//    self.theSelectedView = Tap.view;
     self.deleteCaddyRow = deleteRow - 1;
     //
     if (Tap.state == UIGestureRecognizerStateBegan) {
@@ -397,11 +425,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 #pragma -mark DownCourt
 -(void)DownCourt
 {
-    NSLog(@"create group and down Court");
-    //执行查询数据库中的参数的例子
-    //    DataTable *table = [[DataTable alloc] init];
-    //    table = [dbCon ExecDataTable:@"select *from tbl_logPerson"];
-    //    NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
+//    NSLog(@"create group and down Court");
     //删除旧数据，所创建的组信息，以及返回的平板的数据
     //建组数据
     [self.dbCon ExecNonQuery:@"delete from tbl_groupInf"];
@@ -486,7 +510,8 @@ typedef NS_ENUM(NSInteger,holePosition) {
         {
             [self.dbCon ExecDataTable:@"delete from tbl_CustomersInfo"];
             [self.dbCon ExecDataTable:@"delete from tbl_selectCart"];
-            //
+            [self.dbCon ExecDataTable:@"delete from tbl_addCaddy"];
+            //tbl_addCaddy
             NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"]);
             //组建获取到的组信息的数组
             NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"],receiveCreateGroupDic[@"Msg"][@"hgcod"],receiveCreateGroupDic[@"Msg"][@"onlinestatus"], nil];
@@ -508,24 +533,30 @@ typedef NS_ENUM(NSInteger,holePosition) {
                 NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
                 [strongself.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
             }
+            //保存添加的球童的信息 tbl_addCaddy(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)
+            NSArray *allSelectedCaddiesArray = receiveCreateGroupDic[@"Msg"][@"cads"];
+            for (NSDictionary *eachCaddy in allSelectedCaddiesArray) {
+                NSMutableArray *selectedCaddy = [[NSMutableArray alloc] initWithObjects:eachCaddy[@"cadcod"],eachCaddy[@"cadnam"],eachCaddy[@"cadnum"],eachCaddy[@"cadsex"],eachCaddy[@"empcod"], nil];
+                [strongself.dbCon ExecNonQuery:@"insert into tbl_addCaddy(cadcod,cadnam,cadnum,cadsex,empcod) values(?,?,?,?,?)" forParameter:selectedCaddy];
+            }
             
-            //设置代理
-            //CreateGroupViewController *tempViewCtl = [[CreateGroupViewController alloc] init];
-            //tempViewCtl.cusAndHoleDelegate = (WaitToPlayTableViewController *)self;
             ucCusCounts = (unsigned char)self.theSelectedCusCounts;
             ucHolePosition = (unsigned char)self.theSelectedHolePosition;
             
             if ([self.cusAndHoleDelegate respondsToSelector:@selector(getCustomerCounts:andHolePosition:)]) {
                 [self.cusAndHoleDelegate getCustomerCounts:self.theSelectedCusCounts andHolePosition:self.theSelectedHolePosition];
             }
-            //跳转页面
-            [strongself performSegueWithIdentifier:@"toWaitInterface" sender:nil];
+            //
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //跳转页面
+                [strongself performSegueWithIdentifier:@"toWaitInterface" sender:nil];
+                //建组成功之后，进入心跳处理类中，开始心跳功能
+                HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
+                if (![heartBeat checkState]) {
+                    [heartBeat initHeartBeat];//1、开启心跳功能
+                }
+            });
             
-            //建组成功之后，进入心跳处理类中，开始心跳功能
-            HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
-            if (![heartBeat checkState]) {
-                [heartBeat initHeartBeat];//1、开启心跳功能
-            }
         }
         
     }failure:^(NSError *err){
@@ -669,48 +700,68 @@ typedef NS_ENUM(NSInteger,holePosition) {
 //
 - (void)displayCurrentCaddies
 {
-    static CGFloat _offset = 0;
-    
-//    static unsigned char i = 0;
-    
-    UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(_offset, self.inputCaddyNum.frame.origin.y, self.subDetailView.frame.size.width, self.subDetailView.frame.size.height)];
-    UILabel *detailInf = [[UILabel alloc] initWithFrame:CGRectMake(5, self.detailLabel.frame.origin.y, self.detailLabel.frame.size.width, self.detailLabel.frame.size.height)];
-    detailInf.text = self.addcaddiesArray[self.caddyIndex][@"resultCaddy"];
+    //进入之后，将偏移量清零
+    self._caddyOffset = 0;
+    //首先清除掉所有之前的球车视图
+    for (id eachCaddy in self.allCaddiesViewArray) {
+        if ([eachCaddy isKindOfClass:[UIView class]]) {
+            [eachCaddy removeFromSuperview];
+        }
+    }
+    //之后将目前数组中的所有球童给显示出来
+    for (NSInteger i = 0; i < [self.addcaddiesArray count]; i++) {
+        self.caddyIndex = i;
+        //
+        UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(self._caddyOffset, self.inputCaddyNum.frame.origin.y, self.subDetailView.frame.size.width, self.subDetailView.frame.size.height)];
+        UILabel *detailInf = [[UILabel alloc] initWithFrame:CGRectMake(5, self.detailLabel.frame.origin.y, self.detailLabel.frame.size.width, self.detailLabel.frame.size.height)];
+        detailInf.text = self.addcaddiesArray[self.caddyIndex][@"resultCaddy"];
         
-    detailInf.textAlignment = NSTextAlignmentCenter;
-    detailInf.font = [UIFont systemFontOfSize:15];
-    [subView addSubview:detailInf];
+        detailInf.textAlignment = NSTextAlignmentCenter;
+        detailInf.font = [UIFont systemFontOfSize:15];
+        [subView addSubview:detailInf];
         
-    subView.backgroundColor = [UIColor HexString:@"eeeeee"];
-    subView.layer.cornerRadius = 6.0;
-    [self.caddyScrollView addSubview:subView];
-    _offset += offset;
+        subView.backgroundColor = [UIColor HexString:@"eeeeee"];
+        subView.layer.cornerRadius = 6.0;
+        //
+        [self.allCaddiesViewArray addObject:subView];
+        //
+        [self.caddyScrollView addSubview:subView];
+        //    _offset += offset;
+        self._caddyOffset += offset;
+        //
+        subView.tag = (int)self.caddyIndex + 1;
+        self.caddyIndex++;
+        if (self.caddyIndex == 1) {
+            UILongPressGestureRecognizer *view1Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+            view1Gesture.minimumPressDuration = 0.5;
+            [subView addGestureRecognizer:view1Gesture];
+        }
+        else if (self.caddyIndex == 2)
+        {
+            UILongPressGestureRecognizer *view2Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+            view2Gesture.minimumPressDuration = 0.5;
+            [subView addGestureRecognizer:view2Gesture];
+        }
+        else if (self.caddyIndex == 3)
+        {
+            UILongPressGestureRecognizer *view3Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+            view3Gesture.minimumPressDuration = 0.5;
+            [subView addGestureRecognizer:view3Gesture];
+        }
+        else if (self.caddyIndex == 4)
+        {
+            UILongPressGestureRecognizer *view4Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+            view4Gesture.minimumPressDuration = 0.5;
+            [subView addGestureRecognizer:view4Gesture];
+        }
+    }
+    
+    
+    
     //
-    subView.tag = (int)self.caddyIndex + 1;
-    self.caddyIndex++;
-    if (self.caddyIndex == 1) {
-        UITapGestureRecognizer *view1Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
-        [subView addGestureRecognizer:view1Gesture];
-    }
-    else if (self.caddyIndex == 2)
-    {
-        UITapGestureRecognizer *view2Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
-        [subView addGestureRecognizer:view2Gesture];
-    }
-    else if (self.caddyIndex == 3)
-    {
-        UITapGestureRecognizer *view3Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
-        [subView addGestureRecognizer:view3Gesture];
-    }
-    else if (self.caddyIndex == 4)
-    {
-        UITapGestureRecognizer *view4Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
-        [subView addGestureRecognizer:view4Gesture];
-    }
-    //
-    self.inputCaddyNum.transform = CGAffineTransformMakeTranslation(_offset, 0);
-    self.addCaddyButton.transform = CGAffineTransformMakeTranslation(_offset, 0);
-    [self.caddyScrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, _offset)];
+    self.inputCaddyNum.transform = CGAffineTransformMakeTranslation(self._caddyOffset, 0);
+    self.addCaddyButton.transform = CGAffineTransformMakeTranslation(self._caddyOffset, 0);
+    [self.caddyScrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, self._caddyOffset)];
     self.inputCaddyNum.text = @"";
 }
 
@@ -767,45 +818,62 @@ typedef NS_ENUM(NSInteger,holePosition) {
 //
 - (void)displayCurrentCarts
 {
-//    static CGFloat _offset = 0;
-    
-//    static unsigned char i = 0;
-    
-    
-    UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(self._cartOffset, self.inputCaddyNum.frame.origin.y, self.subDetailView.frame.size.width, self.subDetailView.frame.size.height)];
-    UILabel *detailInf = [[UILabel alloc] initWithFrame:CGRectMake(5, self.detailLabel.frame.origin.y, self.detailLabel.frame.size.width, self.detailLabel.frame.size.height)];
-    detailInf.text = self.addCartsArray[self.cartIndex][@"resultCart"];
-    
-    detailInf.textAlignment = NSTextAlignmentCenter;
-    detailInf.font = [UIFont systemFontOfSize:15];
-    [subView addSubview:detailInf];
-    
-    subView.backgroundColor = [UIColor HexString:@"eeeeee"];
-    subView.layer.cornerRadius = 6.0;
-    [self.cartScrollView addSubview:subView];
-    self._cartOffset += offset;
-    //
-    subView.tag = (int)self.cartIndex + 1;
-    self.cartIndex++;
-    if (self.cartIndex == 1) {
-        UITapGestureRecognizer *view1Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
-        [subView addGestureRecognizer:view1Gesture];
+    //进入之后，将偏移量清零
+    self._cartOffset = 0;
+    //首先清除掉所有之前的球车视图
+    for (id eachCart in self.allCartsViewArray) {
+        if ([eachCart isKindOfClass:[UIView class]]) {
+            [eachCart removeFromSuperview];
+        }
     }
-    else if (self.cartIndex == 2)
-    {
-        UITapGestureRecognizer *view2Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
-        [subView addGestureRecognizer:view2Gesture];
+    //之后将目前数组中的所有球车给显示出来
+    for (NSInteger i = 0; i < [self.addCartsArray count]; i++) {
+        self.cartIndex = i;
+        //
+        UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(self._cartOffset, self.inputCaddyNum.frame.origin.y, self.subDetailView.frame.size.width, self.subDetailView.frame.size.height)];
+        UILabel *detailInf = [[UILabel alloc] initWithFrame:CGRectMake(5, self.detailLabel.frame.origin.y, self.detailLabel.frame.size.width, self.detailLabel.frame.size.height)];
+        detailInf.text = self.addCartsArray[self.cartIndex][@"resultCart"];
+        
+        detailInf.textAlignment = NSTextAlignmentCenter;
+        detailInf.font = [UIFont systemFontOfSize:15];
+        [subView addSubview:detailInf];
+        
+        subView.backgroundColor = [UIColor HexString:@"eeeeee"];
+        subView.layer.cornerRadius = 6.0;
+        //
+        [self.allCartsViewArray addObject:subView];
+        //
+        [self.cartScrollView addSubview:subView];
+        self._cartOffset += offset;
+        //
+        subView.tag = (int)self.cartIndex + 1;
+        self.cartIndex++;
+        if (self.cartIndex == 1) {
+            UILongPressGestureRecognizer *view1Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+            view1Gesture.minimumPressDuration = 0.5;
+            [subView addGestureRecognizer:view1Gesture];
+        }
+        else if (self.cartIndex == 2)
+        {
+            UILongPressGestureRecognizer *view2Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+            view2Gesture.minimumPressDuration = 0.5;
+            [subView addGestureRecognizer:view2Gesture];
+        }
+        else if (self.cartIndex == 3)
+        {
+            UILongPressGestureRecognizer *view3Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+            view3Gesture.minimumPressDuration = 0.5;
+            [subView addGestureRecognizer:view3Gesture];
+        }
+        else if (self.cartIndex == 4)
+        {
+            UILongPressGestureRecognizer *view4Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+            view4Gesture.minimumPressDuration = 0.5;
+            [subView addGestureRecognizer:view4Gesture];
+        }
     }
-    else if (self.cartIndex == 3)
-    {
-        UITapGestureRecognizer *view3Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
-        [subView addGestureRecognizer:view3Gesture];
-    }
-    else if (self.cartIndex == 4)
-    {
-        UITapGestureRecognizer *view4Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
-        [subView addGestureRecognizer:view4Gesture];
-    }
+    
+    
     
     self.inputCartNum.transform = CGAffineTransformMakeTranslation(self._cartOffset, 0);
     self.addCartButton.transform = CGAffineTransformMakeTranslation(self._cartOffset, 0);
