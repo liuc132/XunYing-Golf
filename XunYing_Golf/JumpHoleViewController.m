@@ -13,6 +13,7 @@
 #import "DataTable.h"
 #import "DBCon.h"
 #import "TaskDetailViewController.h"
+#import "GetRequestIPAddress.h"
 
 #define CurrentHole     @"5ccd73"
 #define SelectedHole    @"f74c30"
@@ -354,8 +355,11 @@
 //    self.whetherSelectHole = NO;
     //组建跳动请求参数
     NSMutableDictionary *jumpHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"code",self.holesInf.Rows[self.selectedJumpNum][@"holcod"],@"aplcod", nil];
+    //
+    NSString *jumpHoleURLStr;
+    jumpHoleURLStr = [GetRequestIPAddress getJumpHoleURL];
     //start request
-    [HttpTools getHttp:JumpHoleURL forParams:jumpHoleParam success:^(NSData *nsData){
+    [HttpTools getHttp:jumpHoleURLStr forParams:jumpHoleParam success:^(NSData *nsData){
         JumpHoleViewController *strongSelf = weakSelf;
         NSLog(@"JumpHole request success");
         
@@ -398,8 +402,11 @@
         return;
     }
     NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.grpInf.Rows[0][@"grocod"],@"grocod", nil];
+    //
+    NSString *playProcessURLStr;
+    playProcessURLStr = [GetRequestIPAddress getPlayProcessURL];
     //start request
-    [HttpTools getHttp:GetPlayProcessURL forParams:refreshParam success:^(NSData *nsData){
+    [HttpTools getHttp:playProcessURLStr forParams:refreshParam success:^(NSData *nsData){
         NSLog(@"success refresh");
         NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         if ([latestDataDic[@"Code"] intValue] > 0) {

@@ -12,7 +12,7 @@ BOOL successSendHeart;
 
 @interface HeartBeatAndDetectState : NSObject
 
-@property(strong, nonatomic)NSTimer *heartBeatTime;
+@property (strong, nonatomic)NSTimer *heartBeatTime;
 @property (nonatomic) BOOL allowDown;
 @property (strong, nonatomic) NSString *allowDownStr;
 @property (strong, nonatomic) NSString *waitToAllow;

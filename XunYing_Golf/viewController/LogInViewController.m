@@ -17,7 +17,9 @@
 #import "HeartBeatAndDetectState.h"
 #import "passValueLogInDelegate.h"
 #import "AppDelegate.h"
-//#import "WaitToPlayTableViewController.h"
+#import "GetRequestIPAddress.h"
+
+extern NSString *CTSettingCopyMyPhoneNumber();
 extern BOOL allowDownCourt;
 
 @interface LogInViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>
@@ -33,10 +35,10 @@ extern BOOL allowDownCourt;
 @property (nonatomic) NetworkStatus curNetworkStatus;
 @property (strong, nonatomic) UIAlertView *forceLogInAlert;
 @property (strong, nonatomic) NSMutableDictionary *logInParams;
-@property(strong, nonatomic)NSMutableDictionary *checkCreatGroupState;
+@property (strong, nonatomic)NSMutableDictionary *checkCreatGroupState;
 
-@property(strong, nonatomic)UIActivityIndicatorView *activityIndicatorView;
-
+@property (strong, nonatomic)UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic)           BOOL    canReceiveNotification;
 //
 @property(strong, nonatomic)DBCon *dbCon;
 @property (strong, nonatomic) DataTable *logInPerson;
@@ -66,7 +68,7 @@ extern BOOL allowDownCourt;
     //NSLog(@"enter Login viewcontroller");
 //    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
     //
-    
+    NSLog(@"phoneNum:%@",CTSettingCopyMyPhoneNumber());
     
     self.tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTap:)];
     self.tap.delegate = self;
@@ -121,16 +123,26 @@ extern BOOL allowDownCourt;
     self.account.borderStyle    = UITextBorderStyleNone;
     self.password.delegate      = self;
     self.account.delegate       = self;
+    //
+    self.canReceiveNotification = NO;
 }
 
 -(void)canDownCourt:(NSNotification *)sender
 {
     NSLog(@"sender:%@",sender);
+    if (!self.canReceiveNotification) {
+        return;
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     //
     if ([sender.userInfo[@"allowDown"] isEqualToString:@"1"]) {
         [self.activityIndicatorView stopAnimating];
         self.activityIndicatorView.hidden = YES;
+        //检查心跳是否在继续
+        HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc]init];
+        if (![heartBeat checkState]) {
+            [heartBeat enableHeartBeat];
+        }
         //执行跳转程序，此时判断的是已经创建了组
         [self performSegueWithIdentifier:@"ToMainMapView" sender:nil];
     }
@@ -235,19 +247,23 @@ extern BOOL allowDownCourt;
     [super viewWillAppear:animated];
     //research the logPerson's information
     self.logInPerson = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
-    if([self.logInPerson.Rows count])
-    {
-        self.account.text = self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"];
-        self.password.text = self.logInPerson.Rows[[self.logInPerson.Rows count] -1][@"password"];
-        //检查当前的状态
-        [self checkCurStateOnServer];
-    }
-    else
-    {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if([self.logInPerson.Rows count])
+        {
+            self.account.text = self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"];
+            self.password.text = self.logInPerson.Rows[[self.logInPerson.Rows count] -1][@"password"];
+            //检查当前的状态 暂时把自动登录功能屏蔽掉
+            //        [self checkCurStateOnServer];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] removeObserver:self];
+        }
+        //
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    });
     //
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(canDownCourt:) name:@"allowDown" object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -301,8 +317,11 @@ extern BOOL allowDownCourt;
     [self.dbCon ExecNonQuery:@"delete from tbl_threeTypeHoleInf"];
     [self.dbCon ExecNonQuery:@"delete from tbl_cartInf"];
     [self.dbCon ExecNonQuery:@"delete from tbl_caddyInf"];
+    //获取到URL
+    NSString *caddyCartURLStr;
+    caddyCartURLStr = [GetRequestIPAddress getCaddyCartInfURL];
     //start request
-    [HttpTools getHttp:CaddyCartInfURL forParams:nil success:^(NSData *nsData){
+    [HttpTools getHttp:caddyCartURLStr forParams:nil success:^(NSData *nsData){
         NSLog(@"successfully request");
         NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"caddy count:%ld",[receiveDic[@"Msg"][@"caddys"] count]);
@@ -354,9 +373,11 @@ extern BOOL allowDownCourt;
     //delete the old data in the database
     [self.dbCon ExecNonQuery:@"delete from tbl_CustomerNumbers"];
     
-    
+    //
+    NSString *customURLStr;
+    customURLStr = [GetRequestIPAddress getCustomInfURL];
     //start request
-    [HttpTools getHttp:CustomInfURL forParams:nil success:^(NSData *nsData){
+    [HttpTools getHttp:customURLStr forParams:nil success:^(NSData *nsData){
         NSLog(@"request successfully");
         NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         //
@@ -398,7 +419,7 @@ extern BOOL allowDownCourt;
                 //修改强制登录的参数为1
                 [self.logInParams setObject:@"1" forKey:@"forceLogin"];
                 //调用接口进行传参数
-                [HttpTools getHttp:loginURL forParams:self.logInParams success:^(NSData *nsData){
+                [HttpTools getHttp:[self getTheSettingIP] forParams:self.logInParams success:^(NSData *nsData){
                     NSLog(@"成功强制登录");
                     //
                     NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
@@ -436,7 +457,11 @@ extern BOOL allowDownCourt;
                     if ([recDic[@"Code"] intValue] == -2) {
                         //组装数据
                         NSMutableDictionary *addDeviceParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"padtag",@"",@"phoneNum", nil];
-                        [HttpTools getHttp:RequestAddDeviceURL forParams:addDeviceParam success:^(NSData *nsData){
+                        //
+                        NSString *addDeviceURLStr;
+                        addDeviceURLStr = [GetRequestIPAddress getRequestAddDeviceURL];
+                        //
+                        [HttpTools getHttp:addDeviceURLStr forParams:addDeviceParam success:^(NSData *nsData){
                             NSLog(@"successfully requested");
                             NSDictionary *recDic1 = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
                             
@@ -462,6 +487,14 @@ extern BOOL allowDownCourt;
     
 }
 
+
+- (NSString *)getTheSettingIP
+{
+    //获取到IP地址
+    NSString *logInUrl;
+    logInUrl = [GetRequestIPAddress getLogInURL];
+    return logInUrl;
+}
 #pragma -mark logInButton
 -(void)logIn
 {
@@ -538,9 +571,11 @@ extern BOOL allowDownCourt;
         self.logInParams = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
         
         //
-        [HttpTools getHttp:loginURL forParams:self.logInParams success:^(NSData *nsData){
+        [HttpTools getHttp:[self getTheSettingIP] forParams:self.logInParams success:^(NSData *nsData){
             LogInViewController *strongSelf = weakSelf;
             NSLog(@"success login");
+            
+            self.canReceiveNotification = YES;
             //
             self.logInPerson = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
             //store data from server
@@ -644,17 +679,28 @@ extern BOOL allowDownCourt;
     //
     self.haveGroupNotDown = NO;
     //
+    HeartBeatAndDetectState *heart = [[HeartBeatAndDetectState alloc] init];
+    if ([heart checkState]) {
+        NSLog(@"heart time enable");
+    }
+    
+    //
     [self.dbCon ExecNonQuery:@"delete from tbl_logPerson"];
     //构建判断是否可以建组参数
     if (![self.logInPerson.Rows count]) {
         [self logIn];
         return;
     }
-    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPersonInf.Rows[[self.logPersonInf.Rows count] - 1][@"user"],@"username",self.logPersonInf.Rows[[self.logPersonInf.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
+    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"],@"username",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
     //
     __weak LogInViewController *weakSelf = self;
+    //
+    NSString *downFieldURLStr;
+    downFieldURLStr = [GetRequestIPAddress getDecideCreateGrpAndDownFieldURL];
     //request
-    [HttpTools getHttp:DecideCreateGrpAndDownField forParams:self.checkCreatGroupState success:^(NSData *nsData){
+    [HttpTools getHttp:downFieldURLStr forParams:self.checkCreatGroupState success:^(NSData *nsData){
+        //
+        self.canReceiveNotification = YES;
         //
         LogInViewController *strongSelf = weakSelf;
         NSLog(@"request successfully");

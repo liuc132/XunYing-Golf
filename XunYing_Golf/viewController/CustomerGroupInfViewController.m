@@ -11,6 +11,7 @@
 #import "DataTable.h"
 #import "HttpTools.h"
 #import "XunYingPre.h"
+#import "GetRequestIPAddress.h"
 
 @interface CustomerGroupInfViewController ()
 
@@ -391,8 +392,11 @@
     //数据不为空，则进行数据组装
     NSMutableDictionary *backToFieldParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.cusGroupInf.Rows[0][@"grocod"],@"grocod", nil];
     __weak CustomerGroupInfViewController *weakSelf = self;
+    //
+    NSString *backFieldURLStr;
+    backFieldURLStr = [GetRequestIPAddress getBackToFieldURL];
     //进行网络请求
-    [HttpTools getHttp:BackToFieldURL forParams:backToFieldParam success:^(NSData *nsData){
+    [HttpTools getHttp:backFieldURLStr forParams:backToFieldParam success:^(NSData *nsData){
         
         CustomerGroupInfViewController *strongSelf = weakSelf;
         

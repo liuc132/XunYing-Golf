@@ -26,45 +26,45 @@
 #define PortNum                             @":8089"
 
 
-#define HeartBeatURL                        [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/appheartbeat.htm"]
+#define HeartBeatSubURL                     @"/XYGolfManage/appheartbeat.htm"//[NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/appheartbeat.htm"]
 
-#define loginURL                            [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/empLoginApp.htm"]
+#define loginSubURL                         @"/XYGolfManage/empLoginApp.htm"//[NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/empLoginApp.htm"]
 
-#define JumpHoleURL                         [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/skipHole.htm"]
-#define MendHoleURL                         [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/mendHole.htm"]
+#define JumpHoleSubURL                      @"/XYGolfManage/skipHole.htm"//[NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/skipHole.htm"]
+#define MendHoleSubURL                      @"/XYGolfManage/mendHole.htm"//[NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/mendHole.htm"]
 
-#define CaddyCartInfURL                     [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/caddyCartList.htm"]
+#define CaddyCartInfSubURL                  @"/XYGolfManage/caddyCartList.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/caddyCartList.htm"]
 
-#define CustomInfURL                        [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getLastShownum.htm"]
+#define CustomInfSubURL                     @"/XYGolfManage/getLastShownum.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getLastShownum.htm"]
 
-#define createGroupURL                      [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/createGroup.htm"]
+#define createGroupSubURL                   @"/XYGolfManage/createGroup.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/createGroup.htm"]
 //cancle down group
-#define CancleWaitingGroupURL               [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/cancelGroup.htm"]
+#define CancleWaitingGroupSubURL            @"/XYGolfManage/cancelGroup.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/cancelGroup.htm"]
 
 //back to the field
-#define BackToFieldURL                      [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/gotoBack.htm"]
+#define BackToFieldSubURL                   @"/XYGolfManage/gotoBack.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/gotoBack.htm"]
 //判断是否可以建组，是否可以进入球场功能界面
-#define DecideCreateGrpAndDownField         [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/isOperation.htm"]
+#define DecideCreateGrpAndDownFieldSubURL   @"/XYGolfManage/isOperation.htm"//      [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/isOperation.htm"]
 //退出登录接口
-#define LogOutURL                           [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/exitLoginApp.htm"]
+#define LogOutSubURL                        @"/XYGolfManage/exitLoginApp.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/exitLoginApp.htm"]
 //请求更换球童接口
-#define ChangeCaddyURL                      [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/changeCaddy.htm"]
+#define ChangeCaddySubURL                   @"/XYGolfManage/changeCaddy.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/changeCaddy.htm"]
 //请求更换球车接口
-#define ChangeCartURL                       [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/changeCart.htm"]
+#define ChangeCartSubURL                    @"/XYGolfManage/changeCart.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/changeCart.htm"]
 //打球进度借口
-#define GetPlayProcessURL                   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getProgress.htm"]
+#define PlayProcessSubURL                   @"/XYGolfManage/getProgress.htm"//[NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getProgress.htm"]
 //申请立场休息
-#define RequestLeaveTimeURL                 [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/offHole.htm"]
+#define RequestLeaveTimeSubURL              @"/XYGolfManage/offHole.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/offHole.htm"]
 //获取历史消息
-#define RequestMsgHistoryURL                [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/msgHistroyApp.htm"]
+#define RequestMsgHistorySubURL             @"/XYGolfManage/msgHistroyApp.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/msgHistroyApp.htm"]
 //发送消息
-#define RequestSendMsgURL                   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/messageComm.htm"]
+#define RequestSendMsgSubURL                @"/XYGolfManage/messageComm.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/messageComm.htm"]
 //注册设备到服务器中的接口
-#define RequestAddDeviceURL                 [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/addPad.htm"]
+#define RequestAddDeviceSubURL              @"/XYGolfManage/addPad.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/addPad.htm"]
 //球洞状态更改
-#define MakeHoleCompleteStateURL            [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/completeHole.htm"]
+#define MakeHoleCompleteStateSubURL         @"/XYGolfManage/completeHole.htm"//   [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/completeHole.htm"]
 //获取指定小组需要补洞的接口
-#define GetNeedMendHoleURL                  [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getMendhole.htm"]
+#define GetNeedMendHoleSubURL               @"/XYGolfManage/getMendhole.htm"//  [NSString stringWithFormat:@"%@%@%@",MainURL,PortNum,@"/XYGolfManage/getMendhole.htm"]
 
 
 //#define testChangeInterface                 1

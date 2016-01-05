@@ -229,6 +229,8 @@
     [dbCon ExecDataTable:@"create table if not exists tbl_taskMendHoleInfo(evecod text,everea text,result text,evesta text,subtim text,mendHoleNum text)"];
     //
     [dbCon ExecDataTable:@"create table if not exists tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,destintime text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)"];
+    //设置界面中的，心跳间隔，IP地址，端口号
+    [dbCon ExecDataTable:@"create table if not exists tbl_SettingInfo(interval text,ipAddr text,portNum text)"];
     
 }
 

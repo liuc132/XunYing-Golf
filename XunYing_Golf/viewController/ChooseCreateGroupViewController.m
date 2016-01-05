@@ -17,6 +17,7 @@
 #import "QRCodeReaderViewController.h"
 #import "ActivityIndicatorView.h"
 #import "WaitToPlayTableViewController.h"
+#import "GetRequestIPAddress.h"
 
 extern unsigned char ucCusCounts;
 extern unsigned char ucHolePosition;
@@ -27,6 +28,7 @@ extern unsigned char ucHolePosition;
 
 @property (strong, nonatomic) DBCon *LogDbcon;
 @property (strong, nonatomic) DataTable *logPerson;
+@property (strong, nonatomic) DataTable *inputlogCaddy;
 @property (strong, nonatomic) DataTable *logEmp;
 @property (strong, nonatomic) DataTable *cusNumbers;
 @property (strong, nonatomic) NSMutableDictionary *checkCreatGroupState;
@@ -57,6 +59,7 @@ extern unsigned char ucHolePosition;
     self.logPerson  = [[DataTable alloc] init];
     self.logEmp     = [[DataTable alloc] init];
     self.cusNumbers = [[DataTable alloc] init];
+    self.inputlogCaddy = [[DataTable alloc] init];
     //
     self.QRCodeWay  = NO;
     //
@@ -102,7 +105,7 @@ extern unsigned char ucHolePosition;
     }
     else
     {
-        [self performSegueWithIdentifier:@"mannualCreatGrp" sender:nil];
+//        [self performSegueWithIdentifier:@"mannualCreatGrp" sender:nil];
     }
     
 }
@@ -124,25 +127,26 @@ extern unsigned char ucHolePosition;
     [super viewDidAppear:animated];
     self.logPerson = [self.LogDbcon ExecDataTable:@"select *from tbl_NamePassword"];
     self.logEmp    = [self.LogDbcon ExecDataTable:@"select *from tbl_logPerson"];
+    self.inputlogCaddy = [self.LogDbcon ExecDataTable:@"select *from tbl_NamePassword"];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
     
-    //
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.logPerson.Rows count] && !self.backOrNext) {
-            NSMutableArray *reConstructLogPersonInf = [[NSMutableArray alloc] initWithObjects:self.loggedPersonInf[@"user"],self.loggedPersonInf[@"password"],@"0", nil];
-            //[self.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
-            [self.LogDbcon ExecNonQuery:@"INSERT INTO tbl_NamePassword(user,password,logOutOrNot) VALUES(?,?,?)" forParameter:reConstructLogPersonInf];
-        }
-        NSLog(@"did disappear");
-
-        self.logPerson = [self.LogDbcon ExecDataTable:@"select *from tbl_NamePassword"];
-        NSLog(@"finish and logPerson:%@",self.logPerson);
-        
-    });
+//    //
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        if ([self.logPerson.Rows count] && !self.backOrNext) {
+//            NSMutableArray *reConstructLogPersonInf = [[NSMutableArray alloc] initWithObjects:self.loggedPersonInf[@"user"],self.loggedPersonInf[@"password"],@"0", nil];
+//            //[self.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
+//            [self.LogDbcon ExecNonQuery:@"INSERT INTO tbl_NamePassword(user,password,logOutOrNot) VALUES(?,?,?)" forParameter:reConstructLogPersonInf];
+//        }
+//        NSLog(@"did disappear");
+//
+//        self.logPerson = [self.LogDbcon ExecDataTable:@"select *from tbl_NamePassword"];
+//        NSLog(@"finish and logPerson:%@",self.logPerson);
+//        
+//    });
     
     
 }
@@ -161,14 +165,24 @@ extern unsigned char ucHolePosition;
     
     self.backOrNext = NO;
     //
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        self.logPerson = [self.LogDbcon ExecDataTable:@"select *from tbl_NamePassword"];
+//        if ([self.logPerson.Rows count]) {
+//            self.loggedPersonInf = [[NSDictionary alloc] initWithObjectsAndKeys:self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"user"],@"user",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"password"],@"password", nil];
+//            [self.LogDbcon ExecNonQuery:@"delete from tbl_NamePassword"];
+//        }
+//        NSLog(@"backToLogIn");
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            //[self dismissViewControllerAnimated:YES completion:nil];
+//            [self performSegueWithIdentifier:@"backToLogInSegue" sender:nil];
+//        });
+//        
+//    });
+    //
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.logPerson = [self.LogDbcon ExecDataTable:@"select *from tbl_NamePassword"];
-        if ([self.logPerson.Rows count]) {
-            self.loggedPersonInf = [[NSDictionary alloc] initWithObjectsAndKeys:self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"user"],@"user",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"password"],@"password", nil];
-            [self.LogDbcon ExecNonQuery:@"delete from tbl_NamePassword"];
-        }
-        NSLog(@"backToLogIn");
-        [self dismissViewControllerAnimated:YES completion:nil];
+        //[self dismissViewControllerAnimated:YES completion:nil];
+        [self performSegueWithIdentifier:@"backToLogInSegue" sender:nil];
     });
 }
 
@@ -179,8 +193,12 @@ extern unsigned char ucHolePosition;
     self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"user"],@"username",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
     //
     __weak ChooseCreateGroupViewController *weakSelf = self;
+    //
+    NSString *downFieldURLStr;
+    downFieldURLStr = [GetRequestIPAddress getDecideCreateGrpAndDownFieldURL];
+    
     //request
-    [HttpTools getHttp:DecideCreateGrpAndDownField forParams:self.checkCreatGroupState success:^(NSData *nsData){
+    [HttpTools getHttp:downFieldURLStr forParams:self.checkCreatGroupState success:^(NSData *nsData){
         //
         ChooseCreateGroupViewController *strongSelf = weakSelf;
         NSLog(@"request successfully");
@@ -333,7 +351,22 @@ extern unsigned char ucHolePosition;
             caddies = [caddies stringByAppendingString:([caddies isEqualToString:@""] && ([separateParam[1] intValue] != -1))?separateParam[1]:[NSString stringWithFormat:@"_%@",separateParam[1]]];
             carts = [carts stringByAppendingString:([carts isEqualToString:@""] && ([separateParam[2] intValue] != -1))?separateParam[2]:[NSString stringWithFormat:@"_%@",separateParam[2]]];
         }
-        
+        NSArray *caddiesArray = [caddies componentsSeparatedByString:@"_"];
+        BOOL hasTheLogCaddy;
+        hasTheLogCaddy = NO;
+        NSString *logCaddyNum;
+        logCaddyNum = [NSString stringWithFormat:@"%@",self.inputlogCaddy.Rows[0][@"user"]];
+        //
+        for (NSString *eachCaddy in caddiesArray) {
+            if ([eachCaddy isEqualToString:logCaddyNum]) {
+                hasTheLogCaddy = YES;
+            }
+        }
+        if (!hasTheLogCaddy) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该组中无此球童" message:nil delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            return;
+        }
 //        NSLog(@"%@",QRCodeReadResult);
 //        NSLog(@"%@  %@  %@",QRCodeReadResult[0],QRCodeReadResult[1],QRCodeReadResult[2]);
 //        NSLog(@"cusCards:%@ caddies:%@ carts:%@",cusCards,caddies,carts);
@@ -352,8 +385,11 @@ extern unsigned char ucHolePosition;
         weakSelf.QRCodeWay = YES;
         //组装请求的数据
         NSMutableDictionary *createGrpParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",QRCodeReadResult[0],@"gronum",cusCards,@"cus",@"all",@"hole",caddies,@"cad",carts,@"car",weakSelf.logEmp.Rows[[weakSelf.logEmp.Rows count] - 1][@"number"],@"cadShow",weakSelf.logEmp.Rows[[weakSelf.logEmp.Rows count] - 1][@"code"],@"user", nil];
+        //
+        NSString *createGrpURLStr;
+        createGrpURLStr = [GetRequestIPAddress getcreateGroupURL];
         //请求接口（建组下场的接口），并进行相应的跳转
-        [HttpTools getHttp:createGroupURL forParams:createGrpParam success:^(NSData *nsData){
+        [HttpTools getHttp:createGrpURLStr forParams:createGrpParam success:^(NSData *nsData){
             NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
             NSLog(@"recDic:%@",recDic);
             //
@@ -375,6 +411,7 @@ extern unsigned char ucHolePosition;
                 [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_CustomersInfo"];
                 [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_selectCart"];
                 [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_groupInf"];
+                [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_addCaddy"];
                 //
                 NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",recDic[@"Msg"][@"grocod"],recDic[@"Msg"][@"groind"],recDic[@"Msg"][@"grolev"],recDic[@"Msg"][@"gronum"],recDic[@"Msg"][@"grosta"]);
                 //组建获取到的组信息的数组
@@ -396,6 +433,13 @@ extern unsigned char ucHolePosition;
                 for (NSDictionary *eachCart in allSelectedCartsArray) {
                     NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
                     [weakSelf.LogDbcon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
+                }
+                //
+                //保存添加的球童的信息 tbl_addCaddy(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)
+                NSArray *allSelectedCaddiesArray = recDic[@"Msg"][@"cads"];
+                for (NSDictionary *eachCaddy in allSelectedCaddiesArray) {
+                    NSMutableArray *selectedCaddy = [[NSMutableArray alloc] initWithObjects:eachCaddy[@"cadcod"],eachCaddy[@"cadnam"],eachCaddy[@"cadnum"],eachCaddy[@"cadsex"],eachCaddy[@"empcod"], nil];
+                    [weakSelf.LogDbcon ExecNonQuery:@"insert into tbl_addCaddy(cadcod,cadnam,cadnum,cadsex,empcod) values(?,?,?,?,?)" forParameter:selectedCaddy];
                 }
 //                DataTable *table11;// = [[DataTable alloc] init];
 //                table11 = [weakSelf.LogDbcon ExecDataTable:@"select *from tbl_selectCart"];

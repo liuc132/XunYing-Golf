@@ -52,8 +52,6 @@
 		5B52F4481B9D7C08004BA338 /* UITableViewController+UICon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B52F43D1B9D7C08004BA338 /* UITableViewController+UICon.m */; };
 		5B52F4491B9D7C08004BA338 /* UIView+FramePostion.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B52F43F1B9D7C08004BA338 /* UIView+FramePostion.m */; };
 		5B52F44A1B9D7C08004BA338 /* UIViewController+UICon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B52F4411B9D7C08004BA338 /* UIViewController+UICon.m */; };
-		5B52F72D1B9D8AA1004BA338 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B52F72B1B9D8AA1004BA338 /* libsqlite3.0.dylib */; };
-		5B52F72E1B9D8AA1004BA338 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B52F72C1B9D8AA1004BA338 /* libsqlite3.dylib */; };
 		5B588E171BE891D900D2B327 /* GetGPSLocationData.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B588E161BE891D900D2B327 /* GetGPSLocationData.m */; };
 		5B63E1111BAFB10C0034C577 /* createGroup_Check.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B63E1071BAFB10C0034C577 /* createGroup_Check.png */; };
 		5B63E1121BAFB10C0034C577 /* createGroup_Main.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B63E1081BAFB10C0034C577 /* createGroup_Main.png */; };
@@ -93,6 +91,9 @@
 		5BD6D69E1BD6359A001524DB /* BLLocationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6D69B1BD6359A001524DB /* BLLocationProvider.m */; };
 		5BD6D69F1BD6359A001524DB /* BLMessageProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6D69D1BD6359A001524DB /* BLMessageProvider.m */; };
 		5BDC837B1BA2B1B500E69940 /* TaskComViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */; };
+		5BE341E51C3B6746007A3A9C /* GetRequestIPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE341E41C3B6746007A3A9C /* GetRequestIPAddress.m */; };
+		5BE341E81C3B886B007A3A9C /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BE341E61C3B886B007A3A9C /* libsqlite3.0.tbd */; };
+		5BE341E91C3B886B007A3A9C /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BE341E71C3B886B007A3A9C /* libsqlite3.tbd */; };
 		5BE599621C2900480071D062 /* LaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE599611C2900480071D062 /* LaunchViewController.m */; };
 		5BE7172E1BB8EDC40080C6F4 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE7172D1BB8EDC40080C6F4 /* Reachability.m */; };
 		5BEA92711BB1077200EAC9BE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEA926E1BB1077200EAC9BE /* FontAwesome.ttf */; };
@@ -217,8 +218,6 @@
 		5B52F4401B9D7C08004BA338 /* UIViewController+UICon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+UICon.h"; path = "UICategory/UIViewController+UICon.h"; sourceTree = "<group>"; };
 		5B52F4411B9D7C08004BA338 /* UIViewController+UICon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+UICon.m"; path = "UICategory/UIViewController+UICon.m"; sourceTree = "<group>"; };
 		5B52F7291B9D88A2004BA338 /* XunYingPre.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XunYingPre.h; sourceTree = "<group>"; };
-		5B52F72B1B9D8AA1004BA338 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		5B52F72C1B9D8AA1004BA338 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5B588E151BE891D900D2B327 /* GetGPSLocationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGPSLocationData.h; path = viewController/GetGPSLocationData.h; sourceTree = "<group>"; };
 		5B588E161BE891D900D2B327 /* GetGPSLocationData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGPSLocationData.m; path = viewController/GetGPSLocationData.m; sourceTree = "<group>"; };
 		5B60FDD51C03212B00D77A44 /* passValueLogInDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = passValueLogInDelegate.h; path = viewController/protocol/passValueLogInDelegate.h; sourceTree = "<group>"; };
@@ -287,6 +286,10 @@
 		5BD6D69D1BD6359A001524DB /* BLMessageProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLMessageProvider.m; sourceTree = "<group>"; };
 		5BDC83791BA2B1B500E69940 /* TaskComViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskComViewController.h; sourceTree = "<group>"; };
 		5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskComViewController.m; sourceTree = "<group>"; };
+		5BE341E31C3B6746007A3A9C /* GetRequestIPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetRequestIPAddress.h; path = viewController/GetRequestIPAddress.h; sourceTree = "<group>"; };
+		5BE341E41C3B6746007A3A9C /* GetRequestIPAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetRequestIPAddress.m; path = viewController/GetRequestIPAddress.m; sourceTree = "<group>"; };
+		5BE341E61C3B886B007A3A9C /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		5BE341E71C3B886B007A3A9C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		5BE599601C2900480071D062 /* LaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LaunchViewController.h; path = viewController/LaunchViewController.h; sourceTree = "<group>"; };
 		5BE599611C2900480071D062 /* LaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LaunchViewController.m; path = viewController/LaunchViewController.m; sourceTree = "<group>"; };
 		5BE7172C1BB8EDC40080C6F4 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -331,9 +334,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BE341E81C3B886B007A3A9C /* libsqlite3.0.tbd in Frameworks */,
+				5BE341E91C3B886B007A3A9C /* libsqlite3.tbd in Frameworks */,
 				5BC7C5221BA1587A00D9072D /* CoreTelephony.framework in Frameworks */,
-				5B52F72D1B9D8AA1004BA338 /* libsqlite3.0.dylib in Frameworks */,
-				5B52F72E1B9D8AA1004BA338 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,6 +405,7 @@
 		5B11C5201B8EDD4700382C9B /* XunYing_Golf */ = {
 			isa = PBXGroup;
 			children = (
+				5BE341E21C3B671A007A3A9C /* getRequestAddr */,
 				5B60FDD41C03207800D77A44 /* protocol */,
 				5B588E141BE8917C00D2B327 /* getGPSLocation */,
 				5B3468141BCDF7AF00CB2E73 /* heartBeatAndDetectState */,
@@ -651,9 +655,9 @@
 		5B52F72A1B9D8A83004BA338 /* framework */ = {
 			isa = PBXGroup;
 			children = (
+				5BE341E61C3B886B007A3A9C /* libsqlite3.0.tbd */,
+				5BE341E71C3B886B007A3A9C /* libsqlite3.tbd */,
 				5BC7C5211BA1587A00D9072D /* CoreTelephony.framework */,
-				5B52F72B1B9D8AA1004BA338 /* libsqlite3.0.dylib */,
-				5B52F72C1B9D8AA1004BA338 /* libsqlite3.dylib */,
 			);
 			name = framework;
 			sourceTree = "<group>";
@@ -911,6 +915,15 @@
 				5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */,
 			);
 			name = taskCommunication;
+			sourceTree = "<group>";
+		};
+		5BE341E21C3B671A007A3A9C /* getRequestAddr */ = {
+			isa = PBXGroup;
+			children = (
+				5BE341E31C3B6746007A3A9C /* GetRequestIPAddress.h */,
+				5BE341E41C3B6746007A3A9C /* GetRequestIPAddress.m */,
+			);
+			name = getRequestAddr;
 			sourceTree = "<group>";
 		};
 		5BE7172B1BB8ED9D0080C6F4 /* reachability */ = {
@@ -1175,6 +1188,7 @@
 				5BEC66E61BC7506F001C70FE /* CustomerGroupInfViewController.m in Sources */,
 				5B4481051BFB25B10085A2E7 /* ChangeCaddyViewController.m in Sources */,
 				5B93C8151BBBBED20081FBAF /* PersonalCenterViewController.m in Sources */,
+				5BE341E51C3B6746007A3A9C /* GetRequestIPAddress.m in Sources */,
 				5B52F42E1B9D7BE3004BA338 /* PinYin.m in Sources */,
 				5B52F42B1B9D7BE3004BA338 /* ChineseString.m in Sources */,
 				5BD6D68F1BD63311001524DB /* AFHTTPRequestOperation.m in Sources */,

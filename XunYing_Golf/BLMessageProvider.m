@@ -30,7 +30,7 @@ static NSString *urlFormat = @"http://jlcmobile.com/nick.nsf/test?openagent&%@&%
 +(instancetype)sharedProvider{
     if(instance == nil){
         instance = [[super allocWithZone:NULL] init];
-        urlFormat = HeartBeatURL;
+        urlFormat = HeartBeatSubURL;
         //
         
     }

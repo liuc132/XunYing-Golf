@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
-            timestampString = "473582249.935692"
+            timestampString = "473679027.690578"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "495"
-            endingLineNumber = "495"
+            startingLineNumber = "500"
+            endingLineNumber = "500"
             landmarkName = "@implementation WaitToPlayTableViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "733"
-            endingLineNumber = "733"
+            startingLineNumber = "779"
+            endingLineNumber = "779"
             landmarkName = "-checkCurStateOnServer"
             landmarkType = "5">
          </BreakpointContent>
@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
-            timestampString = "473579801.922836"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
+            startingLineNumber = "195"
+            endingLineNumber = "195"
             landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "580"
-            endingLineNumber = "580"
+            startingLineNumber = "615"
+            endingLineNumber = "615"
             landmarkName = "-logIn"
             landmarkType = "5">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "749"
-            endingLineNumber = "749"
+            startingLineNumber = "795"
+            endingLineNumber = "795"
             landmarkName = "-checkCurStateOnServer"
             landmarkType = "5">
             <Locations>
@@ -217,11 +217,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "649"
-            endingLineNumber = "649"
+            startingLineNumber = "690"
+            endingLineNumber = "690"
             landmarkName = "-checkCurStateOnServer"
             landmarkType = "5">
          </BreakpointContent>
@@ -233,11 +233,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "538"
-            endingLineNumber = "538"
+            startingLineNumber = "571"
+            endingLineNumber = "571"
             landmarkName = "-logIn"
             landmarkType = "5">
          </BreakpointContent>
@@ -249,11 +249,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "501"
-            endingLineNumber = "501"
+            startingLineNumber = "534"
+            endingLineNumber = "534"
             landmarkName = "-logIn"
             landmarkType = "5">
          </BreakpointContent>
@@ -264,61 +264,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
-            timestampString = "472010272.176917"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "-backToLogInFace:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
-            timestampString = "472010272.176917"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
-            landmarkName = "-viewDidDisappear:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "747"
-            endingLineNumber = "747"
+            startingLineNumber = "793"
+            endingLineNumber = "793"
             landmarkName = "-checkCurStateOnServer"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
-            timestampString = "472010272.176917"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
-            landmarkName = "-whereToGo:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -329,11 +281,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChangeCaddyViewController.m"
-            timestampString = "472731854.59814"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "258"
-            endingLineNumber = "258"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
             landmarkName = "-changeReason:"
             landmarkType = "5">
          </BreakpointContent>
@@ -345,11 +297,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "616"
-            endingLineNumber = "616"
+            startingLineNumber = "651"
+            endingLineNumber = "651"
             landmarkName = "-logIn"
             landmarkType = "5">
          </BreakpointContent>
@@ -361,11 +313,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CustomerGroupInfViewController.m"
-            timestampString = "472116418.601578"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
             landmarkName = "-constructDisInf"
             landmarkType = "5">
          </BreakpointContent>
@@ -377,11 +329,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChangeCartViewController.m"
-            timestampString = "472466402.596829"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "-requestToServer:"
             landmarkType = "5">
          </BreakpointContent>
@@ -393,11 +345,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472796393.68687"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
             landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
@@ -409,11 +361,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CustomerGroupInfViewController.m"
-            timestampString = "472116418.601578"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "217"
-            endingLineNumber = "217"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
             landmarkName = "-constructDisInf"
             landmarkType = "5">
          </BreakpointContent>
@@ -425,11 +377,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
-            timestampString = "473136454.019131"
+            timestampString = "473681684.543499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "403"
-            endingLineNumber = "403"
+            startingLineNumber = "447"
+            endingLineNumber = "447"
             landmarkName = "-QRCodeCreateGrp:"
             landmarkType = "5">
          </BreakpointContent>
@@ -441,11 +393,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CustomerGroupInfViewController.m"
-            timestampString = "472116418.601578"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "315"
-            endingLineNumber = "315"
+            startingLineNumber = "316"
+            endingLineNumber = "316"
             landmarkName = "-constructDisInf"
             landmarkType = "5">
          </BreakpointContent>
@@ -457,11 +409,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CustomerGroupInfViewController.m"
-            timestampString = "472116418.601578"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "348"
-            endingLineNumber = "348"
+            startingLineNumber = "349"
+            endingLineNumber = "349"
             landmarkName = "-constructDisInf"
             landmarkType = "5">
          </BreakpointContent>
@@ -473,11 +425,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
-            timestampString = "473579801.922836"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "202"
-            endingLineNumber = "202"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -489,11 +441,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473564042.962248"
+            timestampString = "473675236.575813"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "383"
-            endingLineNumber = "383"
+            startingLineNumber = "382"
+            endingLineNumber = "382"
             landmarkName = "-DisableHeartBeat"
             landmarkType = "5">
          </BreakpointContent>
@@ -505,11 +457,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473564042.962248"
+            timestampString = "473675236.575813"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "387"
-            endingLineNumber = "387"
+            startingLineNumber = "386"
+            endingLineNumber = "386"
             landmarkName = "-confirmCustomNumbers:"
             landmarkType = "5">
          </BreakpointContent>
@@ -521,11 +473,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "702"
-            endingLineNumber = "702"
+            startingLineNumber = "748"
+            endingLineNumber = "748"
             landmarkName = "-checkCurStateOnServer"
             landmarkType = "5">
          </BreakpointContent>
@@ -537,11 +489,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "409"
-            endingLineNumber = "409"
+            startingLineNumber = "430"
+            endingLineNumber = "430"
             landmarkName = "-alertView:clickedButtonAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
@@ -553,11 +505,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
+            startingLineNumber = "600"
+            endingLineNumber = "600"
             landmarkName = "-logIn"
             landmarkType = "5">
          </BreakpointContent>
@@ -585,11 +537,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChangeCartViewController.m"
-            timestampString = "472631423.924652"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "313"
-            endingLineNumber = "313"
+            startingLineNumber = "316"
+            endingLineNumber = "316"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -601,11 +553,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChangeCartViewController.m"
-            timestampString = "472466402.596829"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
             landmarkName = "-viewWillDisappear:"
             landmarkType = "5">
          </BreakpointContent>
@@ -665,11 +617,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472796908.144447"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "434"
-            endingLineNumber = "434"
+            startingLineNumber = "438"
+            endingLineNumber = "438"
             landmarkName = "-GetPlayProcess"
             landmarkType = "5">
          </BreakpointContent>
@@ -681,11 +633,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472796908.144447"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "478"
-            endingLineNumber = "478"
+            startingLineNumber = "484"
+            endingLineNumber = "484"
             landmarkName = "-alertView:clickedButtonAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
@@ -697,11 +649,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472796908.144447"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "486"
-            endingLineNumber = "486"
+            startingLineNumber = "492"
+            endingLineNumber = "492"
             landmarkName = "-alertView:clickedButtonAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
@@ -713,11 +665,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050041.047964"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "-requestToLeave:"
             landmarkType = "5">
          </BreakpointContent>
@@ -729,11 +681,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050041.047964"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "254"
-            endingLineNumber = "254"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
             landmarkName = "-pickerView:titleForRow:forComponent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -745,11 +697,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050041.047964"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
+            startingLineNumber = "274"
+            endingLineNumber = "274"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -761,11 +713,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050041.047964"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "-requestToLeave:"
             landmarkType = "5">
          </BreakpointContent>
@@ -777,11 +729,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050041.047964"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "291"
-            endingLineNumber = "291"
+            startingLineNumber = "295"
+            endingLineNumber = "295"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -793,11 +745,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
-            timestampString = "472809283.115747"
+            timestampString = "473678518.761105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "202"
-            endingLineNumber = "202"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
             landmarkName = "-timelySend"
             landmarkType = "5">
          </BreakpointContent>
@@ -809,11 +761,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
-            timestampString = "472719010.507743"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "-viewWillAppear:"
             landmarkType = "5">
          </BreakpointContent>
@@ -825,11 +777,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
-            timestampString = "472720880.663508"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "267"
+            endingLineNumber = "267"
             landmarkName = "-requestMendHole:"
             landmarkType = "5">
          </BreakpointContent>
@@ -841,11 +793,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
-            timestampString = "472719891.692857"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
+            startingLineNumber = "185"
+            endingLineNumber = "185"
             landmarkName = "-refreshHoleStateDis"
             landmarkType = "5">
          </BreakpointContent>
@@ -857,11 +809,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
-            timestampString = "472719920.9986"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "231"
-            endingLineNumber = "231"
+            startingLineNumber = "243"
+            endingLineNumber = "243"
             landmarkName = "-refreshHoleStateDis"
             landmarkType = "5">
          </BreakpointContent>
@@ -873,11 +825,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
-            timestampString = "472809283.115747"
+            timestampString = "473678518.761105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
             landmarkName = "-timelySend"
             landmarkType = "5">
          </BreakpointContent>
@@ -889,11 +841,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
-            timestampString = "472809283.115747"
+            timestampString = "473678518.761105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "212"
-            endingLineNumber = "212"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
             landmarkName = "-timelySend"
             landmarkType = "5">
          </BreakpointContent>
@@ -905,11 +857,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChangeCaddyViewController.m"
-            timestampString = "472731772.163584"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "328"
-            endingLineNumber = "328"
+            startingLineNumber = "329"
+            endingLineNumber = "329"
             landmarkName = "-sendRequest:"
             landmarkType = "5">
          </BreakpointContent>
@@ -953,11 +905,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472796908.144447"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "427"
-            endingLineNumber = "427"
+            startingLineNumber = "431"
+            endingLineNumber = "431"
             landmarkName = "-GetPlayProcess"
             landmarkType = "5">
             <Locations>
@@ -1001,11 +953,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472796525.805783"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "283"
-            endingLineNumber = "283"
+            startingLineNumber = "284"
+            endingLineNumber = "284"
             landmarkName = "-hadRefreshSuccess:"
             landmarkType = "5">
             <Locations>
@@ -1049,11 +1001,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472796664.122827"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "292"
-            endingLineNumber = "292"
+            startingLineNumber = "293"
+            endingLineNumber = "293"
             landmarkName = "-hadRefreshSuccess:"
             landmarkType = "5">
             <Locations>
@@ -1097,11 +1049,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472799625.923521"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "480"
-            endingLineNumber = "480"
+            startingLineNumber = "486"
+            endingLineNumber = "486"
             landmarkName = "-alertView:clickedButtonAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1113,11 +1065,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472799715.607252"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "309"
-            endingLineNumber = "309"
+            startingLineNumber = "310"
+            endingLineNumber = "310"
             landmarkName = "-hadRefreshSuccess:"
             landmarkType = "5">
             <Locations>
@@ -1161,11 +1113,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/PlayProcessViewController.m"
-            timestampString = "472810761.4143"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "474"
-            endingLineNumber = "474"
+            startingLineNumber = "480"
+            endingLineNumber = "480"
             landmarkName = "-alertView:clickedButtonAtIndex:"
             landmarkType = "5">
             <Locations>
@@ -1209,11 +1161,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473049879.656706"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
             landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
@@ -1225,11 +1177,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050041.047964"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
             landmarkName = "-viewWillAppear:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1241,11 +1193,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "682"
-            endingLineNumber = "682"
+            startingLineNumber = "728"
+            endingLineNumber = "728"
             landmarkName = "-checkCurStateOnServer"
             landmarkType = "5">
          </BreakpointContent>
@@ -1257,11 +1209,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChangeCartViewController.m"
-            timestampString = "472982442.996702"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "348"
-            endingLineNumber = "348"
+            startingLineNumber = "351"
+            endingLineNumber = "351"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1321,11 +1273,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChangeCartViewController.m"
-            timestampString = "472982691.09238"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
             landmarkName = "-requestToServer:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1353,11 +1305,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
-            timestampString = "472983471.357355"
+            timestampString = "473678518.761105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "296"
-            endingLineNumber = "296"
+            startingLineNumber = "315"
+            endingLineNumber = "315"
             landmarkName = "-timelySend"
             landmarkType = "5">
          </BreakpointContent>
@@ -1369,11 +1321,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/JumpHoleViewController.m"
-            timestampString = "473051499.466521"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "423"
-            endingLineNumber = "423"
+            startingLineNumber = "430"
+            endingLineNumber = "430"
             landmarkName = "-GetPlayProcess"
             landmarkType = "5">
          </BreakpointContent>
@@ -1385,11 +1337,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050041.047964"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
             landmarkName = "-getTheLatestInfo:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1401,11 +1353,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050041.047964"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "311"
-            endingLineNumber = "311"
+            startingLineNumber = "318"
+            endingLineNumber = "318"
             landmarkName = "-GetPlayProcess"
             landmarkType = "5">
             <Locations>
@@ -1449,11 +1401,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LeaveRestViewController.m"
-            timestampString = "473050124.951318"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "332"
-            endingLineNumber = "332"
+            startingLineNumber = "339"
+            endingLineNumber = "339"
             landmarkName = "-GetPlayProcess"
             landmarkType = "5">
          </BreakpointContent>
@@ -1465,11 +1417,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
-            timestampString = "473051966.510982"
+            timestampString = "473678518.761105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "249"
-            endingLineNumber = "249"
+            startingLineNumber = "268"
+            endingLineNumber = "268"
             landmarkName = "-timelySend"
             landmarkType = "5">
          </BreakpointContent>
@@ -1481,11 +1433,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473679953.91891"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "820"
-            endingLineNumber = "820"
+            startingLineNumber = "866"
+            endingLineNumber = "866"
             landmarkName = "-keyboardWillChange:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1513,11 +1465,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/LogInViewController.m"
-            timestampString = "473592894.849539"
+            timestampString = "473656604.23203"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
@@ -1529,11 +1481,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
-            timestampString = "473134794.229634"
+            timestampString = "473681684.543499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
             landmarkName = "-MannualCreateGrp:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1577,11 +1529,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473582611.45503"
+            timestampString = "473679685.56854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "810"
-            endingLineNumber = "810"
+            startingLineNumber = "819"
+            endingLineNumber = "819"
             landmarkName = "-addCart:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1593,11 +1545,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473582611.45503"
+            timestampString = "473679685.56854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "691"
-            endingLineNumber = "691"
+            startingLineNumber = "698"
+            endingLineNumber = "698"
             landmarkName = "-addCaddy:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1609,27 +1561,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473564042.962248"
+            timestampString = "473679685.56854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "-viewDidLoad"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473582611.45503"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "646"
-            endingLineNumber = "646"
+            startingLineNumber = "651"
+            endingLineNumber = "651"
             landmarkName = "-keyboardWillChange:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1641,43 +1577,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473564042.962248"
+            timestampString = "473673426.381505"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "279"
-            endingLineNumber = "279"
-            landmarkName = "-deleteCart:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473564042.962248"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "306"
-            endingLineNumber = "306"
-            landmarkName = "-deleteCaddy:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473564042.962248"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "254"
-            endingLineNumber = "254"
+            startingLineNumber = "261"
+            endingLineNumber = "261"
             landmarkName = "-alertView:clickedButtonAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1689,11 +1593,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473564823.599676"
+            timestampString = "473673426.381505"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "-alertView:clickedButtonAtIndex:"
             landmarkType = "5">
             <Locations>
@@ -1705,11 +1609,11 @@
                   moduleName = "XunYing_Golf"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/CreateGroupViewController.m"
-                  timestampString = "473564823.611248"
+                  timestampString = "473675387.662384"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "215"
-                  endingLineNumber = "215"
+                  startingLineNumber = "222"
+                  endingLineNumber = "222"
                   offsetFromSymbolStart = "596">
                </Location>
                <Location
@@ -1720,11 +1624,11 @@
                   moduleName = "XunYing_Golf"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/CreateGroupViewController.m"
-                  timestampString = "473564823.611557"
+                  timestampString = "473675387.662613"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "215"
-                  endingLineNumber = "215"
+                  startingLineNumber = "222"
+                  endingLineNumber = "222"
                   offsetFromSymbolStart = "612">
                </Location>
             </Locations>
@@ -1737,11 +1641,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473582611.45503"
+            timestampString = "473679685.56854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "511"
-            endingLineNumber = "511"
+            startingLineNumber = "516"
+            endingLineNumber = "516"
             landmarkName = "-DownCourt"
             landmarkType = "5">
          </BreakpointContent>
@@ -1753,11 +1657,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473582611.45503"
+            timestampString = "473679685.56854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "526"
-            endingLineNumber = "526"
+            startingLineNumber = "531"
+            endingLineNumber = "531"
             landmarkName = "-DownCourt"
             landmarkType = "5">
          </BreakpointContent>
@@ -1769,11 +1673,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
-            timestampString = "473582611.45503"
+            timestampString = "473675236.575813"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "448"
-            endingLineNumber = "448"
+            startingLineNumber = "447"
+            endingLineNumber = "447"
             landmarkName = "-DownCourt"
             landmarkType = "5">
          </BreakpointContent>
@@ -1785,11 +1689,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
-            timestampString = "473581672.478917"
+            timestampString = "473681684.543499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
             landmarkName = "-MannualCreateGrp:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1801,11 +1705,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
-            timestampString = "473582338.397189"
+            timestampString = "473679027.690578"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "364"
-            endingLineNumber = "364"
+            startingLineNumber = "369"
+            endingLineNumber = "369"
             landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -1817,11 +1721,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
-            timestampString = "473582473.98166"
+            timestampString = "473679027.690578"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "339"
-            endingLineNumber = "339"
+            startingLineNumber = "344"
+            endingLineNumber = "344"
             landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
             landmarkType = "5">
             <Locations>
@@ -1865,12 +1769,924 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XunYing_Golf/viewController/CustomerGroupInfViewController.m"
-            timestampString = "473584929.845572"
+            timestampString = "473663619.887939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
+            startingLineNumber = "121"
+            endingLineNumber = "121"
             landmarkName = "-constructDisInf"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
+            timestampString = "473663619.887939"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "345"
+            endingLineNumber = "345"
+            landmarkName = "-prepareForSegue:sender:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
+            timestampString = "473663619.887939"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "330"
+            endingLineNumber = "330"
+            landmarkName = "-prepareForSegue:sender:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
+            timestampString = "473663619.887939"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "297"
+            endingLineNumber = "297"
+            landmarkName = "-requestMendHole:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/CurTaskCenterTableViewController.m"
+            timestampString = "473648530.893353"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/CurTaskCenterTableViewController.m"
+            timestampString = "473648539.567099"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/CurTaskCenterTableViewController.m"
+            timestampString = "473648557.409407"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
+            landmarkName = "-viewWillAppear:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/TaskDetailViewController.m"
+            timestampString = "473648603.01625"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
+            timestampString = "473663619.887939"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
+            landmarkName = "-requestMendHole:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/MendHoleViewController.m"
+            timestampString = "473663619.887939"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "281"
+            endingLineNumber = "281"
+            landmarkName = "-requestMendHole:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/SettingViewController.m"
+            timestampString = "473657286.274765"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "-confirmSetting:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/GetRequestIPAddress.m"
+            timestampString = "473666827.61887"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "+getLogInURL"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473679953.91891"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "496"
+            endingLineNumber = "496"
+            landmarkName = "-getTheSettingIP"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473663369.277332"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473676600.662108"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
+            landmarkName = "-viewWillAppear:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[LogInViewController viewWillAppear:]"
+                  moduleName = "XunYing_Golf"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/LogInViewController.m"
+                  timestampString = "473667876.994493"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "245"
+                  endingLineNumber = "245"
+                  offsetFromSymbolStart = "228">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__38-[LogInViewController viewWillAppear:]_block_invoke"
+                  moduleName = "XunYing_Golf"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/LogInViewController.m"
+                  timestampString = "473667876.994718"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "245"
+                  endingLineNumber = "245"
+                  offsetFromSymbolStart = "24">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473676600.662108"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "-canDownCourt:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473678518.761105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "-enableHeartBeat"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+            timestampString = "473681684.543499"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "452"
+            endingLineNumber = "452"
+            landmarkName = "-QRCodeCreateGrp:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+            timestampString = "473681684.543499"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "313"
+            endingLineNumber = "313"
+            landmarkName = "-MannualCreateGrp:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
+            timestampString = "473668547.927056"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
+            timestampString = "473679027.690578"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "281"
+            endingLineNumber = "281"
+            landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+            timestampString = "473681684.543499"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "416"
+            endingLineNumber = "416"
+            landmarkName = "-QRCodeCreateGrp:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+            timestampString = "473681684.543499"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "333"
+            endingLineNumber = "333"
+            landmarkName = "-QRCodeCreateGrp:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ChooseCreateGroupViewController QRCodeCreateGrp:]"
+                  moduleName = "XunYing_Golf"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+                  timestampString = "473675579.229225"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "330"
+                  endingLineNumber = "330"
+                  offsetFromSymbolStart = "248">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__51-[ChooseCreateGroupViewController QRCodeCreateGrp:]_block_invoke"
+                  moduleName = "XunYing_Golf"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+                  timestampString = "473675579.229441"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "330"
+                  endingLineNumber = "330"
+                  offsetFromSymbolStart = "76">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+            timestampString = "473681684.543499"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "341"
+            endingLineNumber = "341"
+            landmarkName = "-QRCodeCreateGrp:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/QRCodeReaderViewController/QRCodeReaderViewController.m"
+            timestampString = "473669584.842668"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "-setCompletionWithBlock:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473679953.91891"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "702"
+            endingLineNumber = "702"
+            landmarkName = "-checkCurStateOnServer"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[LogInViewController checkCurStateOnServer]"
+                  moduleName = "XunYing_Golf"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/LogInViewController.m"
+                  timestampString = "473673534.912631"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "692"
+                  endingLineNumber = "692"
+                  offsetFromSymbolStart = "1332">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__44-[LogInViewController checkCurStateOnServer]_block_invoke"
+                  moduleName = "XunYing_Golf"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/LogInViewController.m"
+                  timestampString = "473673534.912835"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "692"
+                  endingLineNumber = "692"
+                  offsetFromSymbolStart = "76">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473679953.91891"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "517"
+            endingLineNumber = "517"
+            landmarkName = "-logIn"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473679953.91891"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "574"
+            endingLineNumber = "574"
+            landmarkName = "-logIn"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[LogInViewController logIn]"
+                  moduleName = "XunYing_Golf"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/LogInViewController.m"
+                  timestampString = "473673534.914707"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "567"
+                  endingLineNumber = "567"
+                  offsetFromSymbolStart = "3896">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__28-[LogInViewController logIn]_block_invoke"
+                  moduleName = "XunYing_Golf"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liuc/Desktop/lcWorkSpace/SVN%20project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/viewController/LogInViewController.m"
+                  timestampString = "473673534.914907"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "567"
+                  endingLineNumber = "567"
+                  offsetFromSymbolStart = "76">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473679953.91891"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "709"
+            endingLineNumber = "709"
+            landmarkName = "-checkCurStateOnServer"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473679953.91891"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "378"
+            endingLineNumber = "378"
+            landmarkName = "-getCustomInf"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473679953.91891"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
+            landmarkName = "-getCaddyCartInf"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473676600.662108"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
+            landmarkName = "-viewDidDisappear:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473678518.761105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "-timelySend"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/LogInViewController.m"
+            timestampString = "473679953.91891"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "684"
+            endingLineNumber = "684"
+            landmarkName = "-checkCurStateOnServer"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
+            timestampString = "473679027.690578"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "540"
+            endingLineNumber = "540"
+            landmarkName = "-cancleDownGround:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
+            timestampString = "473675236.575813"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "305"
+            endingLineNumber = "305"
+            landmarkName = "-deleteCaddy:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/CreateGroupViewController.m"
+            timestampString = "473675292.784984"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
+            landmarkName = "-deleteCaddy:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/PersonalCenterViewController.m"
+            timestampString = "473676217.944924"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
+            landmarkName = "-logOutHandle:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/PersonalCenterViewController.m"
+            timestampString = "473678518.761105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "-logOutHandle:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473678518.761105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
+            landmarkName = "+disableHeartBeat"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473678518.761105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "-enableHeartBeat"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473678518.761105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "374"
+            endingLineNumber = "374"
+            landmarkName = "-timelySend"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473678518.761105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "353"
+            endingLineNumber = "353"
+            landmarkName = "-timelySend"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473678518.761105"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "-timelySend"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473678439.10741"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "-DisAbleTimer:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+            timestampString = "473681684.543499"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "396"
+            endingLineNumber = "396"
+            landmarkName = "-QRCodeCreateGrp:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/otherClass/HeartBeatAndDetectState.m"
+            timestampString = "473679284.94601"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "-timelySend"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/WaitToPlayTableViewController.m"
+            timestampString = "473679305.837622"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+            timestampString = "473681684.543499"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
+            landmarkName = "-QRCodeCreateGrp:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "XunYing_Golf/viewController/ChooseCreateGroupViewController.m"
+            timestampString = "473681713.106683"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "365"
+            endingLineNumber = "365"
+            landmarkName = "-QRCodeCreateGrp:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

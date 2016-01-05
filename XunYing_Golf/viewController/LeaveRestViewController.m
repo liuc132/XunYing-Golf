@@ -13,6 +13,7 @@
 #import "XunYingPre.h"
 #import "HttpTools.h"
 #import "TaskDetailViewController.h"
+#import "GetRequestIPAddress.h"
 
 @interface LeaveRestViewController ()<UIPickerViewDataSource,UIPickerViewDelegate>
 {
@@ -159,8 +160,11 @@
     NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
     //组装数据,恢复时间以及已经完成的球洞规划表编码（这个目前设计中为空） 设置为空
     NSMutableDictionary *requestToLeaveParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"empcod",@"",@"finishcods",curDateTime,@"retime", nil];
+    //
+    NSString *leaveTimeURLStr;
+    leaveTimeURLStr = [GetRequestIPAddress getRequestLeaveTimeURL];
     //开始请求
-    [HttpTools getHttp:RequestLeaveTimeURL forParams:requestToLeaveParam success:^(NSData *nsData){
+    [HttpTools getHttp:leaveTimeURLStr forParams:requestToLeaveParam success:^(NSData *nsData){
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"recDic:%@",recDic);
         //
@@ -307,8 +311,11 @@
         return;
     }
     NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.grpInfo.Rows[0][@"grocod"],@"grocod", nil];
+    //
+    NSString *playProcessURLStr;
+    playProcessURLStr = [GetRequestIPAddress getPlayProcessURL];
     //start request
-    [HttpTools getHttp:GetPlayProcessURL forParams:refreshParam success:^(NSData *nsData){
+    [HttpTools getHttp:playProcessURLStr forParams:refreshParam success:^(NSData *nsData){
         NSLog(@"success refresh");
         NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         if ([latestDataDic[@"Code"] intValue] > 0) {

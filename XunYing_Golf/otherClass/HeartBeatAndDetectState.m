@@ -12,6 +12,7 @@
 #import "XunYingPre.h"
 #import "GetGPSLocationData.h"
 #import "HttpTools.h"
+#import "GetRequestIPAddress.h"
 
 extern BOOL allowDownCourt;
 
@@ -73,27 +74,39 @@ typedef enum eventOrder{
     self.userData = [[DataTable alloc] init];
     self.groupInformation = [[DataTable alloc] init];
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DisAbleTimer:) name:@"HeartBeat" object:nil];
     
     //启动心跳功能
     [self enableHeartBeat];
+}
+
+- (void)DisAbleTimer:(NSNotification *)sender
+{
+    if ([sender.userInfo[@"disableHeart"] isEqualToString:@"1"]) {
+        [self.heartBeatTime invalidate];
+    }
 }
 
 //
 -(void)enableHeartBeat
 {
     NSLog(@"使能心跳");
+    //获取到心跳间隔时长
+    NSString *intervalTimeStr = [GetRequestIPAddress getIntervalTime];
+    NSTimeInterval heartBeatInterval = [intervalTimeStr doubleValue];
     //
-    self.heartBeatTime = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(timelySend) userInfo:nil repeats:YES];
+    self.heartBeatTime = [NSTimer timerWithTimeInterval:heartBeatInterval target:self selector:@selector(timelySend) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:self.heartBeatTime forMode:NSDefaultRunLoopMode];
     
 }
+
+
 //m15000204330@163.com
 +(void)disableHeartBeat
 {
     NSLog(@"除能心跳");
     //关闭心跳定时计数器
-    HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
+    HeartBeatAndDetectState *heartBeat;// = [[HeartBeatAndDetectState alloc] init];
     [heartBeat.heartBeatTime invalidate];
     
 }
@@ -116,11 +129,11 @@ typedef enum eventOrder{
 //    self.allowDown = NO;
     self.haveDetectedDownEnable = @"1";
     //在这里发送心跳信息
-    static unsigned int timeCounter = 0;
-    timeCounter++;
-    if(timeCounter > 9)
+//    static unsigned int timeCounter = 0;
+//    timeCounter++;
+//    if(timeCounter > 9)
     {
-        timeCounter = 0;
+//        timeCounter = 0;
         NSLog(@"start send heartBeat");
         //read the database to get what we want
         //DBCon *dbCon = [DBCon instance];
@@ -163,8 +176,11 @@ typedef enum eventOrder{
         NSMutableDictionary *heartBeatParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.userData.Rows[0][@"job"],@"job",[NSDate date],@"loct",locx,@"locx",locy,@"locy",self.groupInformation.Rows[0][@"grocod"],@"grocod",@"1",@"gpsType",self.userData.Rows[0][@"code"],@"bandcode", nil];
         //
         __weak HeartBeatAndDetectState *weakSelf = self;
+        //获取到IP地址
+        NSString *heartUrl;
+        heartUrl = [GetRequestIPAddress getHeartBeatURL];
         //request
-        [HttpTools getHttp:HeartBeatURL forParams:heartBeatParam success:^(NSData *nsData){
+        [HttpTools getHttp:heartUrl forParams:heartBeatParam success:^(NSData *nsData){
             HeartBeatAndDetectState *strongSelf = weakSelf;
             NSLog(@"success send HeartBeat");
             
@@ -175,7 +191,10 @@ typedef enum eventOrder{
             if([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
                 NSLog(@"fail");
             else if ([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
+            {
+                [strongSelf.heartBeatTime invalidate];
                 NSLog(@"param is null");
+            }
             else if ([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
                 NSLog(@"The mid is illegal");
             else

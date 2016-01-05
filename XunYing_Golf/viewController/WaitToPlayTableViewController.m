@@ -18,6 +18,7 @@
 #import "LogInViewController.h"
 #import "AppDelegate.h"
 #import "HeartBeatAndDetectState.h"
+#import "GetRequestIPAddress.h"
 
 extern unsigned char ucCusCounts;
 extern unsigned char ucHolePosition;
@@ -228,7 +229,11 @@ extern BOOL          allowDownCourt;
     
     //
     UILabel *holeName = [[UILabel alloc] initWithFrame:CGRectMake(5, 10, 60, 21)];
-    holeName.text = self.holeType;//holeNameString;
+    if (self.holeType == nil) {
+        holeName.text = @"十八洞";
+    }
+    else
+        holeName.text = self.holeType;//holeNameString;
     
     if (indexPath.section == 0) {
         switch (indexPath.row) {
@@ -516,9 +521,11 @@ extern BOOL          allowDownCourt;
         return;
     }
     NSMutableDictionary *cancleWaiting = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.groupTable.Rows[0][@"grocod"],@"grocod", nil];
-    
+    //
+    NSString *cancelWait;
+    cancelWait = [GetRequestIPAddress getCancleWaitingGroupURL];
     //向服务器发送取消下场申请
-    [HttpTools getHttp:CancleWaitingGroupURL forParams:cancleWaiting success:^(NSData *nsData){
+    [HttpTools getHttp:cancelWait forParams:cancleWaiting success:^(NSData *nsData){
         NSLog(@"cancle Waiting down group success");
         [self.timer invalidate];
         //
@@ -528,7 +535,14 @@ extern BOOL          allowDownCourt;
             NSLog(@"delete wait group fail");
         }
         else
+        {
+            HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
+            if ([heartBeat checkState]) {
+                [HeartBeatAndDetectState disableHeartBeat];
+            }
+            //
             [self dismissViewControllerAnimated:YES completion:nil];
+        }
         
     }failure:^(NSError *err){
         NSLog(@"cancle waiting down group fail");

@@ -12,6 +12,7 @@
 #import "DataTable.h"
 #import "HttpTools.h"
 #import "UIColor+UICon.h"
+#import "GetRequestIPAddress.h"
 
 #define normalHoleState @"01cc00"
 #define wasFinished     @"a8a8a8"
@@ -415,8 +416,11 @@ wasOrderedState
         return;
     }
     NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.groupInfo.Rows[0][@"grocod"],@"grocod", nil];
+    //
+    NSString *playProcessURLStr;
+    playProcessURLStr = [GetRequestIPAddress getPlayProcessURL];
     //start request
-    [HttpTools getHttp:GetPlayProcessURL forParams:refreshParam success:^(NSData *nsData){
+    [HttpTools getHttp:playProcessURLStr forParams:refreshParam success:^(NSData *nsData){
         NSLog(@"success refresh");
         NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         if ([latestDataDic[@"Code"] intValue] > 0) {
@@ -469,9 +473,11 @@ wasOrderedState
                 }
                 //组建参数
                 NSMutableDictionary *makeHoleCompleteParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.groupInfo.Rows[0][@"grocod"],@"grocod",self.holePlanInfo.Rows[self.theSelectNum - 1][@"holcod"],@"holecode", nil];
-                
+                //
+                NSString *completeStateURLStr;
+                completeStateURLStr = [GetRequestIPAddress getMakeHoleCompleteStateURL];
                 //发送更改请求
-                [HttpTools getHttp:MakeHoleCompleteStateURL forParams:makeHoleCompleteParam success:^(NSData *nsData){
+                [HttpTools getHttp:completeStateURLStr forParams:makeHoleCompleteParam success:^(NSData *nsData){
                     NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
                     NSLog(@"recDic Msg:%@",recDic[@"Msg"]);
                     //

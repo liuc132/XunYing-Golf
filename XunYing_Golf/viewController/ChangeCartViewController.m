@@ -13,6 +13,7 @@
 #import "DataTable.h"
 #import "UIColor+UICon.h"
 #import "TaskDetailViewController.h"
+#import "GetRequestIPAddress.h"
 
 typedef enum ChangeReason{
     LowPowerRequest = 11,
@@ -150,9 +151,11 @@ typedef enum ChangeReason{
     NSString *curDeviceDate = [dataFormatter stringFromDate:[NSDate date]];
     
     NSMutableDictionary *changeCartParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.groupInfo.Rows[0][@"grocod"],@"grocod",self.logPerson.Rows[0][@"code"],@"empcod",self.changeReasonStr,@"reason",self.cartInfo.Rows[0][@"carcod"],@"carcod",curDeviceDate,@"subtim", nil];
-    
+    //
+    NSString *changeCartURLStr;
+    changeCartURLStr = [GetRequestIPAddress getChangeCartURL];
     //request
-    [HttpTools getHttp:ChangeCartURL forParams:changeCartParam success:^(NSData *nsData){
+    [HttpTools getHttp:changeCartURLStr forParams:changeCartParam success:^(NSData *nsData){
         NSLog(@"have request successfully");
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"recDic:%@",recDic);

@@ -19,6 +19,7 @@
 #import "WaitToPlayTableViewController.h"
 #import "AppDelegate.h"
 #import "subCaddyOrCartView.h"
+#import "GetRequestIPAddress.h"
 
 //
 typedef NS_ENUM(NSInteger,cusNumbers)
@@ -162,6 +163,11 @@ typedef NS_ENUM(NSInteger,holePosition) {
     //
 //    CustomerGroupInfViewController *cusGroupVC = [[CustomerGroupInfViewController alloc] init];
 //    cusGroupVC.delegate = self;
+    //先把登录球童的添加上 self.userData tbl_logPerson(code text,job text,name text,number text,sex text,caddyLogIn text)
+    NSString *logCaddyResult;
+    logCaddyResult = [NSString stringWithFormat:@"%@ %@",self.userData.Rows[0][@"number"],self.userData.Rows[0][@"name"]];
+    NSDictionary *logCaddy = [[NSDictionary alloc] initWithObjectsAndKeys:logCaddyResult,@"resultCaddy",self.userData.Rows[0][@"number"],@"cadnum", nil];
+    [self.addcaddiesArray addObject:logCaddy];
     
     //GPS初始化
     self.locationManager = [[CLLocationManager alloc] init];
@@ -193,7 +199,8 @@ typedef NS_ENUM(NSInteger,holePosition) {
     self.cartIndex  = 0;
     self._caddyOffset = 0;
     self._cartOffset  = 0;
-    
+    //
+    [self displayCurrentCaddies];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -265,53 +272,54 @@ typedef NS_ENUM(NSInteger,holePosition) {
 }
 
 #pragma -mark DeleteTheSelectedCart
-- (void)deleteCart:(UILongPressGestureRecognizer *)Tap
+- (void)deleteCart:(UITapGestureRecognizer *)Tap
 {
     NSInteger deleteRow;
     deleteRow = Tap.view.tag;
 //    self.theSelectedView = Tap.view;
     self.deleteCartRow = deleteRow - 1;
-    if (Tap.state == UIGestureRecognizerStateBegan) {
-        return;
-    }
-//    NSLog(@"enter delete function and sender:%@ and view.tag:%ld",Tap,deleteRow);
-    if ([self.addCartsArray count] < Tap.view.tag) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-        [alert show];
-        return;
+    if (Tap.state == UIGestureRecognizerStateEnded) {
+        if ([self.addCartsArray count] < Tap.view.tag) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            return;
+        }
+        
+        NSString *willDeleteDataDisStr = [NSString stringWithFormat:@"%@",self.addCartsArray[deleteRow - 1][@"resultCart"]];
+        UIAlertView *cartAlert = [[UIAlertView alloc] initWithTitle:@"删除该球车" message:willDeleteDataDisStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        cartAlert.tag = 2;
+        [cartAlert show];
     }
     
-    NSString *willDeleteDataDisStr = [NSString stringWithFormat:@"%@",self.addCartsArray[deleteRow - 1][@"resultCart"]];
-    UIAlertView *cartAlert = [[UIAlertView alloc] initWithTitle:@"删除该球车" message:willDeleteDataDisStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-    cartAlert.tag = 2;
-    [cartAlert show];
-    
-    NSLog(@"haha");
 }
 
 #pragma -mark DeleteTheSelectedCaddy
-- (void)deleteCaddy:(UILongPressGestureRecognizer *)Tap
+- (void)deleteCaddy:(UITapGestureRecognizer *)Tap
 {
     NSInteger deleteRow;
     deleteRow = Tap.view.tag;
-//    self.theSelectedView = Tap.view;
+    
     self.deleteCaddyRow = deleteRow - 1;
     //
-    if (Tap.state == UIGestureRecognizerStateBegan) {
-        return;
+    if (Tap.state == UIGestureRecognizerStateEnded) {
+        if ([self.addcaddiesArray count] < Tap.view.tag) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            return;
+        }
+        //判断是否是登录球童
+        if ([self.addcaddiesArray[deleteRow - 1][@"cadnum"] integerValue] == [self.userData.Rows[0][@"number"] integerValue]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"登录球童不可删除" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            return;
+        }
+        //
+        NSString *willDeleteDataDisStr = [NSString stringWithFormat:@"%@",self.addcaddiesArray[deleteRow - 1][@"resultCaddy"]];
+        UIAlertView *caddyAlert = [[UIAlertView alloc] initWithTitle:@"删除该球童" message:willDeleteDataDisStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        caddyAlert.tag = 1;
+        [caddyAlert show];
+
     }
-//    NSLog(@"enter delete function and sender:%@ and view.tag:%ld",Tap,deleteRow);
-    //
-    if ([self.addcaddiesArray count] < Tap.view.tag) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-        [alert show];
-        return;
-    }
-    //
-    NSString *willDeleteDataDisStr = [NSString stringWithFormat:@"%@",self.addcaddiesArray[deleteRow - 1][@"resultCaddy"]];
-    UIAlertView *caddyAlert = [[UIAlertView alloc] initWithTitle:@"删除该球童" message:willDeleteDataDisStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-    caddyAlert.tag = 1;
-    [caddyAlert show];
     
 }
 
@@ -333,15 +341,6 @@ typedef NS_ENUM(NSInteger,holePosition) {
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 -(void)settingTheColorOftheSelectedCusNumbers:(NSInteger)numbers
 {
     switch (numbers) {
@@ -485,12 +484,18 @@ typedef NS_ENUM(NSInteger,holePosition) {
             allAddCarts = [allAddCarts stringByAppendingString:[NSString stringWithFormat:@"_%@",self.addCartsArray[j][@"carnum"]]];
         }
     }
+    if (![self.addCartsArray count]) {
+        allAddCarts = @"";
+    }
     
     NSMutableDictionary *createGroupParameters = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",@"",@"gronum",selectedCus,@"cus",allAddCarts,@"car",self.theThreeHolesInf.Rows[self.theSelectedHolePosition][@"pdtag"],@"hole",allAddCaddies,@"cad",self.userData.Rows[0][@"caddyLogIn"],@"cadShow",self.userData.Rows[0][@"code"],@"user", nil];
     //
     __weak typeof(self) weakself = self;
     //
-    [HttpTools getHttp:createGroupURL forParams:createGroupParameters success:^(NSData *nsData){
+    NSString *createGrpURLStr;
+    createGrpURLStr = [GetRequestIPAddress getcreateGroupURL];
+    //
+    [HttpTools getHttp:createGrpURLStr forParams:createGroupParameters success:^(NSData *nsData){
         CreateGroupViewController *strongself = weakself;
         
         NSDictionary *receiveCreateGroupDic     = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
@@ -688,8 +693,10 @@ typedef NS_ENUM(NSInteger,holePosition) {
             break;
         }
     }
+    NSString *displayErr;
+    displayErr = [NSString stringWithFormat:@"系统中没有%@球童或者此球童不是可用状态",theInputCaddyNum];
     if (!hasTheData) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"无此球童" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:displayErr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
         return;
     }
@@ -732,26 +739,26 @@ typedef NS_ENUM(NSInteger,holePosition) {
         subView.tag = (int)self.caddyIndex + 1;
         self.caddyIndex++;
         if (self.caddyIndex == 1) {
-            UILongPressGestureRecognizer *view1Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
-            view1Gesture.minimumPressDuration = 0.5;
+            UITapGestureRecognizer *view1Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+//            view1Gesture.minimumPressDuration = 0.5;
             [subView addGestureRecognizer:view1Gesture];
         }
         else if (self.caddyIndex == 2)
         {
-            UILongPressGestureRecognizer *view2Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
-            view2Gesture.minimumPressDuration = 0.5;
+            UITapGestureRecognizer *view2Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+//            view2Gesture.minimumPressDuration = 0.5;
             [subView addGestureRecognizer:view2Gesture];
         }
         else if (self.caddyIndex == 3)
         {
-            UILongPressGestureRecognizer *view3Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
-            view3Gesture.minimumPressDuration = 0.5;
+            UITapGestureRecognizer *view3Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+//            view3Gesture.minimumPressDuration = 0.5;
             [subView addGestureRecognizer:view3Gesture];
         }
         else if (self.caddyIndex == 4)
         {
-            UILongPressGestureRecognizer *view4Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
-            view4Gesture.minimumPressDuration = 0.5;
+            UITapGestureRecognizer *view4Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCaddy:)];
+//            view4Gesture.minimumPressDuration = 0.5;
             [subView addGestureRecognizer:view4Gesture];
         }
     }
@@ -806,9 +813,11 @@ typedef NS_ENUM(NSInteger,holePosition) {
             break;
         }
     }
+    NSString *displayCartErr;
+    displayCartErr = [NSString stringWithFormat:@"系统中没有%@球车或者此球车不是可用状态",theInputCartNum];
     if (!hasTheData) {
         self.inputCartNum.text = @"";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"无此球车" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:displayCartErr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
         return;
     }
@@ -849,26 +858,26 @@ typedef NS_ENUM(NSInteger,holePosition) {
         subView.tag = (int)self.cartIndex + 1;
         self.cartIndex++;
         if (self.cartIndex == 1) {
-            UILongPressGestureRecognizer *view1Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
-            view1Gesture.minimumPressDuration = 0.5;
+            UITapGestureRecognizer *view1Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+//            view1Gesture.minimumPressDuration = 0.5;
             [subView addGestureRecognizer:view1Gesture];
         }
         else if (self.cartIndex == 2)
         {
-            UILongPressGestureRecognizer *view2Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
-            view2Gesture.minimumPressDuration = 0.5;
+            UITapGestureRecognizer *view2Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+//            view2Gesture.minimumPressDuration = 0.5;
             [subView addGestureRecognizer:view2Gesture];
         }
         else if (self.cartIndex == 3)
         {
-            UILongPressGestureRecognizer *view3Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
-            view3Gesture.minimumPressDuration = 0.5;
+            UITapGestureRecognizer *view3Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+//            view3Gesture.minimumPressDuration = 0.5;
             [subView addGestureRecognizer:view3Gesture];
         }
         else if (self.cartIndex == 4)
         {
-            UILongPressGestureRecognizer *view4Gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
-            view4Gesture.minimumPressDuration = 0.5;
+            UITapGestureRecognizer *view4Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteCart:)];
+//            view4Gesture.minimumPressDuration = 0.5;
             [subView addGestureRecognizer:view4Gesture];
         }
     }

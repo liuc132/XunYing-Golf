@@ -13,12 +13,15 @@
 #import "HttpTools.h"
 #import "DataTable.h"
 #import "DBCon.h"
+#import "GetRequestIPAddress.h"
+#import "HeartBeatAndDetectState.h"
 
 
 @interface PersonalCenterViewController ()
 
 @property (strong, nonatomic) DBCon *_dbCon;
 @property (strong, nonatomic) DataTable *userInf;
+@property (strong, nonatomic) DataTable *logCaddy;
 @property (strong, nonatomic) NSMutableDictionary *logOutDicParam;
 
 - (IBAction)logOutHandle:(UIBarButtonItem *)sender;
@@ -36,8 +39,10 @@
     //alloc and init dbCon and Userinf
     self._dbCon = [[DBCon alloc] init];
     self.userInf = [[DataTable alloc] init];
+    self.logCaddy = [[DataTable alloc] init];
     //查询登录人参数
     self.userInf = [self._dbCon ExecDataTable:@"select *from tbl_logPerson"];
+    self.logCaddy = [self._dbCon ExecDataTable:@"select *from tbl_NamePassword"];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -140,15 +145,28 @@
 
 - (IBAction)logOutHandle:(UIBarButtonItem *)sender {
     NSLog(@"enter logOutHandle");
+    
+    __weak typeof(self) weakSelf = self;
     //[[NSMutableDictionary alloc] initWithObjectsAndKeys:TESTMIDCODE,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil]
     
-    self.logOutDicParam = [[NSMutableDictionary alloc]initWithObjectsAndKeys:MIDCODE,@"mid",self.userInf.Rows[0][@"user"],@"username",self.userInf.Rows[0][@"password"],@"pwd",@"0",@"panmull", nil];
+    self.logOutDicParam = [[NSMutableDictionary alloc]initWithObjectsAndKeys:MIDCODE,@"mid",self.logCaddy.Rows[0][@"user"],@"username",self.logCaddy.Rows[0][@"password"],@"pwd",@"0",@"panmull", nil];
+    //
+    NSString *logoutURLStr;
+    logoutURLStr = [GetRequestIPAddress getLogOutURL];
     //request
-    [HttpTools getHttp:LogOutURL forParams:self.logOutDicParam success:^(NSData *nsData){
+    [HttpTools getHttp:logoutURLStr forParams:self.logOutDicParam success:^(NSData *nsData){
         NSLog(@"request success");
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"code:%@ msg:%@",recDic[@"Code"],recDic[@"Msg"]);
-        
+        if ([recDic[@"Code"] integerValue] > 0) {
+            //除能心跳
+//            [HeartBeatAndDetectState disableHeartBeat];
+//            NSDictionary *theDic = [[NSDictionary alloc] initWithObjectsAndKeys:<#(nonnull id), ...#>, nil]
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+            //执行跳转
+            [weakSelf performSegueWithIdentifier:@"backToLogInterface" sender:nil];
+            
+        }
         
     }failure:^(NSError *err){
         NSLog(@"request failled");
@@ -157,7 +175,7 @@
     }];
     
     
-    [self performSegueWithIdentifier:@"backToLogInterface" sender:nil];
+    
     
 }
 @end

@@ -13,6 +13,7 @@
 #import "DataTable.h"
 #import "UIColor+UICon.h"
 #import "TaskDetailViewController.h"
+#import "GetRequestIPAddress.h"
 
 typedef enum ChangeReason{
     CaddyRequest = 21,
@@ -331,9 +332,11 @@ typedef enum ChangeReason{
     //构建参数
     NSString *reasonStr = [NSString stringWithFormat:@"%@;",self.changeReasonStr];
     NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.requestPerson.Rows[0][@"code"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",reasonStr,@"reason",caddyCode,@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
-    
+    //
+    NSString *changeCaddyURLStr;
+    changeCaddyURLStr = [GetRequestIPAddress getChangeCaddyURL];
     //进行HTTP请求，并在收到正确的消息之后返回
-    [HttpTools getHttp:ChangeCaddyURL forParams:changeCaddyParam success:^(NSData *nsData){
+    [HttpTools getHttp:changeCaddyURLStr forParams:changeCaddyParam success:^(NSData *nsData){
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"recDic:%@ Msg:%@ andCode:%@",recDic,recDic[@"Msg"],recDic[@"Code"]);
         //
