@@ -10,6 +10,7 @@
 
 @interface GetRequestIPAddress : NSObject
 
++ (NSString *)getUniqueID;
 + (NSString *)getIntervalTime;
 + (NSString *)getHeartBeatURL;
 + (NSString *)getLogInURL;

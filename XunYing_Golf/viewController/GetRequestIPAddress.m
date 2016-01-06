@@ -23,6 +23,32 @@
     return settingInfo;
 }
 
++ (DataTable *)getStoredUniqueID
+{
+    DataTable   *uniqueID   = [[DataTable alloc] init];
+    DBCon       *DbCon      = [[DBCon alloc] init];
+    //
+    uniqueID = [DbCon ExecDataTable:@"select *from tbl_uniqueID"];
+    
+    return uniqueID;
+}
+
++ (NSString *)getUniqueID
+{
+    NSString *uniqueIDStr;
+    //
+    DataTable *theStoredID = [GetRequestIPAddress getStoredUniqueID];
+    if (![theStoredID.Rows count]) {
+        uniqueIDStr = @"";
+    }
+    else
+    {
+        uniqueIDStr = theStoredID.Rows[0][@"uiniqueID"];
+    }
+    
+    return uniqueIDStr;
+}
+
 + (NSString *)getIntervalTime
 {
     NSString *intervalTime;

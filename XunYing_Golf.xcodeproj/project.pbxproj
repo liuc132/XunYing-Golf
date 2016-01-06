@@ -90,6 +90,9 @@
 		5BD6D6971BD63311001524DB /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6D68E1BD63311001524DB /* AFURLSessionManager.m */; };
 		5BD6D69E1BD6359A001524DB /* BLLocationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6D69B1BD6359A001524DB /* BLLocationProvider.m */; };
 		5BD6D69F1BD6359A001524DB /* BLMessageProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6D69D1BD6359A001524DB /* BLMessageProvider.m */; };
+		5BD90A321C3D036A0059D82C /* UIDevice+IdentifierAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD90A2F1C3D036A0059D82C /* UIDevice+IdentifierAddition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		5BD90A331C3D036A0059D82C /* NSString+MD5Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD90A311C3D036A0059D82C /* NSString+MD5Addition.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		5BD90A361C3D0A630059D82C /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD90A351C3D0A630059D82C /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5BDC837B1BA2B1B500E69940 /* TaskComViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */; };
 		5BE341E51C3B6746007A3A9C /* GetRequestIPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE341E41C3B6746007A3A9C /* GetRequestIPAddress.m */; };
 		5BE341E81C3B886B007A3A9C /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BE341E61C3B886B007A3A9C /* libsqlite3.0.tbd */; };
@@ -284,6 +287,13 @@
 		5BD6D69B1BD6359A001524DB /* BLLocationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLLocationProvider.m; sourceTree = "<group>"; };
 		5BD6D69C1BD6359A001524DB /* BLMessageProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLMessageProvider.h; sourceTree = "<group>"; };
 		5BD6D69D1BD6359A001524DB /* BLMessageProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLMessageProvider.m; sourceTree = "<group>"; };
+		5BD90A2E1C3D036A0059D82C /* UIDevice+IdentifierAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+IdentifierAddition.h"; sourceTree = "<group>"; };
+		5BD90A2F1C3D036A0059D82C /* UIDevice+IdentifierAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+IdentifierAddition.m"; sourceTree = "<group>"; };
+		5BD90A301C3D036A0059D82C /* NSString+MD5Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5Addition.h"; sourceTree = "<group>"; };
+		5BD90A311C3D036A0059D82C /* NSString+MD5Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5Addition.m"; sourceTree = "<group>"; };
+		5BD90A341C3D0A630059D82C /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		5BD90A351C3D0A630059D82C /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		5BD90A371C3D0B410059D82C /* XunYing_Golf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = XunYing_Golf.entitlements; sourceTree = "<group>"; };
 		5BDC83791BA2B1B500E69940 /* TaskComViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskComViewController.h; sourceTree = "<group>"; };
 		5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskComViewController.m; sourceTree = "<group>"; };
 		5BE341E31C3B6746007A3A9C /* GetRequestIPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetRequestIPAddress.h; path = viewController/GetRequestIPAddress.h; sourceTree = "<group>"; };
@@ -405,6 +415,7 @@
 		5B11C5201B8EDD4700382C9B /* XunYing_Golf */ = {
 			isa = PBXGroup;
 			children = (
+				5BD90A371C3D0B410059D82C /* XunYing_Golf.entitlements */,
 				5BE341E21C3B671A007A3A9C /* getRequestAddr */,
 				5B60FDD41C03207800D77A44 /* protocol */,
 				5B588E141BE8917C00D2B327 /* getGPSLocation */,
@@ -599,6 +610,7 @@
 		5B52F4171B9D7B44004BA338 /* commonLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				5BD90A2D1C3D03420059D82C /* DeviceIdentifierAddition */,
 				5BD6D67B1BD632D7001524DB /* AFNetworking */,
 				5BF0CE6B1BC60FF500009BED /* Menu */,
 				5BE7172B1BB8ED9D0080C6F4 /* reachability */,
@@ -904,6 +916,19 @@
 			name = uiviewCaddy;
 			sourceTree = "<group>";
 		};
+		5BD90A2D1C3D03420059D82C /* DeviceIdentifierAddition */ = {
+			isa = PBXGroup;
+			children = (
+				5BD90A341C3D0A630059D82C /* KeychainItemWrapper.h */,
+				5BD90A351C3D0A630059D82C /* KeychainItemWrapper.m */,
+				5BD90A2E1C3D036A0059D82C /* UIDevice+IdentifierAddition.h */,
+				5BD90A2F1C3D036A0059D82C /* UIDevice+IdentifierAddition.m */,
+				5BD90A301C3D036A0059D82C /* NSString+MD5Addition.h */,
+				5BD90A311C3D036A0059D82C /* NSString+MD5Addition.m */,
+			);
+			name = DeviceIdentifierAddition;
+			sourceTree = "<group>";
+		};
 		5BDC83781BA2B17600E69940 /* taskCommunication */ = {
 			isa = PBXGroup;
 			children = (
@@ -1069,6 +1094,11 @@
 					5B11C51D1B8EDD4700382C9B = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = 97YT8J5R3S;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					5B11C5361B8EDD4700382C9B = {
 						CreatedOnToolsVersion = 6.4;
@@ -1204,8 +1234,10 @@
 				5B52F4441B9D7C08004BA338 /* UIColor+UICon.m in Sources */,
 				5B52F4421B9D7C08004BA338 /* NSDate+Con.m in Sources */,
 				5B03A8531C05CF2600207D59 /* ScoreTableViewCell.m in Sources */,
+				5BD90A331C3D036A0059D82C /* NSString+MD5Addition.m in Sources */,
 				5BC136B31B93EFD500FF1CB1 /* TOUCHkitView.m in Sources */,
 				5BD6D69F1BD6359A001524DB /* BLMessageProvider.m in Sources */,
+				5BD90A321C3D036A0059D82C /* UIDevice+IdentifierAddition.m in Sources */,
 				5BF6DFA51C3A71800028FEB4 /* SettingViewController.m in Sources */,
 				5BFF02771BD7399500A25D7A /* JumpHoleViewController.m in Sources */,
 				5B52F42D1B9D7BE3004BA338 /* DBCon.m in Sources */,
@@ -1220,6 +1252,7 @@
 				5BFF027D1BD75F8400A25D7A /* MendHoleViewController.m in Sources */,
 				5B33DDEA1C2136AE00C62DF7 /* MessageCell.m in Sources */,
 				5B3B66A31C197D4000C4D557 /* QRCameraSwitchButton.m in Sources */,
+				5BD90A361C3D0A630059D82C /* KeychainItemWrapper.m in Sources */,
 				5B93C8091BBB938A0081FBAF /* MoreInterfaceViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1367,6 +1400,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = XunYing_Golf/XunYing_Golf.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1393,6 +1427,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = XunYing_Golf/XunYing_Golf.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

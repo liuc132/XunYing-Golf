@@ -29,6 +29,7 @@ GPSPoint currentGPS;
 @property (strong, nonatomic) IBOutlet UIView *chooseHoleView;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *switchMapFunView;
+- (IBAction)showCurLocation:(UIButton *)sender;
 
 
 
@@ -41,6 +42,8 @@ GPSPoint currentGPS;
 @property(strong, nonatomic) AGSGraphicsLayer       *graphicLayer;
 @property(strong, nonatomic) AGSSymbol              *gpsSymbol;
 @property(strong, nonatomic) AGSMapViewBase         *mapViewBase;
+//the sketch layer used to draw the gps track
+@property (nonatomic, strong) AGSSketchGraphicsLayer *gpsSketchLayer;
 
 @property(strong, nonatomic) AGSMutablePolyline     *route;
 
@@ -72,7 +75,8 @@ FixedPoint gpsScreenPoint;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    NSLog(@"enter ViewController");
+    __weak typeof(self) weakSelf = self;
+    
     
     NSError *error;
     [AGSRuntimeEnvironment setClientID:CLIENT_ID error:&error];
@@ -98,7 +102,7 @@ FixedPoint gpsScreenPoint;
         
     }
     
-//    NSURL *mapUrl = [NSURL URLWithString:@"http://services.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer"];
+//    NSURL *mapUrl = [NSURL URLWithString:@"http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"];
 //    AGSTiledMapServiceLayer *tiledLyr = [AGSTiledMapServiceLayer tiledMapServiceLayerWithURL:mapUrl];
 //    [self.mapView addMapLayer:tiledLyr withName:@"Tiled Layer"];
 //    
@@ -121,7 +125,7 @@ FixedPoint gpsScreenPoint;
     
     
     [self.mapView zoomToEnvelope:env animated:YES];
-    //xunying_hole.geodatabase
+//    //xunying_hole.geodatabase
     NSError *hole_error;
     NSString *holePath = [[[NSBundle mainBundle]resourcePath]stringByAppendingPathComponent:@"offlineMapData.bundle/xunying_hole.geodatabase"];
     AGSGDBGeodatabase *gdbXunyinHole = [AGSGDBGeodatabase geodatabaseWithPath:holePath error:&hole_error];
@@ -158,46 +162,6 @@ FixedPoint gpsScreenPoint;
     
     self.queryTask = [[AGSQueryTask alloc] init];
     self.queryTask.delegate = self;
-//    self.query = [AGSQuery query];
-//    self.query.whereClause = @"QCM = '7'";//and leixing Not In ('发球台','果岭环')";//[NSString stringWithFormat:@"QCM = '2' and leixing Not In ('发球台','果岭环') and OBJECTID <>  id"];
-    
-//    __weak ViewController *weakSelf = self;
-    //每个球洞中的要素（沙坑，果岭，球道，发球台）查询
-//    [self.localFeatureTable queryResultsWithParameters:self.query completion:^(NSArray *results,NSError *error){
-//        NSLog(@"results:%@; error:%@",results,error);
-//    }];
-//    //
-//    [self.localFeatureTable queryFeatureWithObjectID:95 completion:^(AGSGDBFeature *feature, NSError *error){
-//        NSDictionary *featureAttr = [feature allAttributes];
-//        NSLog(@"featureAttr:%@",featureAttr);
-//        //
-//        AGSSimpleFillSymbol *fillSymbol = [[AGSSimpleFillSymbol alloc] initWithColor:[[UIColor purpleColor] colorWithAlphaComponent:0.25] outlineColor:[UIColor blackColor]];
-//        AGSGraphic *leixingGraphic = [[AGSGraphic alloc] initWithGeometry:featureAttr[@"Shape"] symbol:fillSymbol attributes:nil];
-//        //
-//        [weakSelf.graphicLayer addGraphic:leixingGraphic];
-//        
-//    }];
-    
-    //球洞查询
-//    [self.localHoleFeatureTable queryResultsWithParameters:self.query completion:^(NSArray *results, NSError *error){
-//        NSLog(@"resultes:%@",results);
-//        AGSGDBFeature *resultFeature = results[0];
-//        NSLog(@"feature:%@",[resultFeature allAttributes]);
-//        
-//    }];
-//    
-//    [self.localHoleFeatureTable queryFeatureWithObjectID:18 completion:^(AGSGDBFeature *feature, NSError *error){
-//        NSLog(@"feature:%@",feature);
-//        NSDictionary *featureDic = [feature allAttributes];
-//        NSLog(@"featureDic:%@",featureDic);
-//        //
-//        AGSSimpleFillSymbol *fillSymbol = [[AGSSimpleFillSymbol alloc] initWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15] outlineColor:[UIColor blackColor]];
-//        AGSGraphic *holeGraphic = [[AGSGraphic alloc] initWithGeometry:featureDic[@"Shape"] symbol:fillSymbol attributes:nil];
-//        [weakSelf.graphicLayer addGraphic:holeGraphic];
-//        
-//        
-//    }];
-    
     
     self.confirmGetGPS = YES;
     //
@@ -206,28 +170,70 @@ FixedPoint gpsScreenPoint;
     
     //地图中的当前GPS定位点的位置信息点的显示
     [self.mapView.locationDisplay addObserver:self forKeyPath:@"autoPanMode" options:(NSKeyValueObservingOptionNew) context:NULL];
-    //
-//    if(!self.mapView.locationDisplay.dataSourceStarted)
-//        [self.mapView.locationDisplay startDataSource];
-    
     //Listen to KVO notifications for map scale property
     [self.mapView addObserver:self
                    forKeyPath:@"location"
                       options:(NSKeyValueObservingOptionNew)
                       context:NULL];
-    //显示的GPS位置的图形风格设置
-    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
-    self.mapView.locationDisplay.wanderExtentFactor = 0.75;
+    
     //callout的代理设置
     self.mapView.callout.delegate = self;
-    
-    
     //
     self.geometryEngineLocal = [[AGSGeometryEngine alloc] init];
+    //
+    //set the layer delegate to self to check when the layers are loaded. Required to start the gps.
+    self.mapView.layerDelegate = self;
     
+    //preparing the gps sketch layer.
+    self.gpsSketchLayer = [[AGSSketchGraphicsLayer alloc] initWithGeometry:nil];
+    [self.mapView addMapLayer:self.gpsSketchLayer withName:@"Sketch layer"];
+    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        //显示的GPS位置的图形风格设置
+//        self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
+//        self.mapView.locationDisplay.wanderExtentFactor = 0.75;
+//        //
+//        if(!weakSelf.mapView.locationDisplay.dataSourceStarted)
+//            [weakSelf.mapView.locationDisplay startDataSource];
+//    });
     
 }
 //
+//#pragma -mark AGSLocationDisplayDataSourceDelegate
+//- (void)locationDisplayDataSource:(id<AGSLocationDisplayDataSource>)dataSource didUpdateWithLocation:(AGSLocation *)location
+//{
+//    NSLog(@"didUpdate dataSource:%@ ;location:%@",dataSource,location);
+//    
+//    
+//}
+//
+//- (void)locationDisplayDataSourceStarted:(id<AGSLocationDisplayDataSource>)dataSource
+//{
+//    NSLog(@"started dataSource:%@",dataSource);
+//    
+//    
+//}
+//
+//- (void)locationDisplayDataSourceStopped:(id<AGSLocationDisplayDataSource>)dataSource
+//{
+//    NSLog(@"stopped datasource:%@",dataSource);
+//    
+//    
+//}
+//
+//- (void)locationDisplayDataSource:(id<AGSLocationDisplayDataSource>)dataSource didFailWithError:(NSError *)error
+//{
+//    NSLog(@"err:%@  datasource:%@",error,dataSource);
+//    
+//    
+//}
+//
+//- (void)locationDisplayDataSource:(id<AGSLocationDisplayDataSource>)dataSource didUpdateWithHeading:(double)heading
+//{
+//    NSLog(@"heading:%f  datasource:%@",heading,dataSource);
+//    
+//    
+//}
 
 //
 -(BOOL)callout:(AGSCallout *)callout willShowForFeature:(id<AGSFeature>)feature layer:(AGSLayer<AGSHitTestable> *)layer mapPoint:(AGSPoint *)mapPoint
@@ -270,73 +276,6 @@ FixedPoint gpsScreenPoint;
         }
     }
 }
-//
-//-(void)mapView:(AGSMapView *)mapView didClickAtPoint:(CGPoint)screen mapPoint:(AGSPoint *)mappoint features:(NSDictionary *)features
-//{
-//    [self.localFeatureTableLayer clearSelection];
-//    if(features)
-//    {
-//        for (AGSGDBFeature *feature in [features valueForKey:@"Xunying Fearue Layer"]) {
-//            [self.localFeatureTableLayer setSelected:YES forFeature:feature];
-//            NSLog(@"feature:%@",feature);
-//            //
-//            AGSProximityResult *myResults = [[AGSProximityResult alloc] init];
-//            
-//            myResults = [self.geometryEngineLocal nearestCoordinateInGeometry:[feature geometry] toPoint:mappoint];
-//            NSLog(@"geometryEngineLocal:%@ and distance:%f",myResults,myResults.distance);
-//        }
-//    }
-//    //
-//    [self.localHoleFeatureTableLayer clearSelection];
-//    if(features)
-//    {
-//        for (AGSGDBFeature *feature1 in [features valueForKey:@"Hole Feature Layer"]) {
-//            [self.localHoleFeatureTableLayer setSelected:YES forFeature:feature1];
-//            NSLog(@"feature1:%@",feature1);
-//            NSDictionary *featureAttr = [[NSDictionary alloc] init];
-//            featureAttr = [feature1 allAttributes];
-//            //
-//            
-//            __weak ViewController *weakSelf = self;
-//            
-//            
-//            NSLog(@"featureAttr:%@",featureAttr);
-//            NSString *searchStr = [NSString stringWithFormat:@"QCM = '%@' and leixing Not In('发球台','果岭环') and OBJECTID <> '%@'",featureAttr[@"QCM"],featureAttr[@"OBJECTID"]];
-//            self.query.whereClause = searchStr;
-//            [self.localFeatureTable queryResultsWithParameters:self.query completion:^(NSArray *results, NSError *error){
-//                AGSGDBFeature *resultFeature = results[0];
-//                NSDictionary *resultFeatureAttr = [resultFeature allAttributes];
-//                NSLog(@"geometry:%@",[resultFeature geometry]);
-//                AGSProximityResult *myResults = [[AGSProximityResult alloc] init];
-//                AGSPoint *testPoint = [[AGSPoint alloc] initWithX:106.28256131500 y:29.49389984490 spatialReference:[AGSSpatialReference wgs84SpatialReference]];
-//                AGSGeometry *pointGeometry = [[AGSGeometry alloc] init];
-//                pointGeometry = [weakSelf.geometryEngineLocal projectGeometry:testPoint toSpatialReference:weakSelf.mapView.spatialReference];
-//                
-//                double distanceValue;
-//                distanceValue = [weakSelf.geometryEngineLocal distanceFromGeometry:pointGeometry toGeometry:[resultFeature geometry]];
-//                NSLog(@"distanceValue:%.10f",distanceValue);
-//                
-//                myResults = [weakSelf.geometryEngineLocal nearestCoordinateInGeometry:[resultFeature geometry] toPoint:testPoint];
-//                NSLog(@"geometryEngineLocal:%@ and distance:%f and featureAttr:%@",myResults,myResults.distance,resultFeatureAttr);
-//                
-//                
-//            }];
-//            
-//        }
-//        //
-////        for (AGSGDBFeature *feature in [features valueForKey:@"Xunying Fearue Layer"]) {
-////            [self.localFeatureTableLayer setSelected:YES forFeature:feature];
-////            NSLog(@"feature:%@",feature);
-////            //
-////            AGSProximityResult *myResults = [[AGSProximityResult alloc] init];
-////            
-////            myResults = [self.geometryEngineLocal nearestCoordinateInGeometry:[feature geometry] toPoint:mappoint];
-////            NSLog(@"geometryEngineLocal:%@ and distance:%f",myResults,myResults.distance);
-////        }
-//        
-//    }
-//}
-
 //
 -(BOOL)mapView:(AGSMapView *)mapView shouldProcessClickAtPoint:(CGPoint)screen mapPoint:(AGSPoint *)mappoint
 {
@@ -439,10 +378,31 @@ FixedPoint gpsScreenPoint;
  */
 -(void)mapViewDidLoad:(AGSMapView *)mapView
 {
-//    NSLog(@"enter mapViewDidLoad");
+    __weak typeof(self) weakSelf = self;
+    //地图中的当前GPS定位点的位置信息点的显示
+//    [self.mapView.locationDisplay addObserver:self forKeyPath:@"autoPanMode" options:(NSKeyValueObservingOptionNew) context:NULL];
     //地图加载完成之后才调用下边的方法，否则会出现底图飘出当前可见的屏幕范围之外去，但是去掉了viewDidload中执行如下边的两条语句的时候，GPS点将不会显示出来！所以在上边的方法中依然调用了下边的语句，先完成再完善
-    if(!self.mapView.locationDisplay.dataSourceStarted)
-        [self.mapView.locationDisplay startDataSource];
+//    if(!self.mapView.locationDisplay.dataSourceStarted)
+//        [self.mapView.locationDisplay startDataSource];
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        //
+////        if(!weakSelf.mapView.locationDisplay.dataSourceStarted)
+//            [weakSelf.mapView.locationDisplay startDataSource];
+//        //显示的GPS位置的图形风格设置
+//        weakSelf.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
+//        weakSelf.mapView.locationDisplay.wanderExtentFactor = 0.75;
+//        
+//    });
+    
+    [self.mapView.locationDisplay startDataSource];
+    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
+    self.mapView.locationDisplay.wanderExtentFactor = 0.75;
+    //setting the geometry of the gps sketch layer to polyline.
+    self.gpsSketchLayer.geometry = [[AGSMutablePolyline alloc] initWithSpatialReference:self.mapView.spatialReference];
+    
+    //set the midvertex symbol to nil to avoid the default circle symbol appearing in between vertices
+    self.gpsSketchLayer.midVertexSymbol = nil;
+    
 }
 #pragma -mark switchMapFunction
 - (IBAction)switchMapFunction:(UISegmentedControl *)sender {
@@ -522,4 +482,8 @@ FixedPoint gpsScreenPoint;
     [self.route addPointToPath:[[AGSPoint alloc] initWithX:106.27950619300 y:29.49490423120 spatialReference:[AGSSpatialReference spatialReferenceWithWKID:3857]]];
 }
 
+- (IBAction)showCurLocation:(UIButton *)sender {
+    [self.mapView centerAtPoint:[self.mapView.locationDisplay mapLocation] animated:YES];
+    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
+}
 @end

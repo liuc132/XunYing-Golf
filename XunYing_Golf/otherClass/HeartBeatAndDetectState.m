@@ -169,11 +169,15 @@ typedef enum eventOrder{
         //纬度
         NSString *locy = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.latitude];//self.simulationGPSData[startCount][1];模拟数据调用之
         NSLog(@"current locx:%@; locy:%@",locx,locy);
+        //获取到mid号码
+        NSString *theMid;
+        theMid = [GetRequestIPAddress getUniqueID];
+        theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
         //使用模拟数据时，则在此组建地图界面的当前位置点
         //start send and handle all what the server sends back
         //巡场和球童这两个角色所传的参数不一样：主要是 组“grocod”不一致，球童需要传该参数，而巡场则不传该参数或者传空
         //construct the parameters for the heartBeat
-        NSMutableDictionary *heartBeatParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.userData.Rows[0][@"job"],@"job",[NSDate date],@"loct",locx,@"locx",locy,@"locy",self.groupInformation.Rows[0][@"grocod"],@"grocod",@"1",@"gpsType",self.userData.Rows[0][@"code"],@"bandcode", nil];
+        NSMutableDictionary *heartBeatParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.userData.Rows[0][@"job"],@"job",[NSDate date],@"loct",locx,@"locx",locy,@"locy",self.groupInformation.Rows[0][@"grocod"],@"grocod",@"1",@"gpsType",self.userData.Rows[0][@"code"],@"bandcode", nil];
         //
         __weak HeartBeatAndDetectState *weakSelf = self;
         //获取到IP地址

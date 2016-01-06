@@ -73,6 +73,10 @@
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
         [cell setLayoutMargins:UIEdgeInsetsZero];
     }
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //
     switch (indexPath.row) {
         case 0:
@@ -100,7 +104,7 @@
             break;
         case 4:
             cell.textLabel.text = @"当前平板";
-            cell.detailTextLabel.text = MIDCODE;
+            cell.detailTextLabel.text = theMid;
             
             break;
         case 5:
@@ -148,8 +152,12 @@
     
     __weak typeof(self) weakSelf = self;
     //[[NSMutableDictionary alloc] initWithObjectsAndKeys:TESTMIDCODE,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil]
-    
-    self.logOutDicParam = [[NSMutableDictionary alloc]initWithObjectsAndKeys:MIDCODE,@"mid",self.logCaddy.Rows[0][@"user"],@"username",self.logCaddy.Rows[0][@"password"],@"pwd",@"0",@"panmull", nil];
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //
+    self.logOutDicParam = [[NSMutableDictionary alloc]initWithObjectsAndKeys:theMid,@"mid",self.logCaddy.Rows[0][@"user"],@"username",self.logCaddy.Rows[0][@"password"],@"pwd",@"0",@"panmull", nil];
     //
     NSString *logoutURLStr;
     logoutURLStr = [GetRequestIPAddress getLogOutURL];

@@ -15,6 +15,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *inputHeartIntervalTime;
 @property (strong, nonatomic) IBOutlet UITextField *inputIPAddress;
 @property (strong, nonatomic) IBOutlet UITextField *inputPortNum;
+@property (strong, nonatomic) IBOutlet UILabel *deviceIDNum;
 
 - (IBAction)confirmSetting:(UIButton *)sender;
 - (IBAction)backToLogInView:(UIBarButtonItem *)sender;
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) UITapGestureRecognizer *tapDismiss;
 @property (strong, nonatomic) DBCon                  *lcDbCon;
 @property (strong, nonatomic) DataTable              *storedIPAddr;
+@property (strong, nonatomic) DataTable              *storedUniqueID;
 
 
 
@@ -39,9 +41,10 @@
     //
     self.lcDbCon = [[DBCon alloc] init];
     self.storedIPAddr = [[DataTable alloc] init];
+    self.storedUniqueID = [[DataTable alloc] init];
     //查询数据库
     self.storedIPAddr = [self.lcDbCon ExecDataTable:@"select *from tbl_SettingInfo"];
-    
+    self.storedUniqueID = [self.lcDbCon ExecDataTable:@"select *from tbl_uniqueID"];
     
 }
 
@@ -56,6 +59,10 @@
             weakSelf.inputHeartIntervalTime.text = [NSString stringWithFormat:@"%@",weakSelf.storedIPAddr.Rows[0][@"interval"]];
             weakSelf.inputIPAddress.text = [NSString stringWithFormat:@"%@",weakSelf.storedIPAddr.Rows[0][@"ipAddr"]];
             weakSelf.inputPortNum.text = [NSString stringWithFormat:@"%@",weakSelf.storedIPAddr.Rows[0][@"portNum"]];
+        }
+        //
+        if ([weakSelf.storedUniqueID.Rows count]) {
+            weakSelf.deviceIDNum.text = weakSelf.storedUniqueID.Rows[0][@"uiniqueID"];
         }
         
     });

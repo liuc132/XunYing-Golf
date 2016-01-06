@@ -389,8 +389,12 @@
         //为空，则直接退出
         return;
     }
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //数据不为空，则进行数据组装
-    NSMutableDictionary *backToFieldParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.cusGroupInf.Rows[0][@"grocod"],@"grocod", nil];
+    NSMutableDictionary *backToFieldParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.cusGroupInf.Rows[0][@"grocod"],@"grocod", nil];
     __weak CustomerGroupInfViewController *weakSelf = self;
     //
     NSString *backFieldURLStr;
@@ -411,9 +415,12 @@
             [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskLeaveRest"];
             [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskMendHoleInfo"];
             [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskInfo"];
-            
-            //执行跳转程序，跳转到建组方式选择界面
-            [strongSelf performSegueWithIdentifier:@"backToField" sender:nil];
+            //
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //执行跳转程序，跳转到建组方式选择界面
+                [strongSelf performSegueWithIdentifier:@"backToField" sender:nil];
+            });
         }
         
         

@@ -189,8 +189,12 @@ extern unsigned char ucHolePosition;
 - (IBAction)MannualCreateGrp:(UIButton *)sender {
     NSLog(@"enter mannualCreateGrp");
     self.backOrNext = YES;
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //check current state
-    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"user"],@"username",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
+    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"user"],@"username",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
     //
     __weak ChooseCreateGroupViewController *weakSelf = self;
     //
@@ -383,8 +387,12 @@ extern unsigned char ucHolePosition;
         
         weakSelf.cusCount = [allCusCards count];
         weakSelf.QRCodeWay = YES;
+        //获取到mid号码
+        NSString *theMid;
+        theMid = [GetRequestIPAddress getUniqueID];
+        theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
         //组装请求的数据
-        NSMutableDictionary *createGrpParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",QRCodeReadResult[0],@"gronum",cusCards,@"cus",@"all",@"hole",caddies,@"cad",carts,@"car",weakSelf.logEmp.Rows[[weakSelf.logEmp.Rows count] - 1][@"number"],@"cadShow",weakSelf.logEmp.Rows[[weakSelf.logEmp.Rows count] - 1][@"code"],@"user", nil];
+        NSMutableDictionary *createGrpParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",QRCodeReadResult[0],@"gronum",cusCards,@"cus",@"all",@"hole",caddies,@"cad",carts,@"car",weakSelf.logEmp.Rows[[weakSelf.logEmp.Rows count] - 1][@"number"],@"cadShow",weakSelf.logEmp.Rows[[weakSelf.logEmp.Rows count] - 1][@"code"],@"user", nil];
         //
         NSString *createGrpURLStr;
         createGrpURLStr = [GetRequestIPAddress getcreateGroupURL];

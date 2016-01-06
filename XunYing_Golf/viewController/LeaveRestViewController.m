@@ -154,12 +154,16 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请求异常" message:@"参数为空" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
     }
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //获取到当前系统的时间，并生成相应的格式
     NSDateFormatter *dateFarmatter = [[NSDateFormatter alloc] init];
     [dateFarmatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
     //组装数据,恢复时间以及已经完成的球洞规划表编码（这个目前设计中为空） 设置为空
-    NSMutableDictionary *requestToLeaveParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"empcod",@"",@"finishcods",curDateTime,@"retime", nil];
+    NSMutableDictionary *requestToLeaveParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logPerson.Rows[0][@"code"],@"empcod",@"",@"finishcods",curDateTime,@"retime", nil];
     //
     NSString *leaveTimeURLStr;
     leaveTimeURLStr = [GetRequestIPAddress getRequestLeaveTimeURL];
@@ -310,7 +314,12 @@
         [alert show];
         return;
     }
-    NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.grpInfo.Rows[0][@"grocod"],@"grocod", nil];
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //
+    NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.grpInfo.Rows[0][@"grocod"],@"grocod", nil];
     //
     NSString *playProcessURLStr;
     playProcessURLStr = [GetRequestIPAddress getPlayProcessURL];

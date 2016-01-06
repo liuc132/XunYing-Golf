@@ -520,7 +520,12 @@ extern BOOL          allowDownCourt;
         [alert show];
         return;
     }
-    NSMutableDictionary *cancleWaiting = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.groupTable.Rows[0][@"grocod"],@"grocod", nil];
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //
+    NSMutableDictionary *cancleWaiting = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.groupTable.Rows[0][@"grocod"],@"grocod", nil];
     //
     NSString *cancelWait;
     cancelWait = [GetRequestIPAddress getCancleWaitingGroupURL];

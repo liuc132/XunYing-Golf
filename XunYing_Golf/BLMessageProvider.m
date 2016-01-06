@@ -52,6 +52,8 @@ static NSString *urlFormat = @"http://jlcmobile.com/nick.nsf/test?openagent&%@&%
     NSLog(@"url:%@",urlFormat);
     NSString *requestUrl = urlFormat;
     //NSMutableDictionary *heartBeatParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:TESTMIDCODE,@"mid",self.userData.Rows[0][@"job"],@"job",[NSData data],@"loct",self.simulationGPSData[startCount][0],@"locx",self.simulationGPSData[startCount][1],@"locy",self.groupInformation.Rows[0][@"grocod"],@"grocod",@"1",@"gpsType",self.userData.Rows[0][@"code"],@"bandcode", nil];
+    
+    
     //构建请求参数
     NSMutableDictionary *heartParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.userInf.Rows[0][@"job"],@"job",[NSDate date],@"loct",logitude,@"locx",latitude,@"locy", nil];
     

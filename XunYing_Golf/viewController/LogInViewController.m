@@ -453,10 +453,14 @@ extern BOOL allowDownCourt;
                             
                         });
                     }
+                    //获取到mid号码
+                    NSString *theMid;
+                    theMid = [GetRequestIPAddress getUniqueID];
+                    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
                     //如果没有在系统中注册则调用注册接口
                     if ([recDic[@"Code"] intValue] == -2) {
                         //组装数据
-                        NSMutableDictionary *addDeviceParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"padtag",@"",@"phoneNum", nil];
+                        NSMutableDictionary *addDeviceParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"padtag",@"",@"phoneNum", nil];
                         //
                         NSString *addDeviceURLStr;
                         addDeviceURLStr = [GetRequestIPAddress getRequestAddDeviceURL];
@@ -566,9 +570,12 @@ extern BOOL allowDownCourt;
             }
         }
         [self.dbCon ExecNonQuery:@"delete from tbl_NamePassword where user = 036"];
-        
+        //获取到mid号码
+        NSString *theMid;
+        theMid = [GetRequestIPAddress getUniqueID];
+        theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
         //构建登录参数
-        self.logInParams = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
+        self.logInParams = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
         
         //
         [HttpTools getHttp:[self getTheSettingIP] forParams:self.logInParams success:^(NSData *nsData){
@@ -691,7 +698,12 @@ extern BOOL allowDownCourt;
         [self logIn];
         return;
     }
-    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"],@"username",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //
+    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"],@"username",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
     //
     __weak LogInViewController *weakSelf = self;
     //

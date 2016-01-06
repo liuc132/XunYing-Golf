@@ -324,14 +324,17 @@ typedef enum ChangeReason{
             caddyCode = eachCaddy[@"cadcod"];
         }
     }
-    
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //获取到当前系统的时间，并生成相应的格式
     NSDateFormatter *dateFarmatter = [[NSDateFormatter alloc] init];
     [dateFarmatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
     //构建参数
     NSString *reasonStr = [NSString stringWithFormat:@"%@;",self.changeReasonStr];
-    NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.requestPerson.Rows[0][@"code"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",reasonStr,@"reason",caddyCode,@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
+    NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.requestPerson.Rows[0][@"code"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",reasonStr,@"reason",caddyCode,@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
     //
     NSString *changeCaddyURLStr;
     changeCaddyURLStr = [GetRequestIPAddress getChangeCaddyURL];

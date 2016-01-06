@@ -127,10 +127,14 @@
     if ([self.logPerson.Rows count]) {
         self.requestMendUser.text = [NSString stringWithFormat:@"%@ %@",self.logPerson.Rows[0][@"number"],self.logPerson.Rows[0][@"name"]];
     }
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //清除掉所有的数据
     self.needMendHoleInfoArray = [[NSMutableArray alloc] init];
     //
-    NSMutableDictionary *getNeedMendHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
+    NSMutableDictionary *getNeedMendHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid", nil];
     //
     NSString *needMendHoleURLStr;
     needMendHoleURLStr = [GetRequestIPAddress getGetNeedMendHoleURL];
@@ -263,8 +267,12 @@
         mendHoles = [NSString stringWithFormat:@"%@",self.needMendHoles[0]];//self.holesInf.Rows[[self.needMendHoles.firstObject intValue]][@"holnum"];
     }
     NSLog(@"mendHoles:%@",mendHoles);
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //组建补洞参数
-    NSMutableDictionary *mendHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"code",mendHoles,@"mencods", nil];
+    NSMutableDictionary *mendHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logPerson.Rows[0][@"code"],@"code",mendHoles,@"mencods", nil];
     //toMoreMain1
     __weak MendHoleViewController *weakSelf = self;
     NSString *needMendHoleURLStr;

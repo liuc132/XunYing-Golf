@@ -415,7 +415,12 @@ wasOrderedState
         [alert show];
         return;
     }
-    NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.groupInfo.Rows[0][@"grocod"],@"grocod", nil];
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //
+    NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.groupInfo.Rows[0][@"grocod"],@"grocod", nil];
     //
     NSString *playProcessURLStr;
     playProcessURLStr = [GetRequestIPAddress getPlayProcessURL];
@@ -471,8 +476,13 @@ wasOrderedState
                     [alert show];
                     return;
                 }
+                //
+                //获取到mid号码
+                NSString *theMid;
+                theMid = [GetRequestIPAddress getUniqueID];
+                theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
                 //组建参数
-                NSMutableDictionary *makeHoleCompleteParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.groupInfo.Rows[0][@"grocod"],@"grocod",self.holePlanInfo.Rows[self.theSelectNum - 1][@"holcod"],@"holecode", nil];
+                NSMutableDictionary *makeHoleCompleteParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.groupInfo.Rows[0][@"grocod"],@"grocod",self.holePlanInfo.Rows[self.theSelectNum - 1][@"holcod"],@"holecode", nil];
                 //
                 NSString *completeStateURLStr;
                 completeStateURLStr = [GetRequestIPAddress getMakeHoleCompleteStateURL];

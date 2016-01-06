@@ -16,6 +16,8 @@
 #import "HeartBeatAndDetectState.h"
 #import "ChooseCreateGroupViewController.h"
 #import "LogInViewController.h"
+#import "UIDevice+IdentifierAddition.h"
+#import "KeychainItemWrapper.h"
 
 @interface AppDelegate ()<CLLocationManagerDelegate>
 {
@@ -24,12 +26,13 @@
     UIBackgroundTaskIdentifier m_taskID;
     BOOL                       m_bRun;
 }
-//@property (strong, nonatomic) DBCon *dbCon;
+@property (strong, nonatomic) DBCon *dbCon;
 //@property (strong, nonatomic) DataTable *dataTable;
 @property (nonatomic)         BOOL  changeState;
 
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) KeychainItemWrapper *keychainWrapper;
 
 @end
 
@@ -41,25 +44,9 @@
     [self initLocalDB];
     // Override point for customization after application launch.
     _window = [[WINDOW_CLASS alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    //
-//    self.dbCon = [[DBCon alloc] init];
-//    self.dataTable = [[DataTable alloc] init];
-//    //
-//    self.dataTable = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
-//    //
-//    if([self.dataTable.Rows count]){
-//        if([self.dataTable.Rows[[self.dataTable.Rows count] - 1][@"logOutOrNot"] isEqualToString:@"1"])
-//        {
-//            self.rootVC = [[ChooseCreateGroupViewController alloc] init];
-//            
-//        }
-//    }
-//    //
-//    else
-//    {
-//        self.rootVC = [[LogInViewController alloc] init];
-//    }
     
+    self.dbCon = [[DBCon alloc]init];
+    //
     self.rootVC = [[LogInViewController alloc]init];
     self.rootVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil]instantiateInitialViewController];
     self.window.rootViewController = self.rootVC;
@@ -81,10 +68,50 @@
         self.autoSizeScaleX = 1.0;
         self.autoSizeScaleY = 1.0;
     }
+    //
+    [self.dbCon ExecNonQuery:@"delete from tbl_uniqueID"];
+    KeychainItemWrapper *wrapper = [[KeychainItemWrapper alloc] initWithIdentifier:@"MY_APP_CREDENTIALS" accessGroup:nil];
+    self.keychainWrapper = wrapper;
+    //
+    NSString *theResultKey;
+    theResultKey = [self.keychainWrapper objectForKey:(id)kSecValueData];
+    theResultKey = [theResultKey substringWithRange:NSMakeRange(0, 30)];
+    NSLog(@"theresult:%@",theResultKey);
+    //tbl_uniqueID(uiniqueID text)
+    if (theResultKey != nil) {
+        NSMutableArray *uniqueIDArray = [[NSMutableArray alloc] initWithObjects:theResultKey, nil];
+        [self.dbCon ExecNonQuery:@"insert into tbl_uniqueID(uiniqueID) values(?)" forParameter:uniqueIDArray];
+    }
+    else
+    {
+        [self.keychainWrapper setObject:@"MY_APP_CREDENTIALS" forKey:(id)kSecAttrService];
+        [self.keychainWrapper setObject:[self gen_uuid] forKey:(id)kSecValueData];
+        NSString *theResultKey1;
+        theResultKey1 = [self.keychainWrapper objectForKey:(id)kSecValueData];
+        NSLog(@"theresult:%@",theResultKey1);
+        //tbl_uniqueID(uiniqueID text)
+        if (theResultKey1 != nil) {
+            NSMutableArray *uniqueIDArray = [[NSMutableArray alloc] initWithObjects:theResultKey1, nil];
+            [self.dbCon ExecNonQuery:@"insert into tbl_uniqueID(uiniqueID) values(?)" forParameter:uniqueIDArray];
+        }
+    }
     
+    
+    DataTable *table = [[DataTable alloc] init];
+    table = [self.dbCon ExecDataTable:@"select *from tbl_uniqueID"];
     
     return YES;
 }
+
+-(NSString *) gen_uuid
+{
+    CFUUIDRef uuid_ref=CFUUIDCreate(nil);
+    CFStringRef uuid_string_ref=CFUUIDCreateString(nil, uuid_ref);
+    NSString *uuid=[NSString stringWithString:(__bridge NSString * _Nonnull)(uuid_string_ref)];
+    NSLog(@"uuid:%@",uuid);
+    return uuid;
+}
+
 /*
  //storyBoard view自动适配
  + (void)storyBoradAutoLay:(UIView *)allView
@@ -231,6 +258,8 @@
     [dbCon ExecDataTable:@"create table if not exists tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,destintime text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)"];
     //设置界面中的，心跳间隔，IP地址，端口号
     [dbCon ExecDataTable:@"create table if not exists tbl_SettingInfo(interval text,ipAddr text,portNum text)"];
+    //保存ID号
+    [dbCon ExecDataTable:@"create table if not exists tbl_uniqueID(uiniqueID text)"];
     
 }
 

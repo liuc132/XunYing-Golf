@@ -353,8 +353,12 @@
         return;
     }
 //    self.whetherSelectHole = NO;
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //组建跳动请求参数
-    NSMutableDictionary *jumpHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.logPerson.Rows[0][@"code"],@"code",self.holesInf.Rows[self.selectedJumpNum][@"holcod"],@"aplcod", nil];
+    NSMutableDictionary *jumpHoleParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logPerson.Rows[0][@"code"],@"code",self.holesInf.Rows[self.selectedJumpNum][@"holcod"],@"aplcod", nil];
     //
     NSString *jumpHoleURLStr;
     jumpHoleURLStr = [GetRequestIPAddress getJumpHoleURL];
@@ -401,7 +405,12 @@
         [alert show];
         return;
     }
-    NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",self.grpInf.Rows[0][@"grocod"],@"grocod", nil];
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //
+    NSMutableDictionary *refreshParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.grpInf.Rows[0][@"grocod"],@"grocod", nil];
     //
     NSString *playProcessURLStr;
     playProcessURLStr = [GetRequestIPAddress getPlayProcessURL];

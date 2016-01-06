@@ -193,6 +193,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
     //
     self.creatGrpTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(DissMissKeyBoard:)];
     self.creatGrpTap.delegate = self;
+    [self.createGrpScrollView setFrame:CGRectMake(self.createGrpScrollView.frame.origin.x, self.createGrpScrollView.frame.origin.y, ScreenWidth, ScreenHeight)];
     [self.createGrpScrollView addGestureRecognizer:self.creatGrpTap];
     //
     self.caddyIndex = 0;
@@ -487,8 +488,12 @@ typedef NS_ENUM(NSInteger,holePosition) {
     if (![self.addCartsArray count]) {
         allAddCarts = @"";
     }
-    
-    NSMutableDictionary *createGroupParameters = [[NSMutableDictionary alloc] initWithObjectsAndKeys:MIDCODE,@"mid",@"",@"gronum",selectedCus,@"cus",allAddCarts,@"car",self.theThreeHolesInf.Rows[self.theSelectedHolePosition][@"pdtag"],@"hole",allAddCaddies,@"cad",self.userData.Rows[0][@"caddyLogIn"],@"cadShow",self.userData.Rows[0][@"code"],@"user", nil];
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //
+    NSMutableDictionary *createGroupParameters = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",@"",@"gronum",selectedCus,@"cus",allAddCarts,@"car",self.theThreeHolesInf.Rows[self.theSelectedHolePosition][@"pdtag"],@"hole",allAddCaddies,@"cad",self.userData.Rows[0][@"caddyLogIn"],@"cadShow",self.userData.Rows[0][@"code"],@"user", nil];
     //
     __weak typeof(self) weakself = self;
     //
