@@ -68,7 +68,7 @@ extern BOOL allowDownCourt;
     //NSLog(@"enter Login viewcontroller");
 //    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
     //
-    NSLog(@"phoneNum:%@",CTSettingCopyMyPhoneNumber());
+//    NSLog(@"phoneNum:%@",CTSettingCopyMyPhoneNumber());
     
     self.tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTap:)];
     self.tap.delegate = self;
@@ -112,7 +112,9 @@ extern BOOL allowDownCourt;
     self.logPersonInf = [[DataTable alloc] init];
     //
     self.logPersonInf = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
+#ifdef DEBUD_MODE
     NSLog(@"logPersonInf:%@",self.logInPerson);
+#endif
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(canDownCourt:) name:@"allowDown" object:nil];
     //
@@ -129,7 +131,7 @@ extern BOOL allowDownCourt;
 
 -(void)canDownCourt:(NSNotification *)sender
 {
-    NSLog(@"sender:%@",sender);
+//    NSLog(@"sender:%@",sender);
     if (!self.canReceiveNotification) {
         return;
     }
@@ -185,7 +187,7 @@ extern BOOL allowDownCourt;
 #pragma -mark checkNetworkState
 -(void)checkNetworkState:(Reachability *)reachability
 {
-    NSLog(@"reachability:%@",reachability);
+//    NSLog(@"reachability:%@",reachability);
     //wifi state
     Reachability *wifiState = [Reachability reachabilityForLocalWiFi];
     //监测手机上能否上网络（wifi/3G/2.5G）
@@ -239,7 +241,9 @@ extern BOOL allowDownCourt;
     //
     [self.view removeGestureRecognizer:self.tap];
     //
+#ifdef DEBUD_MODE
     NSLog(@"holeType:%@  holeCount:%ld",self.curHoleName,(long)self.customerCount);
+#endif
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -287,7 +291,7 @@ extern BOOL allowDownCourt;
  *  @param sender 对应的按键信息
  */
 - (IBAction)forgetPassword:(UIButton *)sender {
-    NSLog(@"forgetPassword");
+//    NSLog(@"forgetPassword");
     //
     if(!self.forgetCode){
         self.forgetCode = YES;
@@ -310,7 +314,7 @@ extern BOOL allowDownCourt;
 #pragma -mark getCaddyCartInf
 -(void)getCaddyCartInf
 {
-    NSLog(@"enter getCaddyCartInf");
+//    NSLog(@"enter getCaddyCartInf");
     __weak typeof(self) wealSelf = self;
     //删除保存在内存中的以前的数据
     //前九洞，后九洞，十八洞
@@ -322,9 +326,11 @@ extern BOOL allowDownCourt;
     caddyCartURLStr = [GetRequestIPAddress getCaddyCartInfURL];
     //start request
     [HttpTools getHttp:caddyCartURLStr forParams:nil success:^(NSData *nsData){
-        NSLog(@"successfully request");
+//        NSLog(@"successfully request");
         NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+#ifdef DEBUD_MODE
         NSLog(@"caddy count:%ld",[receiveDic[@"Msg"][@"caddys"] count]);
+#endif
         //获取到当前的球车
         NSArray *allCarts = receiveDic[@"Msg"][@"carts"];
 //        NSDictionary *oneCart = [[NSDictionary alloc] init];
@@ -354,20 +360,22 @@ extern BOOL allowDownCourt;
         DataTable *threeHolesInf;// = [[DataTable alloc]init];
         threeHolesInf = [self.dbCon ExecDataTable:@"select *from tbl_threeTypeHoleInf"];
         //NSLog(@"top9:%@\n down9:%@\n all:%@",threeHolesInf.Rows[0],threeHolesInf.Rows[1],threeHolesInf.Rows[2]);
-        NSLog(@"holeInf:%@",threeHolesInf);
+//        NSLog(@"holeInf:%@",threeHolesInf);
         //NSLog(@"end store the three holes information");
         
         
         
     }failure:^(NSError *err){
+#ifdef DEBUD_MODE
         NSLog(@"caddyCartInf request failed");
+#endif
         
     }];
 }
 #pragma -mark getCustomInf
 -(void)getCustomInf
 {
-    NSLog(@"enter getCustomInf");
+//    NSLog(@"enter getCustomInf");
     __weak typeof(self) weakSelf = self;
     
     //delete the old data in the database
@@ -378,7 +386,9 @@ extern BOOL allowDownCourt;
     customURLStr = [GetRequestIPAddress getCustomInfURL];
     //start request
     [HttpTools getHttp:customURLStr forParams:nil success:^(NSData *nsData){
+#ifdef DEBUD_MODE
         NSLog(@"request successfully");
+#endif
         NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         //
         NSString *cusNumberString;// = [[NSString alloc] init];
@@ -389,7 +399,9 @@ extern BOOL allowDownCourt;
         [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_CustomerNumbers(first,second,third,fourth) VALUES(?,?,?,?)" forParameter:(NSMutableArray *)cusNumberArray];
         
     }failure:^(NSError *err){
+#ifdef DEBUD_MODE
         NSLog(@"request fail");
+#endif
         
     }];
 }
@@ -410,20 +422,28 @@ extern BOOL allowDownCourt;
     {
         switch (buttonIndex) {
             case 0:
+#ifdef DEBUD_MODE
                 NSLog(@"取消强制登录");
+#endif
                 
                 break;
             case 1:
+#ifdef DEBUD_MODE
                 NSLog(@"执行强制登录");
+#endif
                 //调用强制登录接口
                 //修改强制登录的参数为1
                 [self.logInParams setObject:@"1" forKey:@"forceLogin"];
                 //调用接口进行传参数
                 [HttpTools getHttp:[self getTheSettingIP] forParams:self.logInParams success:^(NSData *nsData){
+#ifdef DEBUD_MODE
                     NSLog(@"成功强制登录");
+#endif
                     //
                     NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+#ifdef DEBUD_MODE
                     NSLog(@"msg:%@",recDic[@"Msg"]);
+#endif
                     //创建登录人信息数组
                     //1sex cadShowNum 1empcod 1empnam 1empnum 1empjob
                     //code text,job text,name text,number text,sex text,caddyLogIn text
@@ -442,7 +462,12 @@ extern BOOL allowDownCourt;
                             weakSelf.activityIndicatorView.hidden = YES;
                             //
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                if(recDic[@"Msg"][@"group"] == NULL)
+                                NSString *value;
+                                NSDictionary *msgDic = recDic[@"Msg"];
+                                
+                                value = [msgDic objectForKey:@"group"];
+                                
+                                if((NSNull *)value == [NSNull null])
                                     [weakSelf performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];
                                 else
                                 {
@@ -466,21 +491,27 @@ extern BOOL allowDownCourt;
                         addDeviceURLStr = [GetRequestIPAddress getRequestAddDeviceURL];
                         //
                         [HttpTools getHttp:addDeviceURLStr forParams:addDeviceParam success:^(NSData *nsData){
+#ifdef DEBUD_MODE
                             NSLog(@"successfully requested");
+#endif
                             NSDictionary *recDic1 = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-                            
+#ifdef DEBUD_MODE
                             NSLog(@"recDic:%@",recDic1);
+#endif
                             
                             
                         }failure:^(NSError *err){
+#ifdef DEBUD_MODE
                             NSLog(@"request failled");
-                            
+#endif
                             
                         }];
                     }
                     
                 }failure:^(NSError *err){
+#ifdef DEBUD_MODE
                     NSLog(@"强制登录失败");
+#endif
                     
                 }];
                 
@@ -502,7 +533,7 @@ extern BOOL allowDownCourt;
 #pragma -mark logInButton
 -(void)logIn
 {
-    NSLog(@"enter login");
+//    NSLog(@"enter login");
     //    [self performSegueWithIdentifier:@"jumpToCreateGroup" sender:self];
     
     //    [self.activityView showIndicator];
@@ -515,7 +546,7 @@ extern BOOL allowDownCourt;
     [self.dbCon ExecNonQuery:@"delete from tbl_EmployeeInf"];
     
     //start request from the server
-    NSLog(@"username:%@,password:%@",self.account.text,self.password.text);
+//    NSLog(@"username:%@,password:%@",self.account.text,self.password.text);
     
     
     if(self.curNetworkStatus == NotReachable)
@@ -580,7 +611,7 @@ extern BOOL allowDownCourt;
         //
         [HttpTools getHttp:[self getTheSettingIP] forParams:self.logInParams success:^(NSData *nsData){
             LogInViewController *strongSelf = weakSelf;
-            NSLog(@"success login");
+//            NSLog(@"success login");
             
             self.canReceiveNotification = YES;
             //
@@ -588,8 +619,10 @@ extern BOOL allowDownCourt;
             //store data from server
             NSDictionary *reDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
             //handle error
+#ifdef DEBUD_MODE
             NSLog(@"Code:%@",reDic[@"Code"]);
             NSLog(@"message is:%@",reDic[@"Msg"]);
+#endif
             
             if([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
             {
@@ -602,7 +635,9 @@ extern BOOL allowDownCourt;
                 NSLog(@"The Mid id illegal");
             else if ([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]])
             {
+#ifdef DEBUD_MODE
                 NSLog(@"message is:%@",reDic[@"Msg"]);
+#endif
                 //是否强制登录，显示
                 [strongSelf.forceLogInAlert show];
             }
@@ -619,7 +654,9 @@ extern BOOL allowDownCourt;
                 //执行查询功能
                 DataTable *table;// = [[DataTable alloc] init];
                 table = [self.dbCon ExecDataTable:@"select *from tbl_logPerson"];
+#ifdef DEBUD_MODE
                 NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
+#endif
                 
                 //获取到球洞信息，并将相应的信息保存到内存中
                 NSArray *allHolesInfo = recDictionary[@"holes"];
@@ -688,7 +725,9 @@ extern BOOL allowDownCourt;
     //
     HeartBeatAndDetectState *heart = [[HeartBeatAndDetectState alloc] init];
     if ([heart checkState]) {
+#ifdef DEBUD_MODE
         NSLog(@"heart time enable");
+#endif
     }
     
     //
@@ -715,10 +754,12 @@ extern BOOL allowDownCourt;
         self.canReceiveNotification = YES;
         //
         LogInViewController *strongSelf = weakSelf;
-        NSLog(@"request successfully");
+//        NSLog(@"request successfully");
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+#ifdef DEBUD_MODE
         NSLog(@"code:%@\n msg:%@",recDic[@"Code"],recDic[@"Msg"]);
         NSLog(@"124");
+#endif
         //
         if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
         {
@@ -799,10 +840,10 @@ extern BOOL allowDownCourt;
                     //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
                     [strongSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
                     //
-                    DataTable *table;// = [[DataTable alloc] init];
-                    
-                    table = [strongSelf.dbCon ExecDataTable:@"select *from tbl_groupInf"];
-                    NSLog(@"table:%@",table);
+//                    DataTable *table;// = [[DataTable alloc] init];
+//                    
+//                    table = [strongSelf.dbCon ExecDataTable:@"select *from tbl_groupInf"];
+//                    NSLog(@"table:%@",table);
                     //
                     HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
                     [HeartBeatAndDetectState disableHeartBeat];//disable heartBeat
@@ -833,8 +874,9 @@ extern BOOL allowDownCourt;
         }
         
     }failure:^(NSError *err){
+#ifdef DEBUD_MODE
         NSLog(@"request failled");
-        
+#endif
         
     }];
 }
@@ -870,7 +912,7 @@ extern BOOL allowDownCourt;
  */
 - (void)keyboardWillChange:(NSNotification *)note
 {
-    NSLog(@"%@", note.userInfo);
+//    NSLog(@"%@", note.userInfo);
     NSDictionary *userInfo = note.userInfo;
     CGFloat duration = [userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
     

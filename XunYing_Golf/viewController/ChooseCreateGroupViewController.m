@@ -205,10 +205,12 @@ extern unsigned char ucHolePosition;
     [HttpTools getHttp:downFieldURLStr forParams:self.checkCreatGroupState success:^(NSData *nsData){
         //
         ChooseCreateGroupViewController *strongSelf = weakSelf;
-        NSLog(@"request successfully");
+//        NSLog(@"request successfully");
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+#ifdef DEBUD_MODE
         NSLog(@"code:%@\n msg:%@",recDic[@"Code"],recDic[@"Msg"]);
         NSLog(@"124");
+#endif
         //
         if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
         {
@@ -233,7 +235,9 @@ extern unsigned char ucHolePosition;
             //
             NSArray *holeInf = [[NSArray alloc]initWithObjects:@"forecasttime",@"gronum",@"holcod",@"holcue",@"holfla",@"holgro",@"holind",@"hollen",@"holnam",@"holnum",@"holspe",@"holsta",@"nowgroups",@"stan1",@"stan2",@"stan3",@"stan4",@"usestatus",@"x",@"y", nil];
             NSMutableArray *holesInf = [[NSMutableArray alloc] init];
+#ifdef DEBUD_MODE
             NSLog(@"count:%ld",[recDic[@"Msg"][@"holes"] count]);
+#endif
             NSArray *holesArray = recDic[@"Msg"][@"holes"];
             
             //            NSDictionary *holeDic = [[NSDictionary alloc] init];
@@ -335,7 +339,9 @@ extern unsigned char ucHolePosition;
     self.cusNumbers = [self.LogDbcon ExecDataTable:@"select *from tbl_CustomerNumbers"];
     //
     [self.QRCodeReader setCompletionWithBlock:^(NSString *resultAsString){
+#ifdef DEBUD_MODE
         NSLog(@"result:%@",resultAsString);
+#endif
         [weakSelf.QRCodeReader dismissViewControllerAnimated:YES completion:nil];
         //定义球车，球童，消费卡号的字符数组
         NSString *cusCards = [[NSString alloc] init];
@@ -347,10 +353,13 @@ extern unsigned char ucHolePosition;
         NSString *cusCadCartsStr = [NSString stringWithFormat:@"%@",QRCodeReadResult[2]];
         NSArray *allCadCartsArray = [cusCadCartsStr componentsSeparatedByString:@"&"];
         for (NSString *eachCadCart in allCadCartsArray) {
-            
+#ifdef DEBUD_MODE
             NSLog(@"eacgCadCart:%@",eachCadCart);
+#endif
             NSArray *separateParam = [eachCadCart componentsSeparatedByString:@"_"];
+#ifdef DEBUD_MODE
             NSLog(@"separateParam:%@ intValue:%d cuscardsBool:%d",separateParam,[separateParam[0] intValue],[cusCards isEqualToString:@""]);
+#endif
             cusCards = [cusCards stringByAppendingString:([cusCards isEqualToString:@""] && ([separateParam[0] intValue] != -1))?separateParam[0]:[NSString stringWithFormat:@"_%@",separateParam[0]]];
             caddies = [caddies stringByAppendingString:([caddies isEqualToString:@""] && ([separateParam[1] intValue] != -1))?separateParam[1]:[NSString stringWithFormat:@"_%@",separateParam[1]]];
             carts = [carts stringByAppendingString:([carts isEqualToString:@""] && ([separateParam[2] intValue] != -1))?separateParam[2]:[NSString stringWithFormat:@"_%@",separateParam[2]]];
@@ -380,7 +389,9 @@ extern unsigned char ucHolePosition;
         
         
         NSMutableArray *allCuscards = [[NSMutableArray alloc] initWithObjects:allCusCards, nil];
+#ifdef DEBUD_MODE
         NSLog(@"allcuscards:%@",allCuscards);
+#endif
 //        [weakSelf.LogDbcon ExecNonQuery:@"insert into tbl_CustomerNumbers(first,second,third,fourth) values(?,?,?,?)" forParameter:allCuscards];
 //        DataTable *table = [[DataTable alloc] init];
 //        table = [weakSelf.LogDbcon ExecDataTable:@"select *from tbl_CustomerNumbers"];
@@ -399,7 +410,9 @@ extern unsigned char ucHolePosition;
         //请求接口（建组下场的接口），并进行相应的跳转
         [HttpTools getHttp:createGrpURLStr forParams:createGrpParam success:^(NSData *nsData){
             NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+#ifdef DEBUD_MODE
             NSLog(@"recDic:%@",recDic);
+#endif
             //
             if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
             {
@@ -421,15 +434,18 @@ extern unsigned char ucHolePosition;
                 [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_groupInf"];
                 [weakSelf.LogDbcon ExecDataTable:@"delete from tbl_addCaddy"];
                 //
+#ifdef DEBUD_MODE
                 NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",recDic[@"Msg"][@"grocod"],recDic[@"Msg"][@"groind"],recDic[@"Msg"][@"grolev"],recDic[@"Msg"][@"gronum"],recDic[@"Msg"][@"grosta"]);
+#endif
                 //组建获取到的组信息的数组
                 NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"grocod"],recDic[@"Msg"][@"groind"],recDic[@"Msg"][@"grolev"],recDic[@"Msg"][@"gronum"],recDic[@"Msg"][@"grosta"],recDic[@"Msg"][@"hgcod"],recDic[@"Msg"][@"onlinestatus"], nil];
                 //将数据加载到创建的数据库中
                 //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
                 
                 [weakSelf.LogDbcon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
-                
+#ifdef DEBUD_MODE
                 NSLog(@"successfully create group and the recDic:%@  code:%@",recDic[@"Msg"],recDic[@"code"]);
+#endif
                 //获取到登录小组的所有客户的信息
                 NSArray *allCustomers = recDic[@"Msg"][@"cuss"];
                 for (NSDictionary *eachCus in allCustomers) {
@@ -461,7 +477,9 @@ extern unsigned char ucHolePosition;
                 //执行通知
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSDictionary *QRCodeNotice = [[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",(long)weakSelf.cusCount],@"customerCount",@"十八洞",@"holetype", nil];
+#ifdef DEBUD_MODE
                     NSLog(@"%@",QRCodeNotice);
+#endif
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"QRCodeResult" object:nil userInfo:QRCodeNotice];
                 });
                 

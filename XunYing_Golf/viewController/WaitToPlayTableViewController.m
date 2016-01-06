@@ -531,11 +531,13 @@ extern BOOL          allowDownCourt;
     cancelWait = [GetRequestIPAddress getCancleWaitingGroupURL];
     //向服务器发送取消下场申请
     [HttpTools getHttp:cancelWait forParams:cancleWaiting success:^(NSData *nsData){
-        NSLog(@"cancle Waiting down group success");
+//        NSLog(@"cancle Waiting down group success");
         [self.timer invalidate];
         //
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+#ifdef DEBUD_MODE
         NSLog(@"recDic:%@ and Msg:%@ Code:%@",recDic,recDic[@"Msg"],recDic[@"Code"]);
+#endif
         if ([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]]) {
             NSLog(@"delete wait group fail");
         }
