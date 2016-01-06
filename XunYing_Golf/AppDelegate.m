@@ -75,10 +75,12 @@
     //
     NSString *theResultKey;
     theResultKey = [self.keychainWrapper objectForKey:(id)kSecValueData];
-    theResultKey = [theResultKey substringWithRange:NSMakeRange(0, 30)];
+    
     NSLog(@"theresult:%@",theResultKey);
     //tbl_uniqueID(uiniqueID text)
-    if (theResultKey != nil) {
+    if ((theResultKey != nil) && (![theResultKey  isEqual: @""])) {
+        theResultKey = [theResultKey substringWithRange:NSMakeRange(0, 30)];
+        NSLog(@"theresult:%@",theResultKey);
         NSMutableArray *uniqueIDArray = [[NSMutableArray alloc] initWithObjects:theResultKey, nil];
         [self.dbCon ExecNonQuery:@"insert into tbl_uniqueID(uiniqueID) values(?)" forParameter:uniqueIDArray];
     }
@@ -90,7 +92,9 @@
         theResultKey1 = [self.keychainWrapper objectForKey:(id)kSecValueData];
         NSLog(@"theresult:%@",theResultKey1);
         //tbl_uniqueID(uiniqueID text)
-        if (theResultKey1 != nil) {
+        if ((theResultKey != nil) && (![theResultKey  isEqual: @""])) {
+            theResultKey = [theResultKey substringWithRange:NSMakeRange(0, 30)];
+            NSLog(@"theresult:%@",theResultKey);
             NSMutableArray *uniqueIDArray = [[NSMutableArray alloc] initWithObjects:theResultKey1, nil];
             [self.dbCon ExecNonQuery:@"insert into tbl_uniqueID(uiniqueID) values(?)" forParameter:uniqueIDArray];
         }
