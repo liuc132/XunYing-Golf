@@ -17,7 +17,7 @@
 #import "HeartBeatAndDetectState.h"
 
 
-@interface PersonalCenterViewController ()
+@interface PersonalCenterViewController ()<UIAlertViewDelegate>
 
 @property (strong, nonatomic) DBCon *_dbCon;
 @property (strong, nonatomic) DataTable *userInf;
@@ -144,12 +144,8 @@
     return cell;
 }
 
-
-
-
-- (IBAction)logOutHandle:(UIBarButtonItem *)sender {
-    NSLog(@"enter logOutHandle");
-    
+- (void)willLogOutHandle
+{
     __weak typeof(self) weakSelf = self;
     //[[NSMutableDictionary alloc] initWithObjectsAndKeys:TESTMIDCODE,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil]
     //获取到mid号码
@@ -167,9 +163,10 @@
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         NSLog(@"code:%@ msg:%@",recDic[@"Code"],recDic[@"Msg"]);
         if ([recDic[@"Code"] integerValue] > 0) {
-            //除能心跳
-//            [HeartBeatAndDetectState disableHeartBeat];
-//            NSDictionary *theDic = [[NSDictionary alloc] initWithObjectsAndKeys:<#(nonnull id), ...#>, nil]
+            //删除本地的登录人信息以及组信息
+            [weakSelf._dbCon ExecNonQuery:@"delete from tbl_logPerson"];
+            [weakSelf._dbCon ExecNonQuery:@"delete from tbl_groupInf"];
+            //
             [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
             //执行跳转
             [weakSelf performSegueWithIdentifier:@"backToLogInterface" sender:nil];
@@ -181,9 +178,29 @@
         
         
     }];
-    
-    
-    
-    
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1) {
+        switch (buttonIndex) {
+            case 0:
+                
+                break;
+                
+            case 1:
+                [self willLogOutHandle];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+- (IBAction)logOutHandle:(UIBarButtonItem *)sender {
+    NSLog(@"enter logOutHandle");
+    UIAlertView *logOutAlert = [[UIAlertView alloc] initWithTitle:@"您确定退出登录吗?" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"退出", nil];
+    logOutAlert.tag = 1;
+    [logOutAlert show];
 }
 @end

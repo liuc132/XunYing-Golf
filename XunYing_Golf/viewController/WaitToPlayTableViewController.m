@@ -26,10 +26,7 @@ extern BOOL          allowDownCourt;
 
 
 
-@interface WaitToPlayTableViewController ()
-
-
-
+@interface WaitToPlayTableViewController ()<UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray *customerCount;
 @property (strong, nonatomic) NSMutableArray *caddyCount;
@@ -46,6 +43,7 @@ extern BOOL          allowDownCourt;
 @property (strong, nonatomic) DataTable *groupTable;
 @property (strong, nonatomic) DataTable *addedCaddiesTable;
 @property (strong, nonatomic) DataTable *addedCartsTable;
+@property (strong, nonatomic) DataTable *allcusTable;
 
 @property (nonatomic) NSInteger cusCounts;  //选取的客户个数
 @property (nonatomic) NSInteger holeName;   //选取的球洞类型
@@ -95,6 +93,7 @@ extern BOOL          allowDownCourt;
     self.groupTable = [[DataTable alloc] init];
     self.addedCaddiesTable = [[DataTable alloc] init];
     self.addedCartsTable = [[DataTable alloc] init];
+    self.allcusTable     = [[DataTable alloc] init];
     //查询球童信息
     self.caddyTable = [self.localDBcon ExecDataTable:@"select *from tbl_logPerson"];
     self.addedCaddiesTable = [self.localDBcon ExecDataTable:@"select *from tbl_addCaddy"];
@@ -110,7 +109,7 @@ extern BOOL          allowDownCourt;
         self.cusCardNumArray = [[NSArray alloc] initWithObjects:self.cusCardNumTable.Rows[0][@"first"],self.cusCardNumTable.Rows[0][@"second"],self.cusCardNumTable.Rows[0][@"third"],self.cusCardNumTable.Rows[0][@"fourth"], nil];
     }
     self.groupTable = [self.localDBcon ExecDataTable:@"select *from tbl_groupInf"];
-    
+    self.allcusTable = [self.localDBcon ExecDataTable:@"select *from tbl_CustomersInfo"];
     //
     self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2-100, ScreenHeight/2 - 130, 200, 200)];
     [self.view addSubview:self.activityIndicatorView];
@@ -122,6 +121,11 @@ extern BOOL          allowDownCourt;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detectTheThing:) name:@"readyDown" object:nil];
     //from QRCodeReaderView
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(QRCodeResult:) name:@"QRCodeResult" object:nil];
+    //
+    NSLog(@"count:%ld",[self.allcusTable.Rows count]);
+//    if ([self.allcusTable.Rows count]) {
+//        self.customerCounts = [self.allcusTable.Rows count];
+//    }
     
 }
 
@@ -155,7 +159,7 @@ extern BOOL          allowDownCourt;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 //#warning Incomplete implementation, return the number of sections
-    return 4;
+    return 6;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -163,13 +167,16 @@ extern BOOL          allowDownCourt;
     NSInteger eachSectionRow;
     eachSectionRow = 0;
     switch (section) {
-        case 0:
-            eachSectionRow = self.QRCodeEnable?[self.cusCardNumArray count]:self.customerCounts + 1;
-            break;
-            
-        case 1:
         case 2:
+            //eachSectionRow = self.QRCodeEnable?[self.cusCardNumArray count]:self.customerCounts + 1;
+            eachSectionRow = self.QRCodeEnable?[self.cusCardNumArray count]:[self.allcusTable.Rows count]?[self.allcusTable.Rows count]:1;
+            break;
+        
+        case 0:
+        case 1:
         case 3:
+        case 4:
+        case 5:
             eachSectionRow = 1;
             break;
         default:
@@ -191,7 +198,29 @@ extern BOOL          allowDownCourt;
         [cell setLayoutMargins:UIEdgeInsetsZero];
     }
     //
+    UILabel *grpNum = [[UILabel alloc] initWithFrame:CGRectMake(5, 10, 60, 21)];
+    UILabel *createTime = [[UILabel alloc] initWithFrame:CGRectMake(5, 10, 60, 21)];
+    //
+    if ([self.groupTable.Rows count]) {
+        grpNum.text = self.groupTable.Rows[0][@"gronum"];
+        NSString *createTimeStr;
+        createTimeStr = self.groupTable.Rows[0][@"createdate"];
+        createTimeStr = [createTimeStr substringWithRange:NSMakeRange(11, 5)];
+        createTime.text = createTimeStr;
+    }
+    
+    //
     if(indexPath.section == 0)
+    {
+        [cell addSubview:grpNum];
+    }
+    //
+    if(indexPath.section == 1)
+    {
+        [cell addSubview:createTime];
+    }
+    //
+    if(indexPath.section == 2)
     {
         self.cusName = [[UILabel alloc] initWithFrame:CGRectMake(5, 10, 45, 21)];
         //NSLog(@"index.row:%ld",indexPath.row);
@@ -235,7 +264,7 @@ extern BOOL          allowDownCourt;
     else
         holeName.text = self.holeType;//holeNameString;
     
-    if (indexPath.section == 0) {
+    if (indexPath.section == 2) {
         switch (indexPath.row) {
                 //第一个客户信息显示
             case 0:
@@ -271,12 +300,12 @@ extern BOOL          allowDownCourt;
         }
     }
     //球洞信息
-    else if (indexPath.section == 1)
+    else if (indexPath.section == 3)
     {
         [cell addSubview:holeName];
     }
     //球童信息
-    else if (indexPath.section == 2) {
+    else if (indexPath.section == 4) {
         //将所有的球车视图隐藏，并在下边相应开启
         self.firstCaddyLabel.hidden = YES;
         self.secondCaddyLabel.hidden = YES;
@@ -333,7 +362,7 @@ extern BOOL          allowDownCourt;
         
     }
     //球车
-    else if (indexPath.section == 3)
+    else if (indexPath.section == 5)
     {
         //将所有的球车视图隐藏，并在下边相应开启
         self.firstCartLabel.hidden = YES;
@@ -408,18 +437,26 @@ extern BOOL          allowDownCourt;
     NSString *headerTitle = [[NSString alloc]init];
     switch (section) {
         case 0:
-            headerTitle = @"  客户";
+            headerTitle = @"  小组编号";
             break;
             
         case 1:
-            headerTitle = @"  球洞";
+            headerTitle = @"  创建时间";
             break;
             
         case 2:
-            headerTitle = @"  球童";
+            headerTitle = @"  客户";
             break;
             
         case 3:
+            headerTitle = @"  球洞";
+            break;
+            
+        case 4:
+            headerTitle = @"  球童";
+            break;
+            
+        case 5:
             headerTitle = @"  球车";
             break;
         default:
@@ -467,53 +504,26 @@ extern BOOL          allowDownCourt;
     
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1) {
+        switch (buttonIndex) {
+            case 0:
+                
+                break;
+                
+            case 1:
+                [self canCleDownHandle];
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-- (IBAction)cancleDownGround:(UIBarButtonItem *)sender {
-    NSLog(@"right cancle button");
-    //
+- (void)canCleDownHandle
+{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"组参数异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
     if(![self.groupTable.Rows count])
     {
@@ -531,7 +541,7 @@ extern BOOL          allowDownCourt;
     cancelWait = [GetRequestIPAddress getCancleWaitingGroupURL];
     //向服务器发送取消下场申请
     [HttpTools getHttp:cancelWait forParams:cancleWaiting success:^(NSData *nsData){
-//        NSLog(@"cancle Waiting down group success");
+        //        NSLog(@"cancle Waiting down group success");
         [self.timer invalidate];
         //
         NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
@@ -543,26 +553,29 @@ extern BOOL          allowDownCourt;
         }
         else
         {
-            HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
-            if ([heartBeat checkState]) {
-                [HeartBeatAndDetectState disableHeartBeat];
-            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
             //
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self performSegueWithIdentifier:@"waitDownToCreateWay" sender:nil];
         }
         
     }failure:^(NSError *err){
         NSLog(@"cancle waiting down group fail");
         
-        
-        
     }];
-    
-    
+
+}
+
+- (IBAction)cancleDownGround:(UIBarButtonItem *)sender {
+    UIAlertView *cancelDownAlert = [[UIAlertView alloc] initWithTitle:@"你确定要取消该客户组吗?" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    cancelDownAlert.tag = 1;
+    [cancelDownAlert show];
     
 }
 
 - (IBAction)backToCreateInf:(UIBarButtonItem *)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:@"waitDownToCreateWay" sender:nil];
+    });
 }
 @end

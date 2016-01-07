@@ -79,11 +79,20 @@ extern unsigned char ucHolePosition;
     self.activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
     self.activityIndicatorView.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
     self.activityIndicatorView.layer.cornerRadius = 20;
+    self.activityIndicatorView.tintColor = [UIColor blackColor];
     //先隐藏，同时停止动画
     [self.activityIndicatorView hideIndicator];
+    [self.view addSubview:self.activityIndicatorView];
     
     
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+}
+
 #pragma -mark where interface to go
 -(void)whereToGo:(NSNotification *)sender
 {
@@ -92,15 +101,15 @@ extern unsigned char ucHolePosition;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     //decide which interface to go according to the sender whoes object is NSNotification
     if ([sender.userInfo[@"allowDown"] isEqualToString:@"1"]) {
-//        [self.activityIndicatorView stopAnimating];
-//        self.activityIndicatorView.hidden = YES;
+        [self.activityIndicatorView hideIndicator];
+        self.activityIndicatorView.hidden = YES;
         //执行跳转程序，此时判断的是已经创建了组
         [self performSegueWithIdentifier:@"ToMainMapView1" sender:nil];
     }
     else if([sender.userInfo[@"waitToAllow"] isEqualToString:@"1"])
     {
-//        [self.activityIndicatorView stopAnimating];
-//        self.activityIndicatorView.hidden = YES;
+        [self.activityIndicatorView hideIndicator];
+        self.activityIndicatorView.hidden = YES;
         [self performSegueWithIdentifier:@"shouldWaitToAllow1" sender:nil];
     }
     else
@@ -196,7 +205,10 @@ extern unsigned char ucHolePosition;
     //check current state
     self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"user"],@"username",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
     //
-    __weak ChooseCreateGroupViewController *weakSelf = self;
+    [self.activityIndicatorView showIndicator];
+    self.activityIndicatorView.hidden = NO;
+    //
+    __weak typeof(self) weakSelf = self;
     //
     NSString *downFieldURLStr;
     downFieldURLStr = [GetRequestIPAddress getDecideCreateGrpAndDownFieldURL];
@@ -291,16 +303,19 @@ extern unsigned char ucHolePosition;
                 //                }
                 
 //                if(recDic[@"Msg"][@"group"])
-                if([recDic[@"Msg"][@"group"] isEmpty])
+                NSDictionary *grpInfDic = [[NSDictionary alloc] initWithDictionary:recDic[@"Msg"]];
+                NSString *createTim;
+                createTim = [grpInfDic objectForKey:@"group"];
+                if(((NSNull *)createTim != [NSNull null]) && (![createTim  isEqual: @"null"]))
                 {
                     NSMutableArray *logPersonInf = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"logemp"][@"empcod"],recDic[@"Msg"][@"logemp"][@"empjob"],recDic[@"Msg"][@"logemp"][@"empnam"],recDic[@"Msg"][@"logemp"][@"empnum"],recDic[@"Msg"][@"logemp"][@"empsex"],recDic[@"Msg"][@"logemp"][@"cadShowNum"], nil];
                     //将数据加载到创建的数据库中
                     [strongSelf.LogDbcon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
                     //组建获取到的组信息的数组
-                    NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"groind"],recDic[@"Msg"][@"group"][@"grolev"],recDic[@"Msg"][@"group"][@"gronum"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"hgcod"],recDic[@"Msg"][@"group"][@"onlinestatus"], nil];
+                    NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"groind"],recDic[@"Msg"][@"group"][@"grolev"],recDic[@"Msg"][@"group"][@"gronum"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"hgcod"],recDic[@"Msg"][@"group"][@"onlinestatus"],recDic[@"Msg"][@"group"][@"createdate"], nil];
                     //将数据加载到创建的数据库中
                     //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
-                    [strongSelf.LogDbcon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
+                    [strongSelf.LogDbcon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate)values(?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
                     //
 //                    DataTable *table = [[DataTable alloc] init];
 //                    
@@ -318,6 +333,10 @@ extern unsigned char ucHolePosition;
                 }
                 else
                 {
+                    //先隐藏，同时停止动画
+                    [self.activityIndicatorView hideIndicator];
+                    self.activityIndicatorView.hidden = YES;
+                    //
                     [self performSegueWithIdentifier:@"mannualCreatGrp" sender:nil];
                 }
                 
@@ -438,11 +457,11 @@ extern unsigned char ucHolePosition;
                 NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",recDic[@"Msg"][@"grocod"],recDic[@"Msg"][@"groind"],recDic[@"Msg"][@"grolev"],recDic[@"Msg"][@"gronum"],recDic[@"Msg"][@"grosta"]);
 #endif
                 //组建获取到的组信息的数组
-                NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"grocod"],recDic[@"Msg"][@"groind"],recDic[@"Msg"][@"grolev"],recDic[@"Msg"][@"gronum"],recDic[@"Msg"][@"grosta"],recDic[@"Msg"][@"hgcod"],recDic[@"Msg"][@"onlinestatus"], nil];
+                NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"grocod"],recDic[@"Msg"][@"groind"],recDic[@"Msg"][@"grolev"],recDic[@"Msg"][@"gronum"],recDic[@"Msg"][@"grosta"],recDic[@"Msg"][@"hgcod"],recDic[@"Msg"][@"onlinestatus"],recDic[@"Msg"][@"createdate"], nil];
                 //将数据加载到创建的数据库中
                 //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
                 
-                [weakSelf.LogDbcon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
+                [weakSelf.LogDbcon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate)values(?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
 #ifdef DEBUD_MODE
                 NSLog(@"successfully create group and the recDic:%@  code:%@",recDic[@"Msg"],recDic[@"code"]);
 #endif

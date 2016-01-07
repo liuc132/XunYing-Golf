@@ -13,7 +13,7 @@
 #import "XunYingPre.h"
 #import "GetRequestIPAddress.h"
 
-@interface CustomerGroupInfViewController ()
+@interface CustomerGroupInfViewController ()<UIAlertViewDelegate>
 
 
 @property (strong, nonatomic) DBCon *cusGroupDBCon;
@@ -365,17 +365,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-- (IBAction)backToField:(UIBarButtonItem *)sender {
+- (void)BackField
+{
     NSLog(@"执行回场");
     //调用回场接口所需要的参数是：mid:移动端AMEI码   grocod:小组code
     self.cusGroupInf = [self.cusGroupDBCon ExecDataTable:@"select *from tbl_groupInf"];
@@ -415,6 +406,7 @@
             [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskLeaveRest"];
             [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskMendHoleInfo"];
             [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskInfo"];
+            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_groupInf"];
             //
             [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -423,20 +415,35 @@
             });
         }
         
-        
-        
-        
-        
     }failure:^(NSError *err){
         NSLog(@"回场失败");
         
         
     }];
-    
-    
-    
-    
-    
+
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1) {
+        switch (buttonIndex) {
+            case 0:
+                
+                break;
+                
+            case 1:
+                [self BackField];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+- (IBAction)backToField:(UIBarButtonItem *)sender {
+    UIAlertView *backFieldAlert = [[UIAlertView alloc] initWithTitle:@"确定回场吗?" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    backFieldAlert.tag = 1;
+    [backFieldAlert show];
     
 }
 @end

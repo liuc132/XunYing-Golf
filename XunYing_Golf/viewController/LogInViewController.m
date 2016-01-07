@@ -142,9 +142,12 @@ extern BOOL allowDownCourt;
         self.activityIndicatorView.hidden = YES;
         //检查心跳是否在继续
         HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc]init];
-        if (![heartBeat checkState]) {
-            [heartBeat enableHeartBeat];
-        }
+        [heartBeat initHeartBeat];
+        
+        [heartBeat enableHeartBeat];
+//        if (![heartBeat checkState]) {
+//            [heartBeat enableHeartBeat];
+//        }
         //执行跳转程序，此时判断的是已经创建了组
         [self performSegueWithIdentifier:@"ToMainMapView" sender:nil];
     }
@@ -464,7 +467,7 @@ extern BOOL allowDownCourt;
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 NSString *value;
                                 NSDictionary *msgDic = recDic[@"Msg"];
-                                
+                        
                                 value = [msgDic objectForKey:@"group"];
                                 
                                 if((NSNull *)value == [NSNull null])
@@ -835,10 +838,10 @@ extern BOOL allowDownCourt;
                     //将数据加载到创建的数据库中
                     [strongSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
                     //组建获取到的组信息的数组
-                    NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"groind"],recDic[@"Msg"][@"group"][@"grolev"],recDic[@"Msg"][@"group"][@"gronum"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"hgcod"],recDic[@"Msg"][@"group"][@"onlinestatus"], nil];
+                    NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"groind"],recDic[@"Msg"][@"group"][@"grolev"],recDic[@"Msg"][@"group"][@"gronum"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"hgcod"],recDic[@"Msg"][@"group"][@"onlinestatus"],recDic[@"Msg"][@"group"][@"createdate"], nil];
                     //将数据加载到创建的数据库中
                     //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
-                    [strongSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
+                    [strongSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate)values(?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
                     //
 //                    DataTable *table;// = [[DataTable alloc] init];
 //                    
@@ -846,11 +849,13 @@ extern BOOL allowDownCourt;
 //                    NSLog(@"table:%@",table);
                     //
                     HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
-                    [HeartBeatAndDetectState disableHeartBeat];//disable heartBeat
                     if(![heartBeat checkState])
                     {
                         [heartBeat initHeartBeat];//启动心跳服务
+                        [heartBeat enableHeartBeat];
                     }
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:@"allowDown" object:nil userInfo:@{@"allowDown":@"1"}];
+                    
                     strongSelf.haveGroupNotDown = YES;
                     //获取到球洞信息，并将相应的信息保存到内存中
                     NSArray *allHolesInfo = recDic[@"Msg"][@"holes"];

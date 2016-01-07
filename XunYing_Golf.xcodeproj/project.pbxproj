@@ -72,6 +72,7 @@
 		5B9D51EF1BA954BF006DD2C7 /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B9D51EE1BA954BF006DD2C7 /* LogInViewController.m */; };
 		5B9ECB0E1BABF40900612474 /* CreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B9ECB0D1BABF40900612474 /* CreateGroupViewController.m */; };
 		5B9ECB131BAC113600612474 /* ChooseCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B9ECB121BAC113600612474 /* ChooseCreateGroupViewController.m */; };
+		5BA68A241C3DF0D400B139EF /* XunYing_Golf.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 5BA68A231C3DF0D400B139EF /* XunYing_Golf.entitlements */; };
 		5BA96CA71C045B89009DD1B0 /* ChangeCartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA96CA61C045B89009DD1B0 /* ChangeCartViewController.m */; };
 		5BA96CAB1C0469F1009DD1B0 /* LeaveRestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA96CAA1C0469F1009DD1B0 /* LeaveRestViewController.m */; };
 		5BC136B31B93EFD500FF1CB1 /* TOUCHkitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC136B01B93EFD500FF1CB1 /* TOUCHkitView.m */; };
@@ -251,6 +252,7 @@
 		5B9ECB0D1BABF40900612474 /* CreateGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreateGroupViewController.m; path = viewController/CreateGroupViewController.m; sourceTree = "<group>"; };
 		5B9ECB111BAC113600612474 /* ChooseCreateGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChooseCreateGroupViewController.h; path = viewController/ChooseCreateGroupViewController.h; sourceTree = "<group>"; };
 		5B9ECB121BAC113600612474 /* ChooseCreateGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChooseCreateGroupViewController.m; path = viewController/ChooseCreateGroupViewController.m; sourceTree = "<group>"; };
+		5BA68A231C3DF0D400B139EF /* XunYing_Golf.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XunYing_Golf.entitlements; sourceTree = "<group>"; };
 		5BA96CA51C045B89009DD1B0 /* ChangeCartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangeCartViewController.h; path = viewController/ChangeCartViewController.h; sourceTree = "<group>"; };
 		5BA96CA61C045B89009DD1B0 /* ChangeCartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChangeCartViewController.m; path = viewController/ChangeCartViewController.m; sourceTree = "<group>"; };
 		5BA96CA91C0469F1009DD1B0 /* LeaveRestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeaveRestViewController.h; path = viewController/LeaveRestViewController.h; sourceTree = "<group>"; };
@@ -293,7 +295,6 @@
 		5BD90A311C3D036A0059D82C /* NSString+MD5Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5Addition.m"; sourceTree = "<group>"; };
 		5BD90A341C3D0A630059D82C /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		5BD90A351C3D0A630059D82C /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
-		5BD90A371C3D0B410059D82C /* XunYing_Golf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = XunYing_Golf.entitlements; sourceTree = "<group>"; };
 		5BDC83791BA2B1B500E69940 /* TaskComViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskComViewController.h; sourceTree = "<group>"; };
 		5BDC837A1BA2B1B500E69940 /* TaskComViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskComViewController.m; sourceTree = "<group>"; };
 		5BE341E31C3B6746007A3A9C /* GetRequestIPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetRequestIPAddress.h; path = viewController/GetRequestIPAddress.h; sourceTree = "<group>"; };
@@ -415,7 +416,7 @@
 		5B11C5201B8EDD4700382C9B /* XunYing_Golf */ = {
 			isa = PBXGroup;
 			children = (
-				5BD90A371C3D0B410059D82C /* XunYing_Golf.entitlements */,
+				5BA68A231C3DF0D400B139EF /* XunYing_Golf.entitlements */,
 				5BE341E21C3B671A007A3A9C /* getRequestAddr */,
 				5B60FDD41C03207800D77A44 /* protocol */,
 				5B588E141BE8917C00D2B327 /* getGPSLocation */,
@@ -1130,6 +1131,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BA68A241C3DF0D400B139EF /* XunYing_Golf.entitlements in Resources */,
 				5B11C52D1B8EDD4700382C9B /* Main.storyboard in Resources */,
 				5B63E1121BAFB10C0034C577 /* createGroup_Main.png in Resources */,
 				5B63E11A1BAFB10C0034C577 /* logInUnselected.png in Resources */,
@@ -1400,7 +1402,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = XunYing_Golf/XunYing_Golf.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "/Users/liuc/Desktop/lcWorkSpace/SVN project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/XunYing_Golf.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1427,7 +1429,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = XunYing_Golf/XunYing_Golf.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "/Users/liuc/Desktop/lcWorkSpace/SVN project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/XunYing_Golf.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

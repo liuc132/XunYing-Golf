@@ -536,11 +536,11 @@ typedef NS_ENUM(NSInteger,holePosition) {
             NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"]);
 #endif
             //组建获取到的组信息的数组
-            NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"],receiveCreateGroupDic[@"Msg"][@"hgcod"],receiveCreateGroupDic[@"Msg"][@"onlinestatus"], nil];
+            NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"],receiveCreateGroupDic[@"Msg"][@"hgcod"],receiveCreateGroupDic[@"Msg"][@"onlinestatus"],receiveCreateGroupDic[@"Msg"][@"createdate"], nil];
             //将数据加载到创建的数据库中
             //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
             
-            [self.dbCon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus)values(?,?,?,?,?,?,?)" forParameter:groupInfArray];
+            [self.dbCon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate)values(?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
 #ifdef DEBUD_MODE
             NSLog(@"successfully create group and the recDic:%@  code:%@",receiveCreateGroupDic[@"Msg"],receiveCreateGroupDic[@"code"]);
 #endif

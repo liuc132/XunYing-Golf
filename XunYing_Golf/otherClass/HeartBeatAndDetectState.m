@@ -49,7 +49,7 @@ typedef enum eventOrder{
 @property (strong, nonatomic) CLLocation *getGPSLocation;
 @property (strong, nonatomic) GetGPSLocationData *gpsData;
 @property (strong, nonatomic) NSArray    *observerNameArray;
-//@property (strong, nonatomic) 
+@property (nonatomic)         BOOL      canEnterHeartBeat;
 
 
 @end
@@ -84,6 +84,7 @@ typedef enum eventOrder{
 {
     if ([sender.userInfo[@"disableHeart"] isEqualToString:@"1"]) {
         [self.heartBeatTime invalidate];
+        self.canEnterHeartBeat = NO;
     }
 }
 
@@ -97,7 +98,7 @@ typedef enum eventOrder{
     //
     self.heartBeatTime = [NSTimer timerWithTimeInterval:heartBeatInterval target:self selector:@selector(timelySend) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:self.heartBeatTime forMode:NSDefaultRunLoopMode];
-    
+    self.canEnterHeartBeat = YES;
 }
 
 
@@ -115,6 +116,10 @@ typedef enum eventOrder{
 -(void)timelySend
 {
 //    NSLog(@"心跳主程序");
+    if (!self.canEnterHeartBeat) {
+        return;
+    }
+    
     //计算发送次数
     static unsigned char SendGPStimes = 0;
     static unsigned char startCount = 0;

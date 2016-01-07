@@ -17,7 +17,9 @@
     //set this view's center
     self.activityIndicatorView.center = CGPointMake(rect.size.width/2, rect.size.height/2);
     
-    self.activityIndicatorView.tintColor = [UIColor whiteColor];
+    self.activityIndicatorView.tintColor = [UIColor grayColor];
+    
+    self.activityIndicatorView.color     = [UIColor blackColor];
     
 }
 #pragma --mark showIndicator

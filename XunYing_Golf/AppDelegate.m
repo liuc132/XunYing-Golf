@@ -88,16 +88,20 @@
     {
         [self.keychainWrapper setObject:@"MY_APP_CREDENTIALS" forKey:(id)kSecAttrService];
         [self.keychainWrapper setObject:[self gen_uuid] forKey:(id)kSecValueData];
-        NSString *theResultKey1;
-        theResultKey1 = [self.keychainWrapper objectForKey:(id)kSecValueData];
-        NSLog(@"theresult:%@",theResultKey1);
-        //tbl_uniqueID(uiniqueID text)
-        if ((theResultKey != nil) && (![theResultKey  isEqual: @""])) {
-            theResultKey = [theResultKey substringWithRange:NSMakeRange(0, 30)];
-            NSLog(@"theresult:%@",theResultKey);
-            NSMutableArray *uniqueIDArray = [[NSMutableArray alloc] initWithObjects:theResultKey1, nil];
-            [self.dbCon ExecNonQuery:@"insert into tbl_uniqueID(uiniqueID) values(?)" forParameter:uniqueIDArray];
-        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *theResultKey1;
+            theResultKey1 = [self.keychainWrapper objectForKey:(id)kSecValueData];
+            NSLog(@"theresult:%@",theResultKey1);
+            //tbl_uniqueID(uiniqueID text)
+            if ((theResultKey1 != nil) && (![theResultKey1  isEqual: @""])) {
+                theResultKey1 = [theResultKey1 substringWithRange:NSMakeRange(0, 30)];
+                NSLog(@"theresult:%@",theResultKey1);
+                NSMutableArray *uniqueIDArray = [[NSMutableArray alloc] initWithObjects:theResultKey1, nil];
+                [self.dbCon ExecNonQuery:@"insert into tbl_uniqueID(uiniqueID) values(?)" forParameter:uniqueIDArray];
+            }
+        });
+        
     }
     
     
@@ -182,7 +186,7 @@
     //所选择的球洞的信息，上九洞，下九洞，十八洞
     [dbCon ExecDataTable:@"create table if not exists tbl_threeTypeHoleInf(pdcod text,pdind text,pdnam text,pdpcod text,pdtag text,pdtcod text)"];
     //建组成功之后，获取到的组信息
-    [dbCon ExecDataTable:@"create table if not exists tbl_groupInf(grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_groupInf(grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text,createdate text)"];
     //建组成功之后，获取返回的平板的信息
     [dbCon ExecDataTable:@"create table if not exists tbl_PadsInf(isprim text,locsta text,loctim text,onlsta text,padcod text,padnum text,padtag text,revx text,revy text)"];
     //获取到所有球童的信息
