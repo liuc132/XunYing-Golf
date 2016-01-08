@@ -18,6 +18,8 @@
 #import "passValueLogInDelegate.h"
 #import "AppDelegate.h"
 #import "GetRequestIPAddress.h"
+#import "AFHTTPRequestOperationManager.h"
+//#import "GpsLocation.h"
 
 extern NSString *CTSettingCopyMyPhoneNumber();
 extern BOOL allowDownCourt;
@@ -44,6 +46,9 @@ extern BOOL allowDownCourt;
 @property (strong, nonatomic) DataTable *logInPerson;
 @property (strong, nonatomic) DataTable *logPersonInf;
 
+
+@property (strong, nonatomic) AFHTTPRequestOperationManager *requestManager;
+
 @property (strong, nonatomic) IBOutlet UITextField *account;
 
 @property (strong, nonatomic) IBOutlet UITextField *password;
@@ -64,12 +69,7 @@ extern BOOL allowDownCourt;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    //NSLog(@"enter Login viewcontroller");
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
     //
-//    NSLog(@"phoneNum:%@",CTSettingCopyMyPhoneNumber());
-    
     self.tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTap:)];
     self.tap.delegate = self;
     [self.view addGestureRecognizer:self.tap];
@@ -95,10 +95,13 @@ extern BOOL allowDownCourt;
 //    self.hostReachability = [Reachability reachabilityWithHostName:remoteHostName];
 //    [self.hostReachability startNotifier];
 //    [self updateInterfaceWithReachability:self.hostReachability];
+    //获取到IP地址
+//    NSString *serverUrl;
+//    serverUrl = [GetRequestIPAddress getServerURL];
+//    
+//    NSString *remoteHostName = serverUrl;
     
-    NSString *remoteHostName = @"http://www.baidu.com";
-    
-    self.hostReachability = [Reachability reachabilityWithHostName:remoteHostName];
+    self.hostReachability = [Reachability reachabilityWithHostName:@"www.baidu.com"];
     [self.hostReachability startNotifier];
     [self updateInterfaceWithReachability:self.hostReachability];
     
@@ -127,6 +130,9 @@ extern BOOL allowDownCourt;
     self.account.delegate       = self;
     //
     self.canReceiveNotification = NO;
+    //
+    self.requestManager = [[AFHTTPRequestOperationManager alloc] init];
+    
 }
 
 -(void)canDownCourt:(NSNotification *)sender
@@ -327,53 +333,64 @@ extern BOOL allowDownCourt;
     //获取到URL
     NSString *caddyCartURLStr;
     caddyCartURLStr = [GetRequestIPAddress getCaddyCartInfURL];
-    //start request
-    [HttpTools getHttp:caddyCartURLStr forParams:nil success:^(NSData *nsData){
-//        NSLog(@"successfully request");
-        NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+    
+    dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 1ull * NSEC_PER_SEC ) ;
+    dispatch_after(time, dispatch_get_main_queue(), ^{
+        //start request
+        [HttpTools getHttp:caddyCartURLStr forParams:nil success:^(NSData *nsData){
+            //        NSLog(@"successfully request");
+//            NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *receiveDic;
+            receiveDic = (NSDictionary *)nsData;
 #ifdef DEBUD_MODE
-        NSLog(@"caddy count:%ld",[receiveDic[@"Msg"][@"caddys"] count]);
+            NSLog(@"caddy count:%ld",[receiveDic[@"Msg"][@"caddys"] count]);
 #endif
-        //获取到当前的球车
-        NSArray *allCarts = receiveDic[@"Msg"][@"carts"];
-//        NSDictionary *oneCart = [[NSDictionary alloc] init];
-        for (NSDictionary *eachCart in allCarts) {
-            NSMutableArray *eachCartParam = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
-            //tbl_cartInf(carcod text,carnum text,carsea text)
-            [wealSelf.dbCon ExecNonQuery:@"insert into tbl_cartInf(carcod,carnum,carsea) values(?,?,?)" forParameter:eachCartParam];
-        }
-        //保存所有可用球童的信息
-        NSArray *allCaddies = receiveDic[@"Msg"][@"caddys"];
-        for (NSDictionary *eachCaddy in allCaddies) {
-            NSMutableArray *eachCaddyParam = [[NSMutableArray alloc] initWithObjects:eachCaddy[@"cadcod"],eachCaddy[@"cadnam"],eachCaddy[@"cadnum"],eachCaddy[@"cadsex"],eachCaddy[@"empcod"], nil];
-            //tbl_caddyInf(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)
-            [self.dbCon ExecNonQuery:@"insert into tbl_caddyInf(cadcod,cadnam,cadnum,cadsex,empcod) values(?,?,?,?,?)" forParameter:eachCaddyParam];
-        }
-        
-        //保存三种类型的球洞的参数
-        NSArray *allHoles = receiveDic[@"Msg"][@"holes"];
-        for (NSDictionary *eachTypeHole in allHoles) {
-            NSMutableArray *eachHoleParam = [[NSMutableArray alloc] initWithObjects:eachTypeHole[@"pdcod"],eachTypeHole[@"pdind"],eachTypeHole[@"pdnam"],eachTypeHole[@"pdpcod"],eachTypeHole[@"pdtag"],eachTypeHole[@"pdtcod"], nil];
-            [self.dbCon ExecNonQuery:@"insert into tbl_threeTypeHoleInf(pdcod,pdind,pdnam,pdpcod,pdtag,pdtcod) values(?,?,?,?,?,?)" forParameter:eachHoleParam];
-        }
-        //执行查询数据库中的参数的例子
-        //    DataTable *table = [[DataTable alloc] init];
-        //    table = [dbCon ExecDataTable:@"select *from tbl_logPerson"];
-        //    NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
-        DataTable *threeHolesInf;// = [[DataTable alloc]init];
-        threeHolesInf = [self.dbCon ExecDataTable:@"select *from tbl_threeTypeHoleInf"];
-        //NSLog(@"top9:%@\n down9:%@\n all:%@",threeHolesInf.Rows[0],threeHolesInf.Rows[1],threeHolesInf.Rows[2]);
-//        NSLog(@"holeInf:%@",threeHolesInf);
-        //NSLog(@"end store the three holes information");
-        
-        
-        
-    }failure:^(NSError *err){
+            //获取到当前的球车
+            NSArray *allCarts = receiveDic[@"Msg"][@"carts"];
+            //        NSDictionary *oneCart = [[NSDictionary alloc] init];
+            for (NSDictionary *eachCart in allCarts) {
+                NSMutableArray *eachCartParam = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
+                //tbl_cartInf(carcod text,carnum text,carsea text)
+                [wealSelf.dbCon ExecNonQuery:@"insert into tbl_cartInf(carcod,carnum,carsea) values(?,?,?)" forParameter:eachCartParam];
+            }
+            //保存所有可用球童的信息
+            NSArray *allCaddies = receiveDic[@"Msg"][@"caddys"];
+            for (NSDictionary *eachCaddy in allCaddies) {
+                NSMutableArray *eachCaddyParam = [[NSMutableArray alloc] initWithObjects:eachCaddy[@"cadcod"],eachCaddy[@"cadnam"],eachCaddy[@"cadnum"],eachCaddy[@"cadsex"],eachCaddy[@"empcod"], nil];
+                //tbl_caddyInf(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)
+                [self.dbCon ExecNonQuery:@"insert into tbl_caddyInf(cadcod,cadnam,cadnum,cadsex,empcod) values(?,?,?,?,?)" forParameter:eachCaddyParam];
+            }
+            
+            //保存三种类型的球洞的参数
+            NSArray *allHoles = receiveDic[@"Msg"][@"holes"];
+            for (NSDictionary *eachTypeHole in allHoles) {
+                NSMutableArray *eachHoleParam = [[NSMutableArray alloc] initWithObjects:eachTypeHole[@"pdcod"],eachTypeHole[@"pdind"],eachTypeHole[@"pdnam"],eachTypeHole[@"pdpcod"],eachTypeHole[@"pdtag"],eachTypeHole[@"pdtcod"], nil];
+                [self.dbCon ExecNonQuery:@"insert into tbl_threeTypeHoleInf(pdcod,pdind,pdnam,pdpcod,pdtag,pdtcod) values(?,?,?,?,?,?)" forParameter:eachHoleParam];
+            }
+            //执行查询数据库中的参数的例子
+            //    DataTable *table = [[DataTable alloc] init];
+            //    table = [dbCon ExecDataTable:@"select *from tbl_logPerson"];
+            //    NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
+            DataTable *threeHolesInf;// = [[DataTable alloc]init];
+            threeHolesInf = [self.dbCon ExecDataTable:@"select *from tbl_threeTypeHoleInf"];
+            //NSLog(@"top9:%@\n down9:%@\n all:%@",threeHolesInf.Rows[0],threeHolesInf.Rows[1],threeHolesInf.Rows[2]);
+            //        NSLog(@"holeInf:%@",threeHolesInf);
+            //NSLog(@"end store the three holes information");
+            
+            
+            
+        }failure:^(NSError *err){
 #ifdef DEBUD_MODE
-        NSLog(@"caddyCartInf request failed");
+            NSLog(@"caddyCartInf request failed");
 #endif
-        
-    }];
+            
+        }];
+    });
+//    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        
+//    });
+    
 }
 #pragma -mark getCustomInf
 -(void)getCustomInf
@@ -387,26 +404,40 @@ extern BOOL allowDownCourt;
     //
     NSString *customURLStr;
     customURLStr = [GetRequestIPAddress getCustomInfURL];
-    //start request
-    [HttpTools getHttp:customURLStr forParams:nil success:^(NSData *nsData){
+    
+    dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 1ull * NSEC_PER_SEC ) ;
+    
+    dispatch_after(time, dispatch_get_main_queue(), ^{
+        //start request
+        [HttpTools getHttp:customURLStr forParams:nil success:^(NSData *nsData){
 #ifdef DEBUD_MODE
-        NSLog(@"request successfully");
+            NSLog(@"request successfully");
 #endif
-        NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        //
-        NSString *cusNumberString;// = [[NSString alloc] init];
-        cusNumberString = receiveDic[@"Msg"];
-        NSArray *cusNumberArray = [cusNumberString componentsSeparatedByString:@";"];//拆分接收到的数据
-        //将数据加载到创建的数据库中
-        //first text,second text,third text,fourth text
-        [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_CustomerNumbers(first,second,third,fourth) VALUES(?,?,?,?)" forParameter:(NSMutableArray *)cusNumberArray];
-        
-    }failure:^(NSError *err){
+//            NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *receiveDic;
+            receiveDic = (NSDictionary *)nsData;
+            //
+            NSString *cusNumberString;// = [[NSString alloc] init];
+            cusNumberString = receiveDic[@"Msg"];
+            NSArray *cusNumberArray = [cusNumberString componentsSeparatedByString:@";"];//拆分接收到的数据
+            //将数据加载到创建的数据库中
+            //            dispatch_async(dispatch_get_main_queue(), ^{
+            //first text,second text,third text,fourth text
+            [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_CustomerNumbers(first,second,third,fourth) VALUES(?,?,?,?)" forParameter:(NSMutableArray *)cusNumberArray];
+            //            });
+            
+            
+        }failure:^(NSError *err){
 #ifdef DEBUD_MODE
-        NSLog(@"request fail");
+            NSLog(@"request fail");
 #endif
-        
-    }];
+            
+        }];
+    });
+//    dispatch_sync( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+//        
+//    });
+    
 }
 
 
@@ -443,7 +474,9 @@ extern BOOL allowDownCourt;
                     NSLog(@"成功强制登录");
 #endif
                     //
-                    NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+//                    NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+                    NSDictionary *recDic;
+                    recDic = (NSDictionary *)nsData;
 #ifdef DEBUD_MODE
                     NSLog(@"msg:%@",recDic[@"Msg"]);
 #endif
@@ -470,45 +503,22 @@ extern BOOL allowDownCourt;
                         
                                 value = [msgDic objectForKey:@"group"];
                                 
-                                if((NSNull *)value == [NSNull null])
+                                if(((NSNull *)value == [NSNull null]) || ([value isEqualToString:@"null"]))
                                     [weakSelf performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];
                                 else
                                 {
-                                    [weakSelf performSegueWithIdentifier:@"directToWaitingDown" sender:nil];
+                                    HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
+                                    if(![heartBeat checkState])
+                                    {
+                                        [heartBeat initHeartBeat];//启动心跳服务
+                                        [heartBeat enableHeartBeat];
+                                    }
+//                                    [weakSelf performSegueWithIdentifier:@"directToWaitingDown" sender:nil];
                                 }
                                 
                             });
                             
                         });
-                    }
-                    //获取到mid号码
-                    NSString *theMid;
-                    theMid = [GetRequestIPAddress getUniqueID];
-                    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
-                    //如果没有在系统中注册则调用注册接口
-                    if ([recDic[@"Code"] intValue] == -2) {
-                        //组装数据
-                        NSMutableDictionary *addDeviceParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"padtag",@"",@"phoneNum", nil];
-                        //
-                        NSString *addDeviceURLStr;
-                        addDeviceURLStr = [GetRequestIPAddress getRequestAddDeviceURL];
-                        //
-                        [HttpTools getHttp:addDeviceURLStr forParams:addDeviceParam success:^(NSData *nsData){
-#ifdef DEBUD_MODE
-                            NSLog(@"successfully requested");
-#endif
-                            NSDictionary *recDic1 = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-#ifdef DEBUD_MODE
-                            NSLog(@"recDic:%@",recDic1);
-#endif
-                            
-                            
-                        }failure:^(NSError *err){
-#ifdef DEBUD_MODE
-                            NSLog(@"request failled");
-#endif
-                            
-                        }];
                     }
                     
                 }failure:^(NSError *err){
@@ -525,6 +535,36 @@ extern BOOL allowDownCourt;
     
 }
 
+- (void)registerDeviceID
+{
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //组装数据
+    NSMutableDictionary *addDeviceParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"padtag",@"",@"phoneNum", nil];
+    //
+    NSString *addDeviceURLStr;
+    addDeviceURLStr = [GetRequestIPAddress getRequestAddDeviceURL];
+    //
+    [HttpTools getHttp:addDeviceURLStr forParams:addDeviceParam success:^(NSData *nsData){
+#ifdef DEBUD_MODE
+        NSLog(@"successfully requested");
+#endif
+        NSDictionary *recDic1 = [[NSDictionary alloc] init];// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+        recDic1 = (NSDictionary *)nsData;
+#ifdef DEBUD_MODE
+        NSLog(@"recDic:%@",recDic1);
+#endif
+        NSLog(@"recDic:%@",recDic1);
+    }failure:^(NSError *err){
+#ifdef DEBUD_MODE
+        NSLog(@"request failled");
+#endif
+            
+    }];
+
+}
 
 - (NSString *)getTheSettingIP
 {
@@ -620,7 +660,9 @@ extern BOOL allowDownCourt;
             //
             self.logInPerson = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
             //store data from server
-            NSDictionary *reDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+//            NSDictionary *reDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *reDic;
+            reDic = (NSDictionary *)nsData;
             //handle error
 #ifdef DEBUD_MODE
             NSLog(@"Code:%@",reDic[@"Code"]);
@@ -629,13 +671,29 @@ extern BOOL allowDownCourt;
             
             if([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
             {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",reDic[@"Msg"]];
+                UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [createGrpFailAlert show];
                 NSLog(@"fail");
-                return ;
             }
             else if([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
+            {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",reDic[@"Msg"]];
+                UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [createGrpFailAlert show];
                 NSLog(@"parameter is null");
+            }
+            
             else if ([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
+            {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",reDic[@"Msg"]];
+                UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [createGrpFailAlert show];
                 NSLog(@"The Mid id illegal");
+            }
             else if ([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]])
             {
 #ifdef DEBUD_MODE
@@ -726,12 +784,9 @@ extern BOOL allowDownCourt;
     //
     self.haveGroupNotDown = NO;
     //
-    HeartBeatAndDetectState *heart = [[HeartBeatAndDetectState alloc] init];
-    if ([heart checkState]) {
-#ifdef DEBUD_MODE
-        NSLog(@"heart time enable");
-#endif
-    }
+//    if (self.account.text isEqualToString:[NSString stringWithFormat:self.]) {
+    
+//    }
     
     //
     [self.dbCon ExecNonQuery:@"delete from tbl_logPerson"];
@@ -758,7 +813,8 @@ extern BOOL allowDownCourt;
         //
         LogInViewController *strongSelf = weakSelf;
 //        NSLog(@"request successfully");
-        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+        NSDictionary *recDic;// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+        recDic = (NSDictionary *)nsData;
 #ifdef DEBUD_MODE
         NSLog(@"code:%@\n msg:%@",recDic[@"Code"],recDic[@"Msg"]);
         NSLog(@"124");
@@ -766,15 +822,28 @@ extern BOOL allowDownCourt;
         //
         if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
         {
-            
+            NSString *errStr;
+            errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
+            UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [createGrpFailAlert show];
         }
         else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
         {
-            
+            [self.activityIndicatorView stopAnimating];
+            self.activityIndicatorView.hidden = YES;
+            //
+            NSString *errStr;
+            errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
+            UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [createGrpFailAlert show];
+            [weakSelf registerDeviceID];
         }
         else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
         {
-            
+            NSString *errStr;
+            errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
+            UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [createGrpFailAlert show];
         }
         else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]])
         {
@@ -889,6 +958,36 @@ extern BOOL allowDownCourt;
 
 #pragma -mark logInButton
 - (IBAction)logInButton:(UIButton *)sender {
+    
+    //构建判断是否可以建组参数
+    if (![self.logInPerson.Rows count]) {
+        [self logIn];
+        return;
+    }
+    //获取到mid号码
+    NSString *theMid;
+    theMid = [GetRequestIPAddress getUniqueID];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    //
+    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"],@"username",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
+    //
+//    __weak LogInViewController *weakSelf = self;
+    //
+    NSString *downFieldURLStr;
+    downFieldURLStr = [GetRequestIPAddress getDecideCreateGrpAndDownFieldURL];
+    /*
+    [HttpTools getHttp:downFieldURLStr forParams:self.checkCreatGroupState success:^(NSData *nsData){
+        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+        
+        NSLog(@"recDic:%@",recDic);
+        
+        
+    }failure:^(NSError *err){
+        NSLog(@"err:%@",err);
+        
+        
+    }];
+    */
     //登录时判断当前的状态
 #ifdef testChangeInterface
     [self performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];

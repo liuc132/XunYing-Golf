@@ -5062,7 +5062,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="tY1-L2-sVp" kind="modal" identifier="backToLogInterface" id="j8K-A6-qmL"/>
+                        <segue destination="gmR-ye-79F" kind="modal" identifier="backToLogInterface" id="l58-hh-5y9"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qaq-fL-1sP" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -7040,11 +7040,12 @@
         <image name="taskCum" width="80" height="64"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="K8I-q8-npQ"/>
-        <segue reference="2jQ-B5-uTJ"/>
-        <segue reference="eAv-ry-xts"/>
-        <segue reference="pcU-RS-Ckj"/>
-        <segue reference="puy-a0-Cu5"/>
+        <segue reference="tq0-Wr-F1g"/>
+        <segue reference="l58-hh-5y9"/>
         <segue reference="1mO-O2-q3U"/>
+        <segue reference="puy-a0-Cu5"/>
+        <segue reference="pcU-RS-Ckj"/>
+        <segue reference="2jQ-B5-uTJ"/>
+        <segue reference="nHe-lr-bpT"/>
     </inferredMetricsTieBreakers>
 </document>

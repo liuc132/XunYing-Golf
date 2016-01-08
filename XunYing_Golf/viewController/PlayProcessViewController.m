@@ -424,38 +424,45 @@ wasOrderedState
     //
     NSString *playProcessURLStr;
     playProcessURLStr = [GetRequestIPAddress getPlayProcessURL];
-    //start request
-    [HttpTools getHttp:playProcessURLStr forParams:refreshParam success:^(NSData *nsData){
-        NSLog(@"success refresh");
-        NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        if ([latestDataDic[@"Code"] intValue] > 0) {
-            //delete the old data
-            [weakSelf.lcDbcon ExecNonQuery:@"delete from tbl_CusGroInf"];
-            [weakSelf.lcDbcon ExecNonQuery:@"delete from tbl_holePlanInfo"];
-            //
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //客户组对象
-                NSMutableArray *cusGroInfPart = [[NSMutableArray alloc] initWithObjects:latestDataDic[@"Msg"][@"appGroupE"][@"grocod"],latestDataDic[@"Msg"][@"appGroupE"][@"grosta"],latestDataDic[@"Msg"][@"appGroupE"][@"nextgrodistime"],latestDataDic[@"Msg"][@"appGroupE"][@"nowblocks"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholcod"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholnum"],latestDataDic[@"Msg"][@"appGroupE"][@"pladur"],latestDataDic[@"Msg"][@"appGroupE"][@"stahol"],latestDataDic[@"Msg"][@"appGroupE"][@"statim"],latestDataDic[@"Msg"][@"appGroupE"][@"stddur"], nil];
-                //tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
-                [self.lcDbcon ExecNonQuery:@"insert into tbl_CusGroInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGroInfPart];
-                //球洞规划组对象
-                NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
-                for (NSDictionary *eachHoleInf in allGroHoleList) {
-                    NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadur"], nil];
-                    //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
-                    [weakSelf.lcDbcon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
-                }
-                //通知数据已经更新了
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshSuccess" object:nil userInfo:@{@"hasRefreshed":@"1"}];
-                
-            });
-        }
-        
-    }failure:^(NSError *err){
-        NSLog(@"refresh failled and err:%@",err);
-        
-        
-    }];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //start request
+        [HttpTools getHttp:playProcessURLStr forParams:refreshParam success:^(NSData *nsData){
+            NSLog(@"success refresh");
+//            NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *latestDataDic;
+            latestDataDic = (NSDictionary *)nsData;
+            
+            if ([latestDataDic[@"Code"] intValue] > 0) {
+                //delete the old data
+                [weakSelf.lcDbcon ExecNonQuery:@"delete from tbl_CusGroInf"];
+                [weakSelf.lcDbcon ExecNonQuery:@"delete from tbl_holePlanInfo"];
+                //
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //客户组对象
+                    NSMutableArray *cusGroInfPart = [[NSMutableArray alloc] initWithObjects:latestDataDic[@"Msg"][@"appGroupE"][@"grocod"],latestDataDic[@"Msg"][@"appGroupE"][@"grosta"],latestDataDic[@"Msg"][@"appGroupE"][@"nextgrodistime"],latestDataDic[@"Msg"][@"appGroupE"][@"nowblocks"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholcod"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholnum"],latestDataDic[@"Msg"][@"appGroupE"][@"pladur"],latestDataDic[@"Msg"][@"appGroupE"][@"stahol"],latestDataDic[@"Msg"][@"appGroupE"][@"statim"],latestDataDic[@"Msg"][@"appGroupE"][@"stddur"], nil];
+                    //tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
+                    [self.lcDbcon ExecNonQuery:@"insert into tbl_CusGroInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGroInfPart];
+                    //球洞规划组对象
+                    NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
+                    for (NSDictionary *eachHoleInf in allGroHoleList) {
+                        NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadur"], nil];
+                        //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
+                        [weakSelf.lcDbcon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
+                    }
+                    //通知数据已经更新了
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshSuccess" object:nil userInfo:@{@"hasRefreshed":@"1"}];
+                    
+                });
+            }
+            
+        }failure:^(NSError *err){
+            NSLog(@"refresh failled and err:%@",err);
+            
+            
+        }];
+    });
+    
     
 }
 
@@ -486,28 +493,35 @@ wasOrderedState
                 //
                 NSString *completeStateURLStr;
                 completeStateURLStr = [GetRequestIPAddress getMakeHoleCompleteStateURL];
-                //发送更改请求
-                [HttpTools getHttp:completeStateURLStr forParams:makeHoleCompleteParam success:^(NSData *nsData){
-                    NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-                    NSLog(@"recDic Msg:%@",recDic[@"Msg"]);
-                    //
-                    if ([recDic[@"Code"] intValue] > 0) {
-                        NSLog(@"正常");
-                        [weakSelf GetPlayProcess];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //发送更改请求
+                    [HttpTools getHttp:completeStateURLStr forParams:makeHoleCompleteParam success:^(NSData *nsData){
+//                        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+                        NSDictionary *recDic;
+                        recDic = (NSDictionary *)nsData;
                         
-                    }
-                    
-                    else if ([recDic[@"Code"] intValue] == -3) {
-                        NSLog(@"发生错误");
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该球洞已经被完成了，不能进行此操作" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-                        [alert show];
-                    }
-                    
-                    
-                    
-                }failure:^(NSError *err){
-                    NSLog(@"request failed");
-                }];
+                        NSLog(@"recDic Msg:%@",recDic[@"Msg"]);
+                        //
+                        if ([recDic[@"Code"] intValue] > 0) {
+                            NSLog(@"正常");
+                            [weakSelf GetPlayProcess];
+                            
+                        }
+                        
+                        else if ([recDic[@"Code"] intValue] == -3) {
+                            NSLog(@"发生错误");
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该球洞已经被完成了，不能进行此操作" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                            [alert show];
+                        }
+                        
+                        
+                        
+                    }failure:^(NSError *err){
+                        NSLog(@"request failed");
+                    }];
+                });
+                
                 
                 
                 break;

@@ -539,29 +539,39 @@ extern BOOL          allowDownCourt;
     //
     NSString *cancelWait;
     cancelWait = [GetRequestIPAddress getCancleWaitingGroupURL];
-    //向服务器发送取消下场申请
-    [HttpTools getHttp:cancelWait forParams:cancleWaiting success:^(NSData *nsData){
-        //        NSLog(@"cancle Waiting down group success");
-        [self.timer invalidate];
-        //
-        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-#ifdef DEBUD_MODE
-        NSLog(@"recDic:%@ and Msg:%@ Code:%@",recDic,recDic[@"Msg"],recDic[@"Code"]);
-#endif
-        if ([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]]) {
-            NSLog(@"delete wait group fail");
-        }
-        else
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //向服务器发送取消下场申请
+        [HttpTools getHttp:cancelWait forParams:cancleWaiting success:^(NSData *nsData){
+            //        NSLog(@"cancle Waiting down group success");
+            [self.timer invalidate];
             //
-            [self performSegueWithIdentifier:@"waitDownToCreateWay" sender:nil];
-        }
-        
-    }failure:^(NSError *err){
-        NSLog(@"cancle waiting down group fail");
-        
-    }];
+//            NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *recDic;
+            recDic = (NSDictionary *)nsData;
+            
+#ifdef DEBUD_MODE
+            NSLog(@"recDic:%@ and Msg:%@ Code:%@",recDic,recDic[@"Msg"],recDic[@"Code"]);
+#endif
+            if ([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]]) {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
+                UIAlertView *hasGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [hasGrpFailAlert show];
+                NSLog(@"delete wait group fail");
+            }
+            else
+            {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+                //
+                [self performSegueWithIdentifier:@"waitDownToCreateWay" sender:nil];
+            }
+            
+        }failure:^(NSError *err){
+            NSLog(@"cancle waiting down group fail");
+            
+        }];
+    });
 
 }
 

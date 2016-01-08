@@ -362,36 +362,42 @@
     //
     NSString *jumpHoleURLStr;
     jumpHoleURLStr = [GetRequestIPAddress getJumpHoleURL];
-    //start request
-    [HttpTools getHttp:jumpHoleURLStr forParams:jumpHoleParam success:^(NSData *nsData){
-        JumpHoleViewController *strongSelf = weakSelf;
-        NSLog(@"JumpHole request success");
-        
-        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"code:%@  msg:%@",recDic[@"Code"],recDic[@"Msg"]);
-        //
-        if ([recDic[@"Code"] intValue] > 0) {
-            NSDictionary *allMsg = recDic[@"Msg"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //start request
+        [HttpTools getHttp:jumpHoleURLStr forParams:jumpHoleParam success:^(NSData *nsData){
+            JumpHoleViewController *strongSelf = weakSelf;
+            NSLog(@"JumpHole request success");
             
+//            NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *recDic;
+            recDic = (NSDictionary *)nsData;
+            NSLog(@"code:%@  msg:%@",recDic[@"Code"],recDic[@"Msg"]);
             //
-            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"3",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",weakSelf.holesInf.Rows[weakSelf.selectedJumpNum][@"holcod"],@"",@"",@"",@"",@"",@"",@"",@"", nil];
-            [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+            if ([recDic[@"Code"] intValue] > 0) {
+                NSDictionary *allMsg = recDic[@"Msg"];
+                
+                //
+                NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"3",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",weakSelf.holesInf.Rows[weakSelf.selectedJumpNum][@"holcod"],@"",@"",@"",@"",@"",@"",@"",@"", nil];
+                [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+                
+                //执行跳转
+                [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
+            }
+            else if ([recDic[@"Code"] intValue] == -6)
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"申请跳过的球洞已经不是待打球洞了" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [alert show];
+            }
             
-            //执行跳转
-            [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
-        }
-        else if ([recDic[@"Code"] intValue] == -6)
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"申请跳过的球洞已经不是待打球洞了" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
-        }
-        
-        
-    }failure:^(NSError *err){
-        NSLog(@"JumpHole request fail");
-        
-        
-    }];
+            
+        }failure:^(NSError *err){
+            NSLog(@"JumpHole request fail");
+            
+            
+        }];
+    });
+    
     
 }
 
@@ -414,38 +420,44 @@
     //
     NSString *playProcessURLStr;
     playProcessURLStr = [GetRequestIPAddress getPlayProcessURL];
-    //start request
-    [HttpTools getHttp:playProcessURLStr forParams:refreshParam success:^(NSData *nsData){
-        NSLog(@"success refresh");
-        NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        if ([latestDataDic[@"Code"] intValue] > 0) {
-            //delete the old data
-            [weakSelf.locDBCon ExecNonQuery:@"delete from tbl_CusGroInf"];
-            [weakSelf.locDBCon ExecNonQuery:@"delete from tbl_holePlanInfo"];
-            //
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //客户组对象
-                NSMutableArray *cusGroInfPart = [[NSMutableArray alloc] initWithObjects:latestDataDic[@"Msg"][@"appGroupE"][@"grocod"],latestDataDic[@"Msg"][@"appGroupE"][@"grosta"],latestDataDic[@"Msg"][@"appGroupE"][@"nextgrodistime"],latestDataDic[@"Msg"][@"appGroupE"][@"nowblocks"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholcod"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholnum"],latestDataDic[@"Msg"][@"appGroupE"][@"pladur"],latestDataDic[@"Msg"][@"appGroupE"][@"stahol"],latestDataDic[@"Msg"][@"appGroupE"][@"statim"],latestDataDic[@"Msg"][@"appGroupE"][@"stddur"], nil];
-                //tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
-                [self.locDBCon ExecNonQuery:@"insert into tbl_CusGroInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGroInfPart];
-                //球洞规划组对象
-                NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
-                for (NSDictionary *eachHoleInf in allGroHoleList) {
-                    NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadur"], nil];
-                    //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
-                    [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
-                }
-                //通知数据已经更新了
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshSuccessJumpHole" object:nil userInfo:@{@"hasRefreshedJumpHole":@"1"}];
-                
-            });
-        }
-        
-    }failure:^(NSError *err){
-        NSLog(@"refresh failled and err:%@",err);
-        
-        
-    }];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //start request
+        [HttpTools getHttp:playProcessURLStr forParams:refreshParam success:^(NSData *nsData){
+            NSLog(@"success refresh");
+//            NSDictionary *latestDataDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *latestDataDic;
+            latestDataDic = (NSDictionary *)nsData;
+            if ([latestDataDic[@"Code"] intValue] > 0) {
+                //delete the old data
+                [weakSelf.locDBCon ExecNonQuery:@"delete from tbl_CusGroInf"];
+                [weakSelf.locDBCon ExecNonQuery:@"delete from tbl_holePlanInfo"];
+                //
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //客户组对象
+                    NSMutableArray *cusGroInfPart = [[NSMutableArray alloc] initWithObjects:latestDataDic[@"Msg"][@"appGroupE"][@"grocod"],latestDataDic[@"Msg"][@"appGroupE"][@"grosta"],latestDataDic[@"Msg"][@"appGroupE"][@"nextgrodistime"],latestDataDic[@"Msg"][@"appGroupE"][@"nowblocks"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholcod"],latestDataDic[@"Msg"][@"appGroupE"][@"nowholnum"],latestDataDic[@"Msg"][@"appGroupE"][@"pladur"],latestDataDic[@"Msg"][@"appGroupE"][@"stahol"],latestDataDic[@"Msg"][@"appGroupE"][@"statim"],latestDataDic[@"Msg"][@"appGroupE"][@"stddur"], nil];
+                    //tbl_CusGroInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
+                    [self.locDBCon ExecNonQuery:@"insert into tbl_CusGroInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGroInfPart];
+                    //球洞规划组对象
+                    NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
+                    for (NSDictionary *eachHoleInf in allGroHoleList) {
+                        NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadur"], nil];
+                        //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
+                        [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
+                    }
+                    //通知数据已经更新了
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshSuccessJumpHole" object:nil userInfo:@{@"hasRefreshedJumpHole":@"1"}];
+                    
+                });
+            }
+            
+        }failure:^(NSError *err){
+            NSLog(@"refresh failled and err:%@",err);
+            
+            
+        }];
+    });
+    
     
 }
 

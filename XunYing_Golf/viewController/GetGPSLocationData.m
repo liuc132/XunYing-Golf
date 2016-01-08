@@ -62,7 +62,6 @@
     //在此选择是传输实际的GPS数据还是模拟的数据
     curLocation = self.getGPSLocation;
     
-    
     return curLocation;
 }
 
@@ -72,6 +71,9 @@
     self.getGPSLocation = [locations lastObject];
 }
 
-
+- (void)stopUpdateLocation
+{
+    [self.locationManager stopUpdatingLocation];
+}
 
 @end

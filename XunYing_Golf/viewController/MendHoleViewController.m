@@ -138,41 +138,48 @@
     //
     NSString *needMendHoleURLStr;
     needMendHoleURLStr = [GetRequestIPAddress getGetNeedMendHoleURL];
-    //在此进行读取当前的需要补打的球洞的信息
-    [HttpTools getHttp:needMendHoleURLStr forParams:getNeedMendHoleParam success:^(NSData *nsData){
-        NSDictionary *needMendHoleDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"needMend:%@",needMendHoleDic);
-        //
-        if ([needMendHoleDic[@"Code"] intValue] > 0) {
-            self.mendHoleReqSuccess = YES;
-            //
-            NSArray *allNeedMend = needMendHoleDic[@"Msg"];
-            for (NSDictionary *eachNeedMendInfo in allNeedMend) {
-                NSMutableDictionary *getNeedInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:eachNeedMendInfo[@"holcod"],@"holcod",eachNeedMendInfo[@"holnum"],@"holnum", nil];
-                [weakSelf.needMendHoleInfoArray addObject:getNeedInfo];
-            }
-            //调用颜色显示方法来根据相应的各个球洞的状态显示出来
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf refreshHoleStateDis];
-            });
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //在此进行读取当前的需要补打的球洞的信息
+        [HttpTools getHttp:needMendHoleURLStr forParams:getNeedMendHoleParam success:^(NSData *nsData){
+//            NSDictionary *needMendHoleDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *needMendHoleDic;
+            needMendHoleDic = (NSDictionary *)nsData;
             
-        }
-        else if ([needMendHoleDic[@"Code"] intValue] == -5)
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"没有需要补打的球洞" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
+            NSLog(@"needMend:%@",needMendHoleDic);
             //
-            self.mendHoleReqSuccess = NO;
-            //同时执行跳转程序
-//            [weakSelf performSegueWithIdentifier:@"mendHoleToList" sender:nil];
-        }
-        
-        
-    }failure:^(NSError *err){
-        NSLog(@"getMendHole Failed");
-        
-        
-    }];
+            if ([needMendHoleDic[@"Code"] intValue] > 0) {
+                self.mendHoleReqSuccess = YES;
+                //
+                NSArray *allNeedMend = needMendHoleDic[@"Msg"];
+                for (NSDictionary *eachNeedMendInfo in allNeedMend) {
+                    NSMutableDictionary *getNeedInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:eachNeedMendInfo[@"holcod"],@"holcod",eachNeedMendInfo[@"holnum"],@"holnum", nil];
+                    [weakSelf.needMendHoleInfoArray addObject:getNeedInfo];
+                }
+                //调用颜色显示方法来根据相应的各个球洞的状态显示出来
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf refreshHoleStateDis];
+                });
+                
+            }
+            else if ([needMendHoleDic[@"Code"] intValue] == -5)
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"没有需要补打的球洞" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [alert show];
+                //
+                self.mendHoleReqSuccess = NO;
+                //同时执行跳转程序
+                //            [weakSelf performSegueWithIdentifier:@"mendHoleToList" sender:nil];
+            }
+            
+            
+        }failure:^(NSError *err){
+            NSLog(@"getMendHole Failed");
+            
+            
+        }];
+    });
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -277,42 +284,46 @@
     __weak MendHoleViewController *weakSelf = self;
     NSString *needMendHoleURLStr;
     needMendHoleURLStr = [GetRequestIPAddress getGetNeedMendHoleURL];
-    //start request
-    [HttpTools getHttp:needMendHoleURLStr forParams:mendHoleParam success:^(NSData *nsData){
-        MendHoleViewController *strongSelf = weakSelf;
-        NSDictionary *recDictionary = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        
-        NSLog(@"returnMsg:%@",recDictionary[@"Msg"]);
-        
-        //
-        if ([recDictionary[@"Code"] intValue]> 0) {
-            self.mendHoleReqSuccess = YES;
-            //
-            NSDictionary *allMsg = recDictionary[@"Msg"];
-            //tbl_taskMendHoleInfo(evecod text,everea text,result text,evesta text,subtim text,mendHoleNum text)
-            
-            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"4",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.logPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
-            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
-            
-            [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
-        }
-        else if([recDictionary[@"Code"] intValue] == -5)
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"正常球洞还未完成，不能补洞" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alert show];
-            //
-            self.mendHoleReqSuccess = NO;
-//            [strongSelf performSegueWithIdentifier:@"mendHoleToList" sender:nil];
-        }
-        
-        
-        
-    }failure:^(NSError *err){
-        NSLog(@"fail request mend");
-        
-        
-    }];
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //start request
+        [HttpTools getHttp:needMendHoleURLStr forParams:mendHoleParam success:^(NSData *nsData){
+            MendHoleViewController *strongSelf = weakSelf;
+//            NSDictionary *recDictionary = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *recDictionary;
+            recDictionary = (NSDictionary *)nsData;
+            
+            NSLog(@"returnMsg:%@",recDictionary[@"Msg"]);
+            
+            //
+            if ([recDictionary[@"Code"] intValue]> 0) {
+                self.mendHoleReqSuccess = YES;
+                //
+                NSDictionary *allMsg = recDictionary[@"Msg"];
+                //tbl_taskMendHoleInfo(evecod text,everea text,result text,evesta text,subtim text,mendHoleNum text)
+                
+                NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"4",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.logPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+                [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+                
+                [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
+            }
+            else if([recDictionary[@"Code"] intValue] == -5)
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"正常球洞还未完成，不能补洞" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [alert show];
+                //
+                self.mendHoleReqSuccess = NO;
+                //            [strongSelf performSegueWithIdentifier:@"mendHoleToList" sender:nil];
+            }
+            
+            
+            
+        }failure:^(NSError *err){
+            NSLog(@"fail request mend");
+            
+            
+        }];
+    });
     
 }
 - (IBAction)mendHoleNavBack:(UIBarButtonItem *)sender {

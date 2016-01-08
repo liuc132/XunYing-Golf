@@ -66,6 +66,23 @@
     return intervalTime;
 }
 
++ (NSString *)getServerURL
+{
+    NSString *heartURL;
+    //
+    DataTable *theStoredData = [[DataTable alloc] init];
+    theStoredData = [GetRequestIPAddress getStoredData];
+    if (![theStoredData.Rows count]) {
+        heartURL = @"";
+    }//(interval text,ipAddr text,portNum text)
+    else
+    {
+        heartURL = [NSString stringWithFormat:@"http://%@:%@",theStoredData.Rows[0][@"ipAddr"],theStoredData.Rows[0][@"portNum"]];
+    }
+    //
+    return heartURL;
+}
+
 + (NSString *)getHeartBeatURL
 {
     NSString *heartURL;

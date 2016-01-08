@@ -390,36 +390,43 @@
     //
     NSString *backFieldURLStr;
     backFieldURLStr = [GetRequestIPAddress getBackToFieldURL];
-    //进行网络请求
-    [HttpTools getHttp:backFieldURLStr forParams:backToFieldParam success:^(NSData *nsData){
-        
-        CustomerGroupInfViewController *strongSelf = weakSelf;
-        
-        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"back to the field msg:%@",recDic[@"Msg"]);
-        
-        if ([recDic[@"Code"] intValue] > 0) {
-            //删除掉本地保存的事务信息数据
-            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskChangeCartInfo"];
-            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskChangeCaddyInfo"];
-            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskJumpHoleInfo"];
-            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskLeaveRest"];
-            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskMendHoleInfo"];
-            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskInfo"];
-            [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_groupInf"];
-            //
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //执行跳转程序，跳转到建组方式选择界面
-                [strongSelf performSegueWithIdentifier:@"backToField" sender:nil];
-            });
-        }
-        
-    }failure:^(NSError *err){
-        NSLog(@"回场失败");
-        
-        
-    }];
+    
+    dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 1ull * NSEC_PER_SEC ) ;
+    dispatch_after(time,dispatch_get_main_queue(), ^{
+        //进行网络请求
+        [HttpTools getHttp:backFieldURLStr forParams:backToFieldParam success:^(NSData *nsData){
+            
+            CustomerGroupInfViewController *strongSelf = weakSelf;
+            
+//            NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *recDic;// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            recDic = (NSDictionary *)nsData;
+            NSLog(@"back to the field msg:%@",recDic[@"Msg"]);
+            
+            if ([recDic[@"Code"] intValue] > 0) {
+                //删除掉本地保存的事务信息数据
+                [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskChangeCartInfo"];
+                [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskChangeCaddyInfo"];
+                [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskJumpHoleInfo"];
+                [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskLeaveRest"];
+                [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskMendHoleInfo"];
+                [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_taskInfo"];
+                [strongSelf.cusGroupDBCon ExecNonQuery:@"delete from tbl_groupInf"];
+                //
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //执行跳转程序，跳转到建组方式选择界面
+                    [strongSelf performSegueWithIdentifier:@"backToField" sender:nil];
+                });
+            }
+            
+        }failure:^(NSError *err){
+            NSLog(@"回场失败");
+            
+            
+        }];
+    });
+    
 
 }
 

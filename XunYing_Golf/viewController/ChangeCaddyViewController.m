@@ -338,30 +338,35 @@ typedef enum ChangeReason{
     //
     NSString *changeCaddyURLStr;
     changeCaddyURLStr = [GetRequestIPAddress getChangeCaddyURL];
-    //进行HTTP请求，并在收到正确的消息之后返回
-    [HttpTools getHttp:changeCaddyURLStr forParams:changeCaddyParam success:^(NSData *nsData){
-        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"recDic:%@ Msg:%@ andCode:%@",recDic,recDic[@"Msg"],recDic[@"Code"]);
-        //
-        if ([recDic[@"Code"] intValue] > 0) {
-            //保存数据 tbl_taskChangeCaddyInfo(evecod text,everea text,result text,evesta text,oldCaddy text,oldCaddyCode text,newCaddy text,newCaddyCode,subtim text)
-            //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
-            
-            NSDictionary *allMsg = recDic[@"Msg"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //进行HTTP请求，并在收到正确的消息之后返回
+        [HttpTools getHttp:changeCaddyURLStr forParams:changeCaddyParam success:^(NSData *nsData){
+            NSDictionary *recDic;// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            recDic = (NSDictionary *)nsData;
+            NSLog(@"recDic:%@ Msg:%@ andCode:%@",recDic,recDic[@"Msg"],recDic[@"Code"]);
             //
-            NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"2",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
-            [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+            if ([recDic[@"Code"] intValue] > 0) {
+                //保存数据 tbl_taskChangeCaddyInfo(evecod text,everea text,result text,evesta text,oldCaddy text,oldCaddyCode text,newCaddy text,newCaddyCode,subtim text)
+                //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
+                
+                NSDictionary *allMsg = recDic[@"Msg"];
+                //
+                NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"2",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+                [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
+                
+                
+                //执行跳转程序
+                [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
+                
+            }
             
             
-            //执行跳转程序
-            [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
+        }failure:^(NSError *err){
             
-        }
-        
-        
-    }failure:^(NSError *err){
-        
-    }];
+        }];
+    });
+    
 }
 
 - (IBAction)backToMoreMain:(UIBarButtonItem *)sender {

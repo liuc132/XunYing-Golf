@@ -115,12 +115,23 @@ FixedPoint gpsScreenPoint;
 //                                    spatialReference:sr];
 //    [self.mapView zoomToEnvelope:env animated:YES];
     
-//    Zooming to an initial envelope with the specified spatial reference of the map.
+//    Zooming to an initial envelope with the specified spatial reference of the map. 上邦地图范围
+//    AGSSpatialReference *sr = [AGSSpatialReference spatialReferenceWithWKID:3857];
+//    AGSEnvelope *env = [AGSEnvelope envelopeWithXmin:11830220.9410906
+//                                                ymin:3439691.60124628
+//                                                xmax:11832488.6845279
+//                                                ymax:3438114.33915628
+//                                    spatialReference:sr];
+//    
+//    
+//    [self.mapView zoomToEnvelope:env animated:YES];
+    
+    //测试场地之花卉园地图范围
     AGSSpatialReference *sr = [AGSSpatialReference spatialReferenceWithWKID:3857];
-    AGSEnvelope *env = [AGSEnvelope envelopeWithXmin:11830220.9410906
-                                                ymin:3439691.60124628
-                                                xmax:11832488.6845279
-                                                ymax:3438114.33915628
+    AGSEnvelope *env = [AGSEnvelope envelopeWithXmin:11856404.596390
+                                                ymin:3450433.501542
+                                                xmax:11856986.392327
+                                                ymax:3450038.812739
                                     spatialReference:sr];
     
     
@@ -283,10 +294,13 @@ FixedPoint gpsScreenPoint;
     AGSSimpleMarkerSymbol *markSymbol = [[AGSSimpleMarkerSymbol alloc] initWithColor:[UIColor redColor]];
     //
 //    AGSSimpleLineSymbol *simpleLineSymbol = [[AGSSimpleLineSymbol alloc] initWithColor:[UIColor blueColor] width:1.0f];
+    //添加标记点
+    /*
     AGSGraphic *myLineSymbol = [[AGSGraphic alloc] initWithGeometry:mappoint symbol:markSymbol attributes:nil];
     AGSGraphic *myStartSymbol = [[AGSGraphic alloc] initWithGeometry:self.startPoint symbol:markSymbol attributes:nil];
     [self.graphicLayer addGraphic:myLineSymbol];
     [self.graphicLayer addGraphic:myStartSymbol];
+     */
 //    NSLog(@"enter showProcessClickAtPoint");
     NSLog(@"currentLocation,altitude:%f;latitude:%f;longtitude:%f",currentGPS.altitude,currentGPS.latitude,currentGPS.longtitude);
     
@@ -378,22 +392,6 @@ FixedPoint gpsScreenPoint;
  */
 -(void)mapViewDidLoad:(AGSMapView *)mapView
 {
-    __weak typeof(self) weakSelf = self;
-    //地图中的当前GPS定位点的位置信息点的显示
-//    [self.mapView.locationDisplay addObserver:self forKeyPath:@"autoPanMode" options:(NSKeyValueObservingOptionNew) context:NULL];
-    //地图加载完成之后才调用下边的方法，否则会出现底图飘出当前可见的屏幕范围之外去，但是去掉了viewDidload中执行如下边的两条语句的时候，GPS点将不会显示出来！所以在上边的方法中依然调用了下边的语句，先完成再完善
-//    if(!self.mapView.locationDisplay.dataSourceStarted)
-//        [self.mapView.locationDisplay startDataSource];
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        //
-////        if(!weakSelf.mapView.locationDisplay.dataSourceStarted)
-//            [weakSelf.mapView.locationDisplay startDataSource];
-//        //显示的GPS位置的图形风格设置
-//        weakSelf.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
-//        weakSelf.mapView.locationDisplay.wanderExtentFactor = 0.75;
-//        
-//    });
-    
     [self.mapView.locationDisplay startDataSource];
     self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
     self.mapView.locationDisplay.wanderExtentFactor = 0.75;

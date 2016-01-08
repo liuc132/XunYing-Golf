@@ -38,7 +38,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 //
 #define offset  100
 
-@interface CreateGroupViewController ()<CLLocationManagerDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate,UIAlertViewDelegate>
+@interface CreateGroupViewController ()<UIGestureRecognizerDelegate,UIScrollViewDelegate,UIAlertViewDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UIButton *oneCustomer;
@@ -76,8 +76,8 @@ typedef NS_ENUM(NSInteger,holePosition) {
 @property(strong, nonatomic)NSArray *simulationGPSData;
 @property(strong, nonatomic)NSMutableDictionary *checkCreatGroupState;
 //
-@property (strong, nonatomic) CLLocationManager *locationManager;
-@property (strong, nonatomic) CLLocation *getGPSLocation;
+//@property (strong, nonatomic) CLLocationManager *locationManager;
+//@property (strong, nonatomic) CLLocation *getGPSLocation;
 @property (strong, nonatomic) UITapGestureRecognizer *creatGrpTap;
 //
 @property (strong, nonatomic) NSMutableArray         *allCartsViewArray;
@@ -169,25 +169,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
     NSDictionary *logCaddy = [[NSDictionary alloc] initWithObjectsAndKeys:logCaddyResult,@"resultCaddy",self.userData.Rows[0][@"number"],@"cadnum", nil];
     [self.addcaddiesArray addObject:logCaddy];
     
-    //GPS初始化
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-//    self.locationManager.allowsBackgroundLocationUpdates = YES;
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8)
-    {
-        if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-            [self.locationManager requestAlwaysAuthorization];
-#ifdef DEBUD_MODE
-            NSLog(@"ENTER requestAlwaysAuthorization");
-#endif
-        }
-    }
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9)
-    {
-        self.locationManager.allowsBackgroundLocationUpdates = YES;
-    }
-    [self.locationManager startUpdatingLocation];
+    
     //
     self.holePosName = @"十八洞";
     
@@ -509,84 +491,115 @@ typedef NS_ENUM(NSInteger,holePosition) {
     //
     NSString *createGrpURLStr;
     createGrpURLStr = [GetRequestIPAddress getcreateGroupURL];
-    //
-    [HttpTools getHttp:createGrpURLStr forParams:createGroupParameters success:^(NSData *nsData){
-        CreateGroupViewController *strongself = weakself;
-        
-        NSDictionary *receiveCreateGroupDic     = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        if([receiveCreateGroupDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
-        {
-            NSLog(@"程序异常");
-        }
-        else if([receiveCreateGroupDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:0]])
-        {
-            NSLog(@"建组失败");
-        }
-        else if([receiveCreateGroupDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
-        {
-            NSLog(@"已有球组，建组失败");
-        }
-        else
-        {
-            [self.dbCon ExecDataTable:@"delete from tbl_CustomersInfo"];
-            [self.dbCon ExecDataTable:@"delete from tbl_selectCart"];
-            [self.dbCon ExecDataTable:@"delete from tbl_addCaddy"];
-            //tbl_addCaddy
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //
+        [HttpTools getHttp:createGrpURLStr forParams:createGroupParameters success:^(NSData *nsData){
+            CreateGroupViewController *strongself = weakself;
+            
+//            NSDictionary *receiveCreateGroupDic     = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *receiveCreateGroupDic;// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            receiveCreateGroupDic = (NSDictionary *)nsData;
+            if([receiveCreateGroupDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
+            {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",receiveCreateGroupDic[@"Msg"]];
+                UIAlertView *programErrAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [programErrAlert show];
+                //            [UIView beginAnimations:nil context:nil]; // 开始动画
+                //            [UIView setAnimationDuration:10.0]; // 动画时长
+                //
+                //            UIView *view111 = [[UIView alloc] initWithFrame:CGRectMake(weakself.view.frame.size.width/2 - 10, self.view.frame.size.height/2 - 10, 20, 20)];
+                //            view111.backgroundColor = [UIColor blackColor];
+                //            [weakself.view addSubview:view111];
+                //
+                //            CGPoint point = view111.center;
+                //            point.x -= 150;
+                //            [view111 setCenter:point];
+                //
+                //            [UIView commitAnimations]; // 提交动画
+                
+                
+                NSLog(@"程序异常");
+            }
+            else if([receiveCreateGroupDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:0]])
+            {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",receiveCreateGroupDic[@"Msg"]];
+                UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [createGrpFailAlert show];
+                NSLog(@"建组失败");
+            }
+            else if([receiveCreateGroupDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
+            {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",receiveCreateGroupDic[@"Msg"]];
+                UIAlertView *hasGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [hasGrpFailAlert show];
+                NSLog(@"已有球组，建组失败");
+            }
+            else
+            {
+                [self.dbCon ExecDataTable:@"delete from tbl_CustomersInfo"];
+                [self.dbCon ExecDataTable:@"delete from tbl_selectCart"];
+                [self.dbCon ExecDataTable:@"delete from tbl_addCaddy"];
+                //tbl_addCaddy
 #ifdef DEBUD_MODE
-            NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"]);
+                NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"]);
 #endif
-            //组建获取到的组信息的数组
-            NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"],receiveCreateGroupDic[@"Msg"][@"hgcod"],receiveCreateGroupDic[@"Msg"][@"onlinestatus"],receiveCreateGroupDic[@"Msg"][@"createdate"], nil];
-            //将数据加载到创建的数据库中
-            //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
-            
-            [self.dbCon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate)values(?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
+                //组建获取到的组信息的数组
+                NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"],receiveCreateGroupDic[@"Msg"][@"hgcod"],receiveCreateGroupDic[@"Msg"][@"onlinestatus"],receiveCreateGroupDic[@"Msg"][@"createdate"], nil];
+                //将数据加载到创建的数据库中
+                //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
+                
+                [self.dbCon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate)values(?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
 #ifdef DEBUD_MODE
-            NSLog(@"successfully create group and the recDic:%@  code:%@",receiveCreateGroupDic[@"Msg"],receiveCreateGroupDic[@"code"]);
+                NSLog(@"successfully create group and the recDic:%@  code:%@",receiveCreateGroupDic[@"Msg"],receiveCreateGroupDic[@"code"]);
 #endif
-            //获取到登录小组的所有客户的信息
-            NSArray *allCustomers = receiveCreateGroupDic[@"Msg"][@"cuss"];
-            for (NSDictionary *eachCus in allCustomers) {
-                NSMutableArray *eachCusParam = [[NSMutableArray alloc] initWithObjects:eachCus[@"bansta"],eachCus[@"bantim"],eachCus[@"cadcod"],eachCus[@"carcod"],eachCus[@"cuscod"],eachCus[@"cuslev"],eachCus[@"cusnam"],eachCus[@"cusnum"],eachCus[@"cussex"],eachCus[@"depsta"],eachCus[@"endtim"],eachCus[@"grocod"],eachCus[@"memnum"],eachCus[@"padcod"],eachCus[@"phone"],eachCus[@"statim"], nil];
-                [strongself.dbCon ExecNonQuery:@"insert into tbl_CustomersInfo(bansta,bantim,cadcod,carcod,cuscod,cuslev,cusnam,cusnum,cussex,depsta,endtim,grocod,memnum,padcod,phone,statim) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachCusParam];
-            }
-            //保存添加的球车的信息 tbl_selectCart(carcod text,carnum text,carsea text)
-            NSArray *allSelectedCartsArray = receiveCreateGroupDic[@"Msg"][@"cars"];
-            for (NSDictionary *eachCart in allSelectedCartsArray) {
-                NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
-                [strongself.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
-            }
-            //保存添加的球童的信息 tbl_addCaddy(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)
-            NSArray *allSelectedCaddiesArray = receiveCreateGroupDic[@"Msg"][@"cads"];
-            for (NSDictionary *eachCaddy in allSelectedCaddiesArray) {
-                NSMutableArray *selectedCaddy = [[NSMutableArray alloc] initWithObjects:eachCaddy[@"cadcod"],eachCaddy[@"cadnam"],eachCaddy[@"cadnum"],eachCaddy[@"cadsex"],eachCaddy[@"empcod"], nil];
-                [strongself.dbCon ExecNonQuery:@"insert into tbl_addCaddy(cadcod,cadnam,cadnum,cadsex,empcod) values(?,?,?,?,?)" forParameter:selectedCaddy];
-            }
-            
-            ucCusCounts = (unsigned char)self.theSelectedCusCounts;
-            ucHolePosition = (unsigned char)self.theSelectedHolePosition;
-            
-            if ([self.cusAndHoleDelegate respondsToSelector:@selector(getCustomerCounts:andHolePosition:)]) {
-                [self.cusAndHoleDelegate getCustomerCounts:self.theSelectedCusCounts andHolePosition:self.theSelectedHolePosition];
-            }
-            //
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //跳转页面
-                [strongself performSegueWithIdentifier:@"toWaitInterface" sender:nil];
-                //建组成功之后，进入心跳处理类中，开始心跳功能
-                HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
-                if (![heartBeat checkState]) {
-                    [heartBeat initHeartBeat];//1、开启心跳功能
+                //获取到登录小组的所有客户的信息
+                NSArray *allCustomers = receiveCreateGroupDic[@"Msg"][@"cuss"];
+                for (NSDictionary *eachCus in allCustomers) {
+                    NSMutableArray *eachCusParam = [[NSMutableArray alloc] initWithObjects:eachCus[@"bansta"],eachCus[@"bantim"],eachCus[@"cadcod"],eachCus[@"carcod"],eachCus[@"cuscod"],eachCus[@"cuslev"],eachCus[@"cusnam"],eachCus[@"cusnum"],eachCus[@"cussex"],eachCus[@"depsta"],eachCus[@"endtim"],eachCus[@"grocod"],eachCus[@"memnum"],eachCus[@"padcod"],eachCus[@"phone"],eachCus[@"statim"], nil];
+                    [strongself.dbCon ExecNonQuery:@"insert into tbl_CustomersInfo(bansta,bantim,cadcod,carcod,cuscod,cuslev,cusnam,cusnum,cussex,depsta,endtim,grocod,memnum,padcod,phone,statim) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachCusParam];
                 }
-            });
+                //保存添加的球车的信息 tbl_selectCart(carcod text,carnum text,carsea text)
+                NSArray *allSelectedCartsArray = receiveCreateGroupDic[@"Msg"][@"cars"];
+                for (NSDictionary *eachCart in allSelectedCartsArray) {
+                    NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
+                    [strongself.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
+                }
+                //保存添加的球童的信息 tbl_addCaddy(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)
+                NSArray *allSelectedCaddiesArray = receiveCreateGroupDic[@"Msg"][@"cads"];
+                for (NSDictionary *eachCaddy in allSelectedCaddiesArray) {
+                    NSMutableArray *selectedCaddy = [[NSMutableArray alloc] initWithObjects:eachCaddy[@"cadcod"],eachCaddy[@"cadnam"],eachCaddy[@"cadnum"],eachCaddy[@"cadsex"],eachCaddy[@"empcod"], nil];
+                    [strongself.dbCon ExecNonQuery:@"insert into tbl_addCaddy(cadcod,cadnam,cadnum,cadsex,empcod) values(?,?,?,?,?)" forParameter:selectedCaddy];
+                }
+                
+                ucCusCounts = (unsigned char)self.theSelectedCusCounts;
+                ucHolePosition = (unsigned char)self.theSelectedHolePosition;
+                
+                if ([self.cusAndHoleDelegate respondsToSelector:@selector(getCustomerCounts:andHolePosition:)]) {
+                    [self.cusAndHoleDelegate getCustomerCounts:self.theSelectedCusCounts andHolePosition:self.theSelectedHolePosition];
+                }
+                //
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //跳转页面
+                    [strongself performSegueWithIdentifier:@"toWaitInterface" sender:nil];
+                    //建组成功之后，进入心跳处理类中，开始心跳功能
+                    HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
+                    if (![heartBeat checkState]) {
+                        [heartBeat initHeartBeat];//1、开启心跳功能
+                    }
+                });
+                
+            }
             
-        }
-        
-    }failure:^(NSError *err){
-        NSLog(@"create group fail");
-        
-        
-    }];
+        }failure:^(NSError *err){
+            NSLog(@"create group fail");
+            
+        }];
+    });
+    
 }
 //
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -610,11 +623,11 @@ typedef NS_ENUM(NSInteger,holePosition) {
     [self dismissViewControllerAnimated:YES completion:nil];
     [HeartBeatAndDetectState disableHeartBeat];
 }
-#pragma -mark 
--(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
-{
-    self.getGPSLocation = [locations lastObject];
-}
+//#pragma -mark 
+//-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
+//{
+//    self.getGPSLocation = [locations lastObject];
+//}
 
 //change the backgroundcolor of the selected holes
 -(void)changeSelectedHoleColor:(NSInteger)holeNum

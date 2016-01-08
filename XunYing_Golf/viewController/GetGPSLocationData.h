@@ -14,7 +14,7 @@
 -(void)initGPSLocation;
 
 -(CLLocation *)getCurLocation;
-
+- (void)stopUpdateLocation;
 
 
 

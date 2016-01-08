@@ -157,27 +157,34 @@
     //
     NSString *logoutURLStr;
     logoutURLStr = [GetRequestIPAddress getLogOutURL];
-    //request
-    [HttpTools getHttp:logoutURLStr forParams:self.logOutDicParam success:^(NSData *nsData){
-        NSLog(@"request success");
-        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        NSLog(@"code:%@ msg:%@",recDic[@"Code"],recDic[@"Msg"]);
-        if ([recDic[@"Code"] integerValue] > 0) {
-            //删除本地的登录人信息以及组信息
-            [weakSelf._dbCon ExecNonQuery:@"delete from tbl_logPerson"];
-            [weakSelf._dbCon ExecNonQuery:@"delete from tbl_groupInf"];
-            //
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
-            //执行跳转
-            [weakSelf performSegueWithIdentifier:@"backToLogInterface" sender:nil];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //request
+        [HttpTools getHttp:logoutURLStr forParams:self.logOutDicParam success:^(NSData *nsData){
+            NSLog(@"request success");
+//            NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+            NSDictionary *recDic;
+            recDic = (NSDictionary *)nsData;
             
-        }
-        
-    }failure:^(NSError *err){
-        NSLog(@"request failled");
-        
-        
-    }];
+            NSLog(@"code:%@ msg:%@",recDic[@"Code"],recDic[@"Msg"]);
+            if ([recDic[@"Code"] integerValue] > 0) {
+                //删除本地的登录人信息以及组信息
+                [weakSelf._dbCon ExecNonQuery:@"delete from tbl_logPerson"];
+                [weakSelf._dbCon ExecNonQuery:@"delete from tbl_groupInf"];
+                //
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+                //执行跳转
+                [weakSelf performSegueWithIdentifier:@"backToLogInterface" sender:nil];
+                
+            }
+            
+        }failure:^(NSError *err){
+            NSLog(@"request failled");
+            
+            
+        }];
+    });
+    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

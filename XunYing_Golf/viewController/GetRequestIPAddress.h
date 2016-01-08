@@ -12,6 +12,7 @@
 
 + (NSString *)getUniqueID;
 + (NSString *)getIntervalTime;
++ (NSString *)getServerURL;
 + (NSString *)getHeartBeatURL;
 + (NSString *)getLogInURL;
 + (NSString *)getJumpHoleURL;

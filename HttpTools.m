@@ -7,6 +7,7 @@
 //
 
 #import "HttpTools.h"
+#import "AFHTTPRequestOperationManager.h"
 
 @implementation HttpTools
 
@@ -176,8 +177,12 @@
 +(void ) getHttp:(NSString *) url forParams:(NSMutableDictionary *) params success:(void (^)(NSData * nsData)) success failure:(void (^)(NSError * err)) failure{
     NSError *error = nil;
     
+    AFHTTPRequestOperationManager *requestManager = [AFHTTPRequestOperationManager manager];
+    requestManager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];//设置相应内容类型
+    
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[[NSURL alloc] initWithString:url]];
     
+    request.timeoutInterval = 120;
     //快速枚举遍历所有KEY的值  构造参数字符串
     NSEnumerator * enumeratorKey =[params keyEnumerator];
     NSMutableArray * paramArr = [[NSMutableArray alloc] init];
@@ -192,31 +197,74 @@
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:bodyData];
     
-//    NSLog(@"re:%@", [bodyData ]);
+//    NSLog(@"re:%@", [bodyData ]); HTTPRequestOperationWithRequest
+    
+    
+//    [requestManager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject){
+//            NSLog(@"JSON: %@", responseObject);
+//            NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableLeaves error:nil];
+//        
+//            NSLog(@"recDic:%@",recDic);
+//                
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//                NSLog(@"Error: %@", error);
+//        
+//        
+//            }];
+    
+    [requestManager POST:url parameters:paramArr success:^(AFHTTPRequestOperation *operation, id responseObject){
+        NSLog(@"responseObject:%@",responseObject);
+        if (success) {
+            //使用GCD  在主线程运行
+            dispatch_async(dispatch_get_main_queue(), ^{
+                success(responseObject);
+            });
+        }
+        
+    }failure:^(AFHTTPRequestOperation *operation, NSError *error){
+        NSLog(@"err:%@",error);
+        failure(error);
+    }];
     
     //发送同步请求 并返回结果
     //创建线程队列
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+//    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    
+//    [requestManager GET:downFieldURLStr parameters:self.checkCreatGroupState success:^(AFHTTPRequestOperation *operation, id responseObject){
+//        NSLog(@"JSON: %@", responseObject);
+//        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableLeaves error:nil];
+//        
+//        NSLog(@"recDic:%@",recDic);
+//        
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        NSLog(@"Error: %@", error);
+//        
+//        
+//    }];
+    
     
 //    NSLog(@"123");
+//    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+//        [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse * response,NSData * data,NSError * err){
+//            if (err&&failure) {
+//                failure(err);
+//            }
+//            else {
+//                if (success) {
+//                    //使用GCD  在主线程运行
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        success(data);
+//                    });
+//                }
+//            }
+//            //
+//            if (error != nil) {
+//                NSLog(@"%@",error);
+//            }
+//        }];
+//    });
     
-    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse * response,NSData * data,NSError * err){
-        if (err&&failure) {
-            failure(err);
-        }
-        else {
-            if (success) {
-                //使用GCD  在主线程运行
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    success(data);
-                });
-            }
-        }
-    }];
     
-    if (error != nil) {
-        NSLog(@"%@",error);
-    }
 }
 
 @end
