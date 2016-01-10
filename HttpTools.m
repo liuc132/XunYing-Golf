@@ -186,16 +186,25 @@
     //快速枚举遍历所有KEY的值  构造参数字符串
     NSEnumerator * enumeratorKey =[params keyEnumerator];
     NSMutableArray * paramArr = [[NSMutableArray alloc] init];
+    //
+    NSMutableDictionary *paramDic = [[NSMutableDictionary alloc] init];
     
     for (NSString * key in enumeratorKey) {
         [paramArr addObject:[key stringByAppendingFormat:@"=%@",params[key]]];
+//        NSDictionary *eachDic = [[NSDictionary alloc] initWithObjectsAndKeys:[key stringByAppendingFormat:@"=%@",params[key]],key, nil];
+        //
+        [paramDic setObject:[key stringByAppendingFormat:@"=%@",params[key]] forKey:key];
+        
+//        paramDic = [paramDic dictionaryWithValuesForKeys:eachDic];
+        
+//        paramDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:params[key],key, nil];
     }
     
     //参数为utf8
-    NSData *bodyData = [[[paramArr componentsJoinedByString:@"&"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]dataUsingEncoding:NSUTF8StringEncoding];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:bodyData];
+//    NSData *bodyData = [[[paramArr componentsJoinedByString:@"&"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]dataUsingEncoding:NSUTF8StringEncoding];
+//    
+//    [request setHTTPMethod:@"POST"];
+//    [request setHTTPBody:bodyData];
     
 //    NSLog(@"re:%@", [bodyData ]); HTTPRequestOperationWithRequest
     
@@ -212,8 +221,8 @@
 //        
 //            }];
     
-    [requestManager POST:url parameters:paramArr success:^(AFHTTPRequestOperation *operation, id responseObject){
-        NSLog(@"responseObject:%@",responseObject);
+    [requestManager POST:url parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject){
+//        NSLog(@"responseObject:%@",responseObject);
         if (success) {
             //使用GCD  在主线程运行
             dispatch_async(dispatch_get_main_queue(), ^{

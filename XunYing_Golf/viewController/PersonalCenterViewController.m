@@ -23,6 +23,7 @@
 @property (strong, nonatomic) DataTable *userInf;
 @property (strong, nonatomic) DataTable *logCaddy;
 @property (strong, nonatomic) NSMutableDictionary *logOutDicParam;
+@property (strong, nonatomic) UIActivityIndicatorView   *stateIndicator;
 
 - (IBAction)logOutHandle:(UIBarButtonItem *)sender;
 
@@ -43,6 +44,28 @@
     //查询登录人参数
     self.userInf = [self._dbCon ExecDataTable:@"select *from tbl_logPerson"];
     self.logCaddy = [self._dbCon ExecDataTable:@"select *from tbl_NamePassword"];
+    /*
+     self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
+     self.activityIndicatorView.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
+     self.activityIndicatorView.layer.cornerRadius = 20;
+     
+     [self.view addSubview:self.activityIndicatorView];
+     
+     self.activityIndicatorView.hidden = YES;
+     */
+    self.stateIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
+    self.stateIndicator.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
+    self.stateIndicator.layer.cornerRadius = 20;
+    [self.view addSubview:self.stateIndicator];
+    self.stateIndicator.hidden = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.stateIndicator stopAnimating];
+    self.stateIndicator.hidden = YES;
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -157,6 +180,10 @@
     //
     NSString *logoutURLStr;
     logoutURLStr = [GetRequestIPAddress getLogOutURL];
+    //
+    [self.stateIndicator startAnimating];
+    self.stateIndicator.hidden = NO;
+    
     
     dispatch_async(dispatch_get_main_queue(), ^{
         //request
@@ -180,7 +207,10 @@
             
         }failure:^(NSError *err){
             NSLog(@"request failled");
-            
+            UIAlertView *errAlert = [[UIAlertView alloc] initWithTitle:@"退出登录失败" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [errAlert show];
+            [self.stateIndicator stopAnimating];
+            self.stateIndicator.hidden = YES;
             
         }];
     });

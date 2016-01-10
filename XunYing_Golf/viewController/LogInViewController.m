@@ -540,7 +540,7 @@ extern BOOL allowDownCourt;
     //获取到mid号码
     NSString *theMid;
     theMid = [GetRequestIPAddress getUniqueID];
-    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+    theMid = [NSString stringWithFormat:@"%@",theMid];
     //组装数据
     NSMutableDictionary *addDeviceParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"padtag",@"",@"phoneNum", nil];
     //
@@ -556,12 +556,12 @@ extern BOOL allowDownCourt;
 #ifdef DEBUD_MODE
         NSLog(@"recDic:%@",recDic1);
 #endif
-        NSLog(@"recDic:%@",recDic1);
+//        NSLog(@"recDic:%@",recDic1);
     }failure:^(NSError *err){
 #ifdef DEBUD_MODE
         NSLog(@"request failled");
 #endif
-            
+        NSLog(@"request failled");
     }];
 
 }
@@ -815,6 +815,7 @@ extern BOOL allowDownCourt;
 //        NSLog(@"request successfully");
         NSDictionary *recDic;// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         recDic = (NSDictionary *)nsData;
+        
 #ifdef DEBUD_MODE
         NSLog(@"code:%@\n msg:%@",recDic[@"Code"],recDic[@"Msg"]);
         NSLog(@"124");

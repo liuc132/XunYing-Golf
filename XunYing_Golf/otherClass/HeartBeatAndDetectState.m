@@ -82,7 +82,7 @@ typedef enum eventOrder{
     if ([sender.userInfo[@"disableHeart"] isEqualToString:@"1"]) {
         //1关闭心跳
         [self.heartBeatTime invalidate];
-//        self.canEnterHeartBeat = NO;
+        self.canEnterHeartBeat = NO;
         //2关闭GPS更新
         [self.gpsData stopUpdateLocation];
     }

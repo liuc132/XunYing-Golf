@@ -12,6 +12,7 @@
 #import "HttpTools.h"
 #import "XunYingPre.h"
 #import "GetRequestIPAddress.h"
+#import "UIColor+UICon.h"
 
 @interface CustomerGroupInfViewController ()<UIAlertViewDelegate>
 
@@ -27,6 +28,9 @@
 @property (strong, nonatomic) DataTable *selectedCartInfo;
 
 @property (strong, nonatomic) NSArray   *playStateArray;
+
+@property (strong, nonatomic) UIActivityIndicatorView *stateIndicator;
+
 
 @property (strong, nonatomic) IBOutlet UIScrollView *cusInfScrollView;
 
@@ -110,9 +114,40 @@
         });
     });
     
+    /*
+     //init activityIndicatorView
+     self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
+     self.activityIndicatorView.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
+     self.activityIndicatorView.layer.cornerRadius = 20;
+     
+     [self.view addSubview:self.activityIndicatorView];
+     
+     self.activityIndicatorView.hidden = YES;
+     */
+    self.stateIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
+    self.stateIndicator.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
+    self.stateIndicator.layer.cornerRadius = 20;
+    [self.view addSubview:self.stateIndicator];
     
+    self.stateIndicator.hidden = YES;
+    
+#ifdef DEBUG_MODE
     NSLog(@"finish search");
+#endif
+    
+    
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    //
+    [self.stateIndicator stopAnimating];
+    self.stateIndicator.hidden = YES;
+    
+    
+}
+
 
 -(void)constructDisInf
 {
@@ -390,6 +425,9 @@
     //
     NSString *backFieldURLStr;
     backFieldURLStr = [GetRequestIPAddress getBackToFieldURL];
+    //
+    [self.stateIndicator startAnimating];
+    self.stateIndicator.hidden = NO;
     
     dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 1ull * NSEC_PER_SEC ) ;
     dispatch_after(time,dispatch_get_main_queue(), ^{
@@ -419,11 +457,22 @@
                     [strongSelf performSegueWithIdentifier:@"backToField" sender:nil];
                 });
             }
+            else
+            {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:errStr delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [alert show];
+                
+            }
             
         }failure:^(NSError *err){
-            NSLog(@"回场失败");
-            
-            
+            //NSLog(@"回场失败");
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"回场失败" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alert show];
+            //
+            [self.stateIndicator stopAnimating];
+            self.stateIndicator.hidden = YES;
         }];
     });
     

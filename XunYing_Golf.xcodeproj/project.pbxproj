@@ -23,6 +23,7 @@
 		5B13BB571C22671D00D1B8D9 /* NoResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB561C22671D00D1B8D9 /* NoResultMode.m */; };
 		5B13BB5A1C22682900D1B8D9 /* HaveResultMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB591C22682900D1B8D9 /* HaveResultMode.m */; };
 		5B13BB5D1C22687000D1B8D9 /* CellViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */; };
+		5B15560A1C401E4600E059B0 /* XunYing_Golf.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 5B1556091C401E4600E059B0 /* XunYing_Golf.entitlements */; };
 		5B33ACF71C27F6D60073737F /* SlowBallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33ACF61C27F6D60073737F /* SlowBallViewController.m */; };
 		5B33DDE91C2136AE00C62DF7 /* HeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE61C2136AE00C62DF7 /* HeadView.m */; };
 		5B33DDEA1C2136AE00C62DF7 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B33DDE81C2136AE00C62DF7 /* MessageCell.m */; };
@@ -72,7 +73,6 @@
 		5B9D51EF1BA954BF006DD2C7 /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B9D51EE1BA954BF006DD2C7 /* LogInViewController.m */; };
 		5B9ECB0E1BABF40900612474 /* CreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B9ECB0D1BABF40900612474 /* CreateGroupViewController.m */; };
 		5B9ECB131BAC113600612474 /* ChooseCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B9ECB121BAC113600612474 /* ChooseCreateGroupViewController.m */; };
-		5BA68A241C3DF0D400B139EF /* XunYing_Golf.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 5BA68A231C3DF0D400B139EF /* XunYing_Golf.entitlements */; };
 		5BA96CA71C045B89009DD1B0 /* ChangeCartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA96CA61C045B89009DD1B0 /* ChangeCartViewController.m */; };
 		5BA96CAB1C0469F1009DD1B0 /* LeaveRestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA96CAA1C0469F1009DD1B0 /* LeaveRestViewController.m */; };
 		5BBFED6D1C3F414700D32000 /* offlineMapData.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5BBFED6C1C3F414700D32000 /* offlineMapData.bundle */; };
@@ -172,6 +172,7 @@
 		5B13BB591C22682900D1B8D9 /* HaveResultMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HaveResultMode.m; path = viewController/HaveResultMode.m; sourceTree = "<group>"; };
 		5B13BB5B1C22687000D1B8D9 /* CellViewNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CellViewNode.h; path = viewController/CellViewNode.h; sourceTree = "<group>"; };
 		5B13BB5C1C22687000D1B8D9 /* CellViewNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CellViewNode.m; path = viewController/CellViewNode.m; sourceTree = "<group>"; };
+		5B1556091C401E4600E059B0 /* XunYing_Golf.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XunYing_Golf.entitlements; sourceTree = "<group>"; };
 		5B33ACF51C27F6D60073737F /* SlowBallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SlowBallViewController.h; path = viewController/SlowBallViewController.h; sourceTree = "<group>"; };
 		5B33ACF61C27F6D60073737F /* SlowBallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SlowBallViewController.m; path = viewController/SlowBallViewController.m; sourceTree = "<group>"; };
 		5B33DDE51C2136AE00C62DF7 /* HeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeadView.h; sourceTree = "<group>"; };
@@ -261,7 +262,6 @@
 		5B9ECB0D1BABF40900612474 /* CreateGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreateGroupViewController.m; path = viewController/CreateGroupViewController.m; sourceTree = "<group>"; };
 		5B9ECB111BAC113600612474 /* ChooseCreateGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChooseCreateGroupViewController.h; path = viewController/ChooseCreateGroupViewController.h; sourceTree = "<group>"; };
 		5B9ECB121BAC113600612474 /* ChooseCreateGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChooseCreateGroupViewController.m; path = viewController/ChooseCreateGroupViewController.m; sourceTree = "<group>"; };
-		5BA68A231C3DF0D400B139EF /* XunYing_Golf.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XunYing_Golf.entitlements; sourceTree = "<group>"; };
 		5BA96CA51C045B89009DD1B0 /* ChangeCartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChangeCartViewController.h; path = viewController/ChangeCartViewController.h; sourceTree = "<group>"; };
 		5BA96CA61C045B89009DD1B0 /* ChangeCartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChangeCartViewController.m; path = viewController/ChangeCartViewController.m; sourceTree = "<group>"; };
 		5BA96CA91C0469F1009DD1B0 /* LeaveRestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeaveRestViewController.h; path = viewController/LeaveRestViewController.h; sourceTree = "<group>"; };
@@ -444,7 +444,7 @@
 		5B11C5201B8EDD4700382C9B /* XunYing_Golf */ = {
 			isa = PBXGroup;
 			children = (
-				5BA68A231C3DF0D400B139EF /* XunYing_Golf.entitlements */,
+				5B1556091C401E4600E059B0 /* XunYing_Golf.entitlements */,
 				5BE341E21C3B671A007A3A9C /* getRequestAddr */,
 				5B60FDD41C03207800D77A44 /* protocol */,
 				5B588E141BE8917C00D2B327 /* getGPSLocation */,
@@ -1202,7 +1202,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5BA68A241C3DF0D400B139EF /* XunYing_Golf.entitlements in Resources */,
+				5B15560A1C401E4600E059B0 /* XunYing_Golf.entitlements in Resources */,
 				5B11C52D1B8EDD4700382C9B /* Main.storyboard in Resources */,
 				5B63E1121BAFB10C0034C577 /* createGroup_Main.png in Resources */,
 				5B63E11A1BAFB10C0034C577 /* logInUnselected.png in Resources */,
@@ -1482,8 +1482,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "/Users/liuc/Desktop/lcWorkSpace/SVN project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/XunYing_Golf.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/XunYing_Golf/XunYing_Golf.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/SDKS/ArcGIS/iOS/",
@@ -1501,6 +1502,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "HongDing.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1509,8 +1511,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "/Users/liuc/Desktop/lcWorkSpace/SVN project/XyGolf/IOS/XunYing-Golf/XunYing_Golf/XunYing_Golf.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/XunYing_Golf/XunYing_Golf.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/SDKS/ArcGIS/iOS/",
@@ -1528,6 +1531,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "HongDing.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
