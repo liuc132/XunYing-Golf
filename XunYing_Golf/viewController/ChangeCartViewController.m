@@ -23,6 +23,7 @@ typedef enum ChangeReason{
 
 #define reasonSelectColor           @"0197d6"
 #define reasonUnselectWordColor     @"999999"
+#define selectCartColor             @"01cc00"
 
 @interface ChangeCartViewController ()
 
@@ -32,6 +33,7 @@ typedef enum ChangeReason{
 @property (strong, nonatomic) DataTable *groupInfo;
 @property (strong, nonatomic) DataTable *cartInfo;
 @property (strong, nonatomic) DataTable *changeCartResult;
+@property (strong, nonatomic) DataTable *curGrpCarts;
 @property (strong, nonatomic) NSString  *changeReasonStr;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
 
@@ -42,6 +44,15 @@ typedef enum ChangeReason{
 @property (strong, nonatomic) IBOutlet UIView *secondChangeCartView;
 @property (strong, nonatomic) IBOutlet UIImageView *secondChangeCartImage;
 @property (strong, nonatomic) IBOutlet UILabel *secondChangeCartInfo;
+@property (strong, nonatomic) IBOutlet UIView *thirdChageCartView;
+@property (strong, nonatomic) IBOutlet UIImageView *thirdChangeCartImage;
+@property (strong, nonatomic) IBOutlet UILabel *thirdChageCartInfo;
+@property (strong, nonatomic) IBOutlet UIView *fourthChangeCartView;
+@property (strong, nonatomic) IBOutlet UIImageView *fourthChangeCartImage;
+@property (strong, nonatomic) IBOutlet UILabel *fourthChangeCartInfo;
+
+
+
 
 @property (strong, nonatomic) IBOutlet UIButton *changeLowPower;
 @property (strong, nonatomic) IBOutlet UIButton *changeBad;
@@ -66,6 +77,7 @@ typedef enum ChangeReason{
     self.cartInfo  = [[DataTable alloc] init];
     self.groupInfo = [[DataTable alloc] init];
     self.changeCartResult = [[DataTable alloc] init];
+    self.curGrpCarts    = [[DataTable alloc] init];
     //
     self.changeReasonStr = [NSString stringWithFormat:@"%d",LowPowerRequest];
     //init a notificationcenter
@@ -98,13 +110,89 @@ typedef enum ChangeReason{
     self.logPerson = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
     self.cartInfo  = [self.lcDBCon ExecDataTable:@"select *from tbl_cartInf"];
     self.groupInfo = [self.lcDBCon ExecDataTable:@"select *from tbl_groupInf"];
+    self.curGrpCarts = [self.lcDBCon ExecDataTable:@"select *from tbl_selectCart"];
     //为了显示方便，将前两个球车的信息显示出来
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([weakSelf.cartInfo.Rows count]) {
-            weakSelf.firstChangeCartInfo.text = [NSString stringWithFormat:@"%@ %@座",weakSelf.cartInfo.Rows[0][@"carnum"],weakSelf.cartInfo.Rows[0][@"carsea"]];//
-            weakSelf.secondChangeCartInfo.text = [NSString stringWithFormat:@"%@ %@座",weakSelf.cartInfo.Rows[1][@"carnum"],weakSelf.cartInfo.Rows[1][@"carsea"]];
-            //
-            
+//        if ([weakSelf.cartInfo.Rows count]) {
+//            weakSelf.firstChangeCartInfo.text = [NSString stringWithFormat:@"%@ %@座",weakSelf.cartInfo.Rows[0][@"carnum"],weakSelf.cartInfo.Rows[0][@"carsea"]];//
+//            weakSelf.secondChangeCartInfo.text = [NSString stringWithFormat:@"%@ %@座",weakSelf.cartInfo.Rows[1][@"carnum"],weakSelf.cartInfo.Rows[1][@"carsea"]];
+//            //
+//            
+//        }
+        NSString *firstCartInfo;
+        NSString *secondCartInfo;
+        NSString *thirdCartInfo;
+        NSString *fourthCartInfo;
+        //
+        switch ([weakSelf.curGrpCarts.Rows count]) {
+            case 0:
+                weakSelf.firstChangeCartView.hidden = YES;
+                weakSelf.secondChangeCartView.hidden = YES;
+                weakSelf.thirdChageCartView.hidden = YES;
+                weakSelf.fourthChangeCartView.hidden = YES;
+                
+                break;
+                
+            case 1:
+                weakSelf.firstChangeCartView.hidden = NO;
+                weakSelf.secondChangeCartView.hidden = YES;
+                weakSelf.thirdChageCartView.hidden = YES;
+                weakSelf.fourthChangeCartView.hidden = YES;
+                //做相应的赋值操作
+                firstCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
+                weakSelf.firstChangeCartInfo.text = firstCartInfo;
+                
+                break;
+                
+            case 2:
+                weakSelf.firstChangeCartView.hidden = NO;
+                weakSelf.secondChangeCartView.hidden = NO;
+                weakSelf.thirdChageCartView.hidden = YES;
+                weakSelf.fourthChangeCartView.hidden = YES;
+                //做相应的赋值操作
+                firstCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
+                secondCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
+                weakSelf.firstChangeCartInfo.text = firstCartInfo;
+                weakSelf.secondChangeCartInfo.text = secondCartInfo;
+                
+                
+                break;
+                
+            case 3:
+                weakSelf.firstChangeCartView.hidden = NO;
+                weakSelf.secondChangeCartView.hidden = NO;
+                weakSelf.thirdChageCartView.hidden = NO;
+                weakSelf.fourthChangeCartView.hidden = YES;
+                //做相应的赋值操作
+                firstCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
+                secondCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
+                thirdCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[2][@"carnum"],weakSelf.curGrpCarts.Rows[2][@"carsea"]];
+                weakSelf.firstChangeCartInfo.text = firstCartInfo;
+                weakSelf.secondChangeCartInfo.text = secondCartInfo;
+                weakSelf.thirdChageCartInfo.text = thirdCartInfo;
+                
+                break;
+                
+            case 4:
+                weakSelf.firstChangeCartView.hidden = NO;
+                weakSelf.secondChangeCartView.hidden = NO;
+                weakSelf.thirdChageCartView.hidden = NO;
+                weakSelf.fourthChangeCartView.hidden = NO;
+                //做相应的赋值操作
+                firstCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
+                secondCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
+                thirdCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[2][@"carnum"],weakSelf.curGrpCarts.Rows[2][@"carsea"]];
+                fourthCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[3][@"carnum"],weakSelf.curGrpCarts.Rows[3][@"carsea"]];
+                
+                weakSelf.firstChangeCartInfo.text = firstCartInfo;
+                weakSelf.secondChangeCartInfo.text = secondCartInfo;
+                weakSelf.thirdChageCartInfo.text = thirdCartInfo;
+                weakSelf.fourthChangeCartInfo.text = fourthCartInfo;
+                
+                
+                break;
+            default:
+                break;
         }
         
         

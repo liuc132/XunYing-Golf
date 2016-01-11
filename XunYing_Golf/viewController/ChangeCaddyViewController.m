@@ -49,7 +49,7 @@ typedef enum ChangeReason{
 
 //
 @property (strong, nonatomic) DBCon *lcDBCon;
-@property (strong, nonatomic) DataTable *requestPerson;
+@property (strong, nonatomic) DataTable *curGrpCaddies;
 @property (strong, nonatomic) DataTable *groInfo;
 @property (strong, nonatomic) DataTable *changeCaddyResult;
 @property (strong, nonatomic) DataTable *allCaddyInfo;
@@ -75,7 +75,7 @@ typedef enum ChangeReason{
     self.caddyView1.layer.masksToBounds = YES;
     //
     self.lcDBCon = [[DBCon alloc] init];
-    self.requestPerson = [[DataTable alloc] init];
+    self.curGrpCaddies = [[DataTable alloc] init];
     self.groInfo       = [[DataTable alloc] init];
     self.changeCaddyResult  = [[DataTable alloc] init];
     self.allCaddyInfo       = [[DataTable alloc] init];
@@ -104,7 +104,7 @@ typedef enum ChangeReason{
 {
     [super viewWillAppear:animated];
     //查询申请人的信息 tbl_caddyInf
-    self.requestPerson = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
+    self.curGrpCaddies = [self.lcDBCon ExecDataTable:@"select *from tbl_addCaddy"];
     self.groInfo       = [self.lcDBCon ExecDataTable:@"select *from tbl_groupInf"];
     self.allCaddyInfo  = [self.lcDBCon ExecDataTable:@"select *from tbl_caddyInf"];
     //
@@ -119,7 +119,7 @@ typedef enum ChangeReason{
         self.otherReason.titleLabel.textColor = [UIColor HexString:reasonUnselectWordColor];
         //球童显示
         //初始化登录人的信息
-        switch ([self.requestPerson.Rows count]) {
+        switch ([self.curGrpCaddies.Rows count]) {
                 //none
             case 0:
                 self.caddyView1.hidden = YES;
@@ -133,7 +133,7 @@ typedef enum ChangeReason{
                 self.caddyView3.hidden = YES;
                 self.caddyView4.hidden = YES;
                 //将相应的球童的名字显示出来
-                self.firstChange.text = self.requestPerson.Rows[0][@"name"];
+                self.firstChange.text = self.curGrpCaddies.Rows[0][@"cadnam"];
                 self.firstChange.textColor = [UIColor blackColor];
                 
                 break;
@@ -142,28 +142,28 @@ typedef enum ChangeReason{
                 self.caddyView3.hidden = YES;
                 self.caddyView4.hidden = YES;
                 //将相应的球童的名字显示出来
-                self.firstChange.text = self.requestPerson.Rows[0][@"name"];
+                self.firstChange.text = self.curGrpCaddies.Rows[0][@"cadnam"];
                 self.firstChange.textColor = [UIColor blackColor];
-                self.secondChange.text = self.requestPerson.Rows[1][@"name"];
+                self.secondChange.text = self.curGrpCaddies.Rows[1][@"cadnam"];
                 self.secondChange.textColor = [UIColor blackColor];
                 break;
                 //three caddies
             case 3:
                 self.caddyView4.hidden = YES;
                 //将相应的球童的名字显示出来
-                self.firstChange.text = self.requestPerson.Rows[0][@"name"];
+                self.firstChange.text = self.curGrpCaddies.Rows[0][@"cadnam"];
                 self.firstChange.textColor = [UIColor blackColor];
-                self.secondChange.text = self.requestPerson.Rows[1][@"name"];
+                self.secondChange.text = self.curGrpCaddies.Rows[1][@"cadnam"];
                 self.secondChange.textColor = [UIColor blackColor];
-                self.thirdChange.text = self.requestPerson.Rows[2][@"name"];
+                self.thirdChange.text = self.curGrpCaddies.Rows[2][@"cadnam"];
                 self.thirdChange.textColor = [UIColor blackColor];
                 break;
                 //have four caddies
             case 4:
-                self.firstChange.text = self.requestPerson.Rows[0][@"name"];
-                self.secondChange.text = self.requestPerson.Rows[1][@"name"];
-                self.thirdChange.text = self.requestPerson.Rows[2][@"name"];
-                self.fourthChange.text = self.requestPerson.Rows[3][@"name"];
+                self.firstChange.text = self.curGrpCaddies.Rows[0][@"cadnam"];
+                self.secondChange.text = self.curGrpCaddies.Rows[1][@"cadnam"];
+                self.thirdChange.text = self.curGrpCaddies.Rows[2][@"cadnam"];
+                self.fourthChange.text = self.curGrpCaddies.Rows[3][@"cadnam"];
                 break;
             default:
                 break;
@@ -309,9 +309,9 @@ typedef enum ChangeReason{
     NSLog(@"提交申请");
     __weak typeof(self) weakSelf = self;
     
-    NSLog(@"requestPerson:%@",self.requestPerson);
+    NSLog(@"requestPerson:%@",self.curGrpCaddies);
     //判断当前所读取到的数据是否为空，为空则返回（可以给予提示）
-    if(![self.requestPerson.Rows count])
+    if(![self.curGrpCaddies.Rows count])
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"换球车异常" message:@"申请人数据为空" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
@@ -320,7 +320,7 @@ typedef enum ChangeReason{
     //根据职员编号查询球童号
     NSString *caddyCode = [[NSString alloc] init];
     for (NSDictionary *eachCaddy in self.allCaddyInfo.Rows) {
-        if ([eachCaddy[@"empcod"] isEqualToString:self.requestPerson.Rows[0][@"code"]]) {
+        if ([eachCaddy[@"empcod"] isEqualToString:self.curGrpCaddies.Rows[0][@"code"]]) {
             caddyCode = eachCaddy[@"cadcod"];
         }
     }
@@ -334,7 +334,7 @@ typedef enum ChangeReason{
     NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
     //构建参数
     NSString *reasonStr = [NSString stringWithFormat:@"%@;",self.changeReasonStr];
-    NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.requestPerson.Rows[0][@"code"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",reasonStr,@"reason",caddyCode,@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
+    NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.curGrpCaddies.Rows[0][@"code"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",reasonStr,@"reason",caddyCode,@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
     //
     NSString *changeCaddyURLStr;
     changeCaddyURLStr = [GetRequestIPAddress getChangeCaddyURL];
@@ -352,7 +352,7 @@ typedef enum ChangeReason{
                 
                 NSDictionary *allMsg = recDic[@"Msg"];
                 //
-                NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"2",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.requestPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+                NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"2",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.curGrpCaddies.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
                 [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
                 
                 
@@ -403,7 +403,7 @@ typedef enum ChangeReason{
             taskViewController.whichInterfaceFrom = 1;
             
             taskViewController.taskStatus = resultStr;
-            taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.requestPerson.Rows[0][@"number"],weakSelf.requestPerson.Rows[0][@"name"]];
+            taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCaddies.Rows[0][@"number"],weakSelf.curGrpCaddies.Rows[0][@"name"]];
             NSString *subtime = weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"subtim"];
             taskViewController.taskRequstTime = [subtime substringFromIndex:11];
             taskViewController.taskDetailName = @"待更换球童";

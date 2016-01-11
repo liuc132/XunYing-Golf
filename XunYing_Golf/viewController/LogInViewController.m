@@ -27,8 +27,8 @@ extern BOOL allowDownCourt;
 @interface LogInViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>
 
 //@property(strong, nonatomic) ActivityIndicatorView *activityView;
-@property(nonatomic) BOOL forgetCode;
-@property(nonatomic) BOOL remCode;
+@property (nonatomic) BOOL forgetCode;
+@property (nonatomic) BOOL remCode;
 
 @property (strong, nonatomic) UITapGestureRecognizer *tap;
 @property (strong, nonatomic) Reachability *internetReachability;
@@ -42,7 +42,7 @@ extern BOOL allowDownCourt;
 @property (strong, nonatomic)UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic)           BOOL    canReceiveNotification;
 //
-@property(strong, nonatomic)DBCon *dbCon;
+@property (strong, nonatomic) DBCon *dbCon;
 @property (strong, nonatomic) DataTable *logInPerson;
 @property (strong, nonatomic) DataTable *logPersonInf;
 
