@@ -186,7 +186,7 @@
     //所选择的球洞的信息，上九洞，下九洞，十八洞
     [dbCon ExecDataTable:@"create table if not exists tbl_threeTypeHoleInf(pdcod text,pdind text,pdnam text,pdpcod text,pdtag text,pdtcod text)"];
     //建组成功之后，获取到的组信息
-    [dbCon ExecDataTable:@"create table if not exists tbl_groupInf(grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text,createdate text)"];
+    [dbCon ExecDataTable:@"create table if not exists tbl_groupInf(grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text,createdate text,timestamps text)"];
     //建组成功之后，获取返回的平板的信息
     [dbCon ExecDataTable:@"create table if not exists tbl_PadsInf(isprim text,locsta text,loctim text,onlsta text,padcod text,padnum text,padtag text,revx text,revy text)"];
     //获取到所有球童的信息

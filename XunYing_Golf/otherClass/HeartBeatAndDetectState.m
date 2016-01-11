@@ -182,19 +182,33 @@ typedef enum eventOrder{
         //3、获取到GPS数据
         self.getGPSLocation = [self.gpsData getCurLocation];
         
-        NSString *locx = [NSString stringWithFormat:@"%.13f",self.getGPSLocation.coordinate.longitude];//self.simulationGPSData[startCount][0];模拟数据调用之
+        NSString *locx = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.longitude];//self.simulationGPSData[startCount][0];模拟数据调用之
         //纬度
-        NSString *locy = [NSString stringWithFormat:@"%.13f",self.getGPSLocation.coordinate.latitude];//self.simulationGPSData[startCount][1];模拟数据调用之
+        NSString *locy = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.latitude];//self.simulationGPSData[startCount][1];模拟数据调用之
         NSLog(@"current locx:%@; locy:%@",locx,locy);
         //获取到mid号码
         NSString *theMid;
         theMid = [GetRequestIPAddress getUniqueID];
         theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+        //
+        //获取到当前系统的时间，并生成相应的格式
+        NSDateFormatter *dateFarmatter = [[NSDateFormatter alloc] init];
+        [dateFarmatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
+        //
+        NSString *timestampsStr;
+        if (self.groupInformation.Rows[0][@"timestamps"] != nil) {
+            timestampsStr = self.groupInformation.Rows[0][@"timestamps"];
+        }
+        else
+        {
+            timestampsStr = @"";
+        }
         //使用模拟数据时，则在此组建地图界面的当前位置点
         //start send and handle all what the server sends back
         //巡场和球童这两个角色所传的参数不一样：主要是 组“grocod”不一致，球童需要传该参数，而巡场则不传该参数或者传空
         //construct the parameters for the heartBeat
-        NSMutableDictionary *heartBeatParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.userData.Rows[0][@"job"],@"job",[NSDate date],@"loct",locx,@"locx",locy,@"locy",self.groupInformation.Rows[0][@"grocod"],@"grocod",@"1",@"gpsType",self.userData.Rows[0][@"code"],@"bandcode", nil];
+        NSMutableDictionary *heartBeatParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.userData.Rows[0][@"job"],@"job",[NSDate date],@"loct",locx,@"locx",locy,@"locy",self.groupInformation.Rows[0][@"grocod"],@"grocod",@"1",@"gpsType",self.userData.Rows[0][@"code"],@"bandcode",curDateTime,@"loct",timestampsStr,@"timestamps", nil];
         //
         __weak HeartBeatAndDetectState *weakSelf = self;
         //获取到IP地址

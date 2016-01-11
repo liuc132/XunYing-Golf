@@ -911,10 +911,10 @@ extern BOOL allowDownCourt;
                     //将数据加载到创建的数据库中
                     [strongSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
                     //组建获取到的组信息的数组
-                    NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"groind"],recDic[@"Msg"][@"group"][@"grolev"],recDic[@"Msg"][@"group"][@"gronum"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"hgcod"],recDic[@"Msg"][@"group"][@"onlinestatus"],recDic[@"Msg"][@"group"][@"createdate"], nil];
+                    NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"groind"],recDic[@"Msg"][@"group"][@"grolev"],recDic[@"Msg"][@"group"][@"gronum"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"hgcod"],recDic[@"Msg"][@"group"][@"onlinestatus"],recDic[@"Msg"][@"group"][@"createdate"],recDic[@"Msg"][@"group"][@"timestamps"], nil];
                     //将数据加载到创建的数据库中
                     //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
-                    [strongSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate)values(?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
+                    [strongSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate,timestamps)values(?,?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
                     //
 //                    DataTable *table;// = [[DataTable alloc] init];
 //                    
