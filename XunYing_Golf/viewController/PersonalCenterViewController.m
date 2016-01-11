@@ -183,7 +183,12 @@
     //
     [self.stateIndicator startAnimating];
     self.stateIndicator.hidden = NO;
-    
+    //删除本地的登录人信息以及组信息
+    [self._dbCon ExecNonQuery:@"delete from tbl_logPerson"];
+    [self._dbCon ExecNonQuery:@"delete from tbl_groupInf"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+    //执行跳转
+    [weakSelf performSegueWithIdentifier:@"backToLogInterface" sender:nil];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         //request
@@ -196,12 +201,6 @@
             NSLog(@"code:%@ msg:%@",recDic[@"Code"],recDic[@"Msg"]);
             if ([recDic[@"Code"] integerValue] > 0) {
                 //删除本地的登录人信息以及组信息
-                [weakSelf._dbCon ExecNonQuery:@"delete from tbl_logPerson"];
-                [weakSelf._dbCon ExecNonQuery:@"delete from tbl_groupInf"];
-                //
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
-                //执行跳转
-                [weakSelf performSegueWithIdentifier:@"backToLogInterface" sender:nil];
                 
             }
             

@@ -32,12 +32,13 @@ extern unsigned char ucHolePosition;
 @property (strong, nonatomic) DataTable *logEmp;
 @property (strong, nonatomic) DataTable *cusNumbers;
 @property (strong, nonatomic) NSMutableDictionary *checkCreatGroupState;
+@property (strong, nonatomic) UIActivityIndicatorView *stateIndicator;
 
 @property (strong, nonatomic) NSDictionary *loggedPersonInf;
 @property BOOL backOrNext;  //yes:next   no:back default we go to the next interface
 
 @property (strong, nonatomic) QRCodeReaderViewController *QRCodeReader;
-@property (strong, nonatomic) ActivityIndicatorView *activityIndicatorView;
+//@property (strong, nonatomic) ActivityIndicatorView *activityIndicatorView;
 @property (nonatomic)         NSInteger cusCount;
 @property (nonatomic)         BOOL      QRCodeWay;
 @property (strong, nonatomic) NSArray   *QRcusCard;
@@ -75,15 +76,11 @@ extern unsigned char ucHolePosition;
 //    self.QRCodeReader = [QRCodeReaderViewController readerWithCancelButtonTitle:@"取消"];
     self.QRCodeReader.delegate = self;
     //
-    //init activityIndicatorView
-    self.activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
-    self.activityIndicatorView.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
-    self.activityIndicatorView.layer.cornerRadius = 20;
-    self.activityIndicatorView.tintColor = [UIColor blackColor];
-    //先隐藏，同时停止动画
-    [self.activityIndicatorView hideIndicator];
-    [self.view addSubview:self.activityIndicatorView];
-    
+    self.stateIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
+    self.stateIndicator.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
+    self.stateIndicator.layer.cornerRadius = 20;
+    [self.view addSubview:self.stateIndicator];
+    self.stateIndicator.hidden = YES;
     
 }
 
@@ -101,15 +98,21 @@ extern unsigned char ucHolePosition;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     //decide which interface to go according to the sender whoes object is NSNotification
     if ([sender.userInfo[@"allowDown"] isEqualToString:@"1"]) {
-        [self.activityIndicatorView hideIndicator];
-        self.activityIndicatorView.hidden = YES;
+//        [self.activityIndicatorView hideIndicator];
+//        self.activityIndicatorView.hidden = YES;
+        
+        [self.stateIndicator stopAnimating];
+        self.stateIndicator.hidden = YES;
         //执行跳转程序，此时判断的是已经创建了组
         [self performSegueWithIdentifier:@"ToMainMapView1" sender:nil];
     }
     else if([sender.userInfo[@"waitToAllow"] isEqualToString:@"1"])
     {
-        [self.activityIndicatorView hideIndicator];
-        self.activityIndicatorView.hidden = YES;
+//        [self.activityIndicatorView hideIndicator];
+//        self.activityIndicatorView.hidden = YES;
+        [self.stateIndicator stopAnimating];
+        self.stateIndicator.hidden = YES;
+        
         [self performSegueWithIdentifier:@"shouldWaitToAllow1" sender:nil];
     }
     else
@@ -205,8 +208,10 @@ extern unsigned char ucHolePosition;
     //check current state
     self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"user"],@"username",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
     //
-    [self.activityIndicatorView showIndicator];
-    self.activityIndicatorView.hidden = NO;
+//    [self.activityIndicatorView showIndicator];
+//    self.activityIndicatorView.hidden = NO;
+    [self.stateIndicator startAnimating];
+    self.stateIndicator.hidden = NO;
     //
     __weak typeof(self) weakSelf = self;
     //
@@ -349,8 +354,10 @@ extern unsigned char ucHolePosition;
                     else
                     {
                         //先隐藏，同时停止动画
-                        [self.activityIndicatorView hideIndicator];
-                        self.activityIndicatorView.hidden = YES;
+//                        [self.activityIndicatorView hideIndicator];
+//                        self.activityIndicatorView.hidden = YES;
+                        [self.stateIndicator stopAnimating];
+                        self.stateIndicator.hidden = YES;
                         //
                         [self performSegueWithIdentifier:@"mannualCreatGrp" sender:nil];
                     }

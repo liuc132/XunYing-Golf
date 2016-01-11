@@ -182,9 +182,9 @@ typedef enum eventOrder{
         //3、获取到GPS数据
         self.getGPSLocation = [self.gpsData getCurLocation];
         
-        NSString *locx = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.longitude];//self.simulationGPSData[startCount][0];模拟数据调用之
+        NSString *locx = [NSString stringWithFormat:@"%.13f",self.getGPSLocation.coordinate.longitude];//self.simulationGPSData[startCount][0];模拟数据调用之
         //纬度
-        NSString *locy = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.latitude];//self.simulationGPSData[startCount][1];模拟数据调用之
+        NSString *locy = [NSString stringWithFormat:@"%.13f",self.getGPSLocation.coordinate.latitude];//self.simulationGPSData[startCount][1];模拟数据调用之
         NSLog(@"current locx:%@; locy:%@",locx,locy);
         //获取到mid号码
         NSString *theMid;

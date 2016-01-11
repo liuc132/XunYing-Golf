@@ -53,6 +53,10 @@
 
 @property (copy, nonatomic) void (^completionBlock) (NSString *);
 
+- (IBAction)QRBackToCreateGrp:(UIBarButtonItem *)sender;
+
+
+
 @end
 
 @implementation QRCodeReaderViewController
@@ -448,5 +452,7 @@
             [_delegate reader:self didScanResult:scannedResult];
         }
     }
+}
+- (IBAction)QRBackToCreateGrp:(UIBarButtonItem *)sender {
 }
 @end

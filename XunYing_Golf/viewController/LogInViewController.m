@@ -459,6 +459,9 @@ extern BOOL allowDownCourt;
 #ifdef DEBUD_MODE
                 NSLog(@"取消强制登录");
 #endif
+                //关闭activityIndicator
+                [self.activityIndicatorView stopAnimating];
+                self.activityIndicatorView.hidden = YES;
                 
                 break;
             case 1:
