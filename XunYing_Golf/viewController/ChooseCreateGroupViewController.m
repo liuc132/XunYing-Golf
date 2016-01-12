@@ -19,8 +19,8 @@
 #import "WaitToPlayTableViewController.h"
 #import "GetRequestIPAddress.h"
 
-extern unsigned char ucCusCounts;
-extern unsigned char ucHolePosition;
+//extern unsigned char ucCusCounts;
+//extern unsigned char ucHolePosition;
 
 
 @interface ChooseCreateGroupViewController ()<QRCodeReaderDelegate>
@@ -431,7 +431,7 @@ extern unsigned char ucHolePosition;
         weakSelf.QRcusCard = [[NSArray alloc] initWithArray:allCusCards];
         
         
-        NSMutableArray *allCuscards = [[NSMutableArray alloc] initWithObjects:allCusCards, nil];
+//        NSMutableArray *allCuscards = [[NSMutableArray alloc] initWithObjects:allCusCards, nil];
 #ifdef DEBUD_MODE
         NSLog(@"allcuscards:%@",allCuscards);
 #endif

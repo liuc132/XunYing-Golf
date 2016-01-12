@@ -96,9 +96,9 @@
         [self.lcDbCon ExecNonQuery:@"insert into tbl_SettingInfo(interval,ipAddr,portNum) values(?,?,?)" forParameter:settingData];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            DataTable *table = [[DataTable alloc] init];
-            table = [weakSelf.lcDbCon ExecDataTable:@"select *from tbl_SettingInfo"];
-            NSLog(@"table:%@",table.Rows);
+//            DataTable *table = [[DataTable alloc] init];
+//            table = [weakSelf.lcDbCon ExecDataTable:@"select *from tbl_SettingInfo"];
+//            NSLog(@"table:%@",table.Rows);
             
             [self dismissViewControllerAnimated:YES completion:nil];
         });

@@ -22,7 +22,7 @@
 //#import "GpsLocation.h"
 
 extern NSString *CTSettingCopyMyPhoneNumber();
-extern BOOL allowDownCourt;
+//extern BOOL allowDownCourt;
 
 @interface LogInViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>
 
@@ -85,31 +85,6 @@ extern BOOL allowDownCourt;
     
     //init and alloc dbCon
     self.dbCon = [[DBCon alloc] init];
-    //添加网络状态监测初始化设置
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentNetworkState:) name:kReachabilityChangedNotification object:nil];
-    
-//    NSString *remoteHostName = @"www.apple.com";
-//    NSString *remoteHostLabelFormatString = NSLocalizedString(@"Remote Host: %@", @"Remote host label format string");
-//    self.remoteHostLabel.text = [NSString stringWithFormat:remoteHostLabelFormatString, remoteHostName];
-//    
-//    self.hostReachability = [Reachability reachabilityWithHostName:remoteHostName];
-//    [self.hostReachability startNotifier];
-//    [self updateInterfaceWithReachability:self.hostReachability];
-    //获取到IP地址
-//    NSString *serverUrl;
-//    serverUrl = [GetRequestIPAddress getServerURL];
-//    
-//    NSString *remoteHostName = serverUrl;
-    
-    self.hostReachability = [Reachability reachabilityWithHostName:@"www.baidu.com"];
-    [self.hostReachability startNotifier];
-    [self updateInterfaceWithReachability:self.hostReachability];
-    
-    
-    self.internetReachability = [Reachability reachabilityForInternetConnection];
-    [self.internetReachability startNotifier];
-    self.wifiReachability = [Reachability reachabilityForLocalWiFi];
-    [self.wifiReachability startNotifier];
     //
     self.logInPerson = [[DataTable alloc] init];
     self.logPersonInf = [[DataTable alloc] init];
@@ -132,7 +107,23 @@ extern BOOL allowDownCourt;
     self.canReceiveNotification = NO;
     //
     self.requestManager = [[AFHTTPRequestOperationManager alloc] init];
+    //
+    [self settingNetWork];
+}
+
+- (void)settingNetWork
+{
+    //添加网络状态监测初始化设置
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentNetworkState:) name:kReachabilityChangedNotification object:nil];
     
+    self.hostReachability = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+    [self.hostReachability startNotifier];
+    [self updateInterfaceWithReachability:self.hostReachability];
+    //
+    self.internetReachability = [Reachability reachabilityForInternetConnection];
+    [self.internetReachability startNotifier];
+    self.wifiReachability = [Reachability reachabilityForLocalWiFi];
+    [self.wifiReachability startNotifier];
 }
 
 -(void)canDownCourt:(NSNotification *)sender
@@ -149,12 +140,8 @@ extern BOOL allowDownCourt;
         //检查心跳是否在继续
         HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc]init];
         [heartBeat initHeartBeat];
-        
         [heartBeat enableHeartBeat];
-//        if (![heartBeat checkState]) {
-//            [heartBeat enableHeartBeat];
-//        }
-        //执行跳转程序，此时判断的是已经创建了组
+        //
         [self performSegueWithIdentifier:@"ToMainMapView" sender:nil];
     }
     else if([sender.userInfo[@"waitToAllow"] isEqualToString:@"1"])
@@ -176,14 +163,6 @@ extern BOOL allowDownCourt;
     }
 
 }
-
-//
-//-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
-//{
-//    if ([keyPath isEqualToString:@"allowDown"]) {
-//        NSLog(@"object:%@",object);
-//    }
-//}
 
 #pragma -mark currentNetworkState
 -(void)currentNetworkState:(NSNotification *)note
@@ -216,6 +195,9 @@ extern BOOL allowDownCourt;
     {
         NSLog(@"没有网络");
         self.curNetworkStatus = NotReachable;
+        //
+        UIAlertView *netWorkAlert = [[UIAlertView alloc] initWithTitle:@"网络连接异常,请检查网络设置" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [netWorkAlert show];
     }
 }
 #pragma -mark updateInterfaceWithReachability
@@ -371,8 +353,8 @@ extern BOOL allowDownCourt;
             //    DataTable *table = [[DataTable alloc] init];
             //    table = [dbCon ExecDataTable:@"select *from tbl_logPerson"];
             //    NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
-            DataTable *threeHolesInf;// = [[DataTable alloc]init];
-            threeHolesInf = [self.dbCon ExecDataTable:@"select *from tbl_threeTypeHoleInf"];
+//            DataTable *threeHolesInf;// = [[DataTable alloc]init];
+//            threeHolesInf = [self.dbCon ExecDataTable:@"select *from tbl_threeTypeHoleInf"];
             //NSLog(@"top9:%@\n down9:%@\n all:%@",threeHolesInf.Rows[0],threeHolesInf.Rows[1],threeHolesInf.Rows[2]);
             //        NSLog(@"holeInf:%@",threeHolesInf);
             //NSLog(@"end store the three holes information");
@@ -523,6 +505,10 @@ extern BOOL allowDownCourt;
                             
                         });
                     }
+                    else if ([recDic[@"Code"] intValue] == -2)
+                    {
+                        [weakSelf registerDeviceID];
+                    }
                     
                 }failure:^(NSError *err){
 #ifdef DEBUD_MODE
@@ -553,10 +539,9 @@ extern BOOL allowDownCourt;
     [HttpTools getHttp:addDeviceURLStr forParams:addDeviceParam success:^(NSData *nsData){
 #ifdef DEBUD_MODE
         NSLog(@"successfully requested");
-#endif
         NSDictionary *recDic1 = [[NSDictionary alloc] init];// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         recDic1 = (NSDictionary *)nsData;
-#ifdef DEBUD_MODE
+
         NSLog(@"recDic:%@",recDic1);
 #endif
 //        NSLog(@"recDic:%@",recDic1);
@@ -599,6 +584,7 @@ extern BOOL allowDownCourt;
     {
         UIAlertView *networkUnreachableAlert = [[UIAlertView alloc] initWithTitle:@"网络连接异常" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [networkUnreachableAlert show];
+        return;
     }
     //
     else if(([self.account.text isEqual: @""]) || ([self.password.text isEqual: @""]))
@@ -716,9 +702,9 @@ extern BOOL allowDownCourt;
                 [self.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
                 
                 //执行查询功能
+#ifdef DEBUD_MODE
                 DataTable *table;// = [[DataTable alloc] init];
                 table = [self.dbCon ExecDataTable:@"select *from tbl_logPerson"];
-#ifdef DEBUD_MODE
                 NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
 #endif
                 
@@ -787,10 +773,19 @@ extern BOOL allowDownCourt;
     //
     self.haveGroupNotDown = NO;
     //
-//    if (self.account.text isEqualToString:[NSString stringWithFormat:self.]) {
+//    [self settingNetWork];
     
-//    }
-    
+    //
+    if(([self.account.text isEqual: @""]) || ([self.password.text isEqual: @""]))
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入用户名及密码" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+        [alert show];
+        return;
+    }
+    NSString *logCaddyStr;
+    NSString *password;
+    logCaddyStr = [NSString stringWithFormat:@"%@",self.account.text];
+    password    = [NSString stringWithFormat:@"%@",self.password.text];
     //
     [self.dbCon ExecNonQuery:@"delete from tbl_logPerson"];
     //构建判断是否可以建组参数
@@ -803,7 +798,7 @@ extern BOOL allowDownCourt;
     theMid = [GetRequestIPAddress getUniqueID];
     theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //
-    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"],@"username",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
+    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",logCaddyStr,@"username",password,@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
     //
     __weak LogInViewController *weakSelf = self;
     //
@@ -955,43 +950,17 @@ extern BOOL allowDownCourt;
 #ifdef DEBUD_MODE
         NSLog(@"request failled");
 #endif
-        
+        [self.activityIndicatorView stopAnimating];
+        self.activityIndicatorView.hidden = YES;
+        //
+        UIAlertView *netAlert = [[UIAlertView alloc] initWithTitle:@"网络连接异常，请检查网络设置" message:nil delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [netAlert show];
     }];
 }
 
 
 #pragma -mark logInButton
 - (IBAction)logInButton:(UIButton *)sender {
-    
-    //构建判断是否可以建组参数
-    if (![self.logInPerson.Rows count]) {
-        [self logIn];
-        return;
-    }
-    //获取到mid号码
-    NSString *theMid;
-    theMid = [GetRequestIPAddress getUniqueID];
-    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
-    //
-    self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"],@"username",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"password"],@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
-    //
-//    __weak LogInViewController *weakSelf = self;
-    //
-    NSString *downFieldURLStr;
-    downFieldURLStr = [GetRequestIPAddress getDecideCreateGrpAndDownFieldURL];
-    /*
-    [HttpTools getHttp:downFieldURLStr forParams:self.checkCreatGroupState success:^(NSData *nsData){
-        NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-        
-        NSLog(@"recDic:%@",recDic);
-        
-        
-    }failure:^(NSError *err){
-        NSLog(@"err:%@",err);
-        
-        
-    }];
-    */
     //登录时判断当前的状态
 #ifdef testChangeInterface
     [self performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];

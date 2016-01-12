@@ -105,8 +105,8 @@
     }
     
     
-    DataTable *table = [[DataTable alloc] init];
-    table = [self.dbCon ExecDataTable:@"select *from tbl_uniqueID"];
+//    DataTable *table = [[DataTable alloc] init];
+//    table = [self.dbCon ExecDataTable:@"select *from tbl_uniqueID"];
     
     return YES;
 }
@@ -114,8 +114,10 @@
 -(NSString *) gen_uuid
 {
     CFUUIDRef uuid_ref=CFUUIDCreate(nil);
-    CFStringRef uuid_string_ref=CFUUIDCreateString(nil, uuid_ref);
-    NSString *uuid=[NSString stringWithString:(__bridge NSString * _Nonnull)(uuid_string_ref)];
+    CFStringRef uuid_string_ref;//=CFUUIDCreateString(nil, uuid_ref);
+    uuid_string_ref=CFUUIDCreateString(nil, uuid_ref);
+    NSString *uuid;//=[NSString stringWithString:(__bridge NSString * _Nonnull)(uuid_string_ref)];
+    uuid=[NSString stringWithString:(__bridge NSString * _Nonnull)(uuid_string_ref)];
     NSLog(@"uuid:%@",uuid);
     return uuid;
 }

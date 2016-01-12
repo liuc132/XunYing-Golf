@@ -20,9 +20,9 @@
 #import "HeartBeatAndDetectState.h"
 #import "GetRequestIPAddress.h"
 
-extern unsigned char ucCusCounts;
-extern unsigned char ucHolePosition;
-extern BOOL          allowDownCourt;
+//extern unsigned char ucCusCounts;
+//extern unsigned char ucHolePosition;
+//extern BOOL          allowDownCourt;
 
 
 
@@ -564,7 +564,7 @@ extern BOOL          allowDownCourt;
             {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
                 //
-                [self performSegueWithIdentifier:@"waitDownToCreateWay" sender:nil];
+                [self performSegueWithIdentifier:@"waitDownToCreateGrp" sender:nil];
             }
             
         }failure:^(NSError *err){
@@ -585,7 +585,7 @@ extern BOOL          allowDownCourt;
 - (IBAction)backToCreateInf:(UIBarButtonItem *)sender {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self performSegueWithIdentifier:@"waitDownToCreateWay" sender:nil];
+        [self performSegueWithIdentifier:@"waitDownToLogIn" sender:nil];
     });
 }
 @end

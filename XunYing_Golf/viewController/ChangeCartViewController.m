@@ -83,6 +83,25 @@ typedef enum ChangeReason{
     //init a notificationcenter
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"changeCart" object:nil];
     
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+    
+}
+
+- (void)ForceBackField:(NSNotification *)sender
+{
+    __weak typeof(self) weakSelf = self;
+    if ([sender.userInfo[@"forceBack"] isEqualToString:@"1"]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        //
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [serverForceBackAlert show];
+            
+            [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
+        });
+        
+        
+    }
 }
 
 - (void)getEventFromHeart:(NSNotification *)sender
@@ -96,8 +115,7 @@ typedef enum ChangeReason{
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear: animated];
-    
-    NSLog(@"enter viewwilldisappear");
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -139,7 +157,7 @@ typedef enum ChangeReason{
                 weakSelf.thirdChageCartView.hidden = YES;
                 weakSelf.fourthChangeCartView.hidden = YES;
                 //做相应的赋值操作
-                firstCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
+                firstCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
                 weakSelf.firstChangeCartInfo.text = firstCartInfo;
                 
                 break;
@@ -150,8 +168,8 @@ typedef enum ChangeReason{
                 weakSelf.thirdChageCartView.hidden = YES;
                 weakSelf.fourthChangeCartView.hidden = YES;
                 //做相应的赋值操作
-                firstCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
-                secondCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
+                firstCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
+                secondCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
                 weakSelf.firstChangeCartInfo.text = firstCartInfo;
                 weakSelf.secondChangeCartInfo.text = secondCartInfo;
                 
@@ -164,9 +182,9 @@ typedef enum ChangeReason{
                 weakSelf.thirdChageCartView.hidden = NO;
                 weakSelf.fourthChangeCartView.hidden = YES;
                 //做相应的赋值操作
-                firstCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
-                secondCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
-                thirdCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[2][@"carnum"],weakSelf.curGrpCarts.Rows[2][@"carsea"]];
+                firstCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
+                secondCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
+                thirdCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[2][@"carnum"],weakSelf.curGrpCarts.Rows[2][@"carsea"]];
                 weakSelf.firstChangeCartInfo.text = firstCartInfo;
                 weakSelf.secondChangeCartInfo.text = secondCartInfo;
                 weakSelf.thirdChageCartInfo.text = thirdCartInfo;
@@ -179,10 +197,10 @@ typedef enum ChangeReason{
                 weakSelf.thirdChageCartView.hidden = NO;
                 weakSelf.fourthChangeCartView.hidden = NO;
                 //做相应的赋值操作
-                firstCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
-                secondCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
-                thirdCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[2][@"carnum"],weakSelf.curGrpCarts.Rows[2][@"carsea"]];
-                fourthCartInfo = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCarts.Rows[3][@"carnum"],weakSelf.curGrpCarts.Rows[3][@"carsea"]];
+                firstCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[0][@"carnum"],weakSelf.curGrpCarts.Rows[0][@"carsea"]];
+                secondCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[1][@"carnum"],weakSelf.curGrpCarts.Rows[1][@"carsea"]];
+                thirdCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[2][@"carnum"],weakSelf.curGrpCarts.Rows[2][@"carsea"]];
+                fourthCartInfo = [NSString stringWithFormat:@"%@ %@座",weakSelf.curGrpCarts.Rows[3][@"carnum"],weakSelf.curGrpCarts.Rows[3][@"carsea"]];
                 
                 weakSelf.firstChangeCartInfo.text = firstCartInfo;
                 weakSelf.secondChangeCartInfo.text = secondCartInfo;

@@ -11,9 +11,9 @@
 
 #ifndef myData
 #define myData
-unsigned char ucCusCounts;
-unsigned char ucHolePosition;
-BOOL          allowDownCourt;
+//unsigned char ucCusCounts;
+//unsigned char ucHolePosition;
+//BOOL          allowDownCourt;
 
 #endif
 

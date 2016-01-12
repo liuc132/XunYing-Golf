@@ -198,53 +198,28 @@ FixedPoint gpsScreenPoint;
     //preparing the gps sketch layer.
     self.gpsSketchLayer = [[AGSSketchGraphicsLayer alloc] initWithGeometry:nil];
     [self.mapView addMapLayer:self.gpsSketchLayer withName:@"Sketch layer"];
-    
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        //显示的GPS位置的图形风格设置
-//        self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
-//        self.mapView.locationDisplay.wanderExtentFactor = 0.75;
-//        //
-//        if(!weakSelf.mapView.locationDisplay.dataSourceStarted)
-//            [weakSelf.mapView.locationDisplay startDataSource];
-//    });
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
-//
-//#pragma -mark AGSLocationDisplayDataSourceDelegate
-//- (void)locationDisplayDataSource:(id<AGSLocationDisplayDataSource>)dataSource didUpdateWithLocation:(AGSLocation *)location
-//{
-//    NSLog(@"didUpdate dataSource:%@ ;location:%@",dataSource,location);
-//    
-//    
-//}
-//
-//- (void)locationDisplayDataSourceStarted:(id<AGSLocationDisplayDataSource>)dataSource
-//{
-//    NSLog(@"started dataSource:%@",dataSource);
-//    
-//    
-//}
-//
-//- (void)locationDisplayDataSourceStopped:(id<AGSLocationDisplayDataSource>)dataSource
-//{
-//    NSLog(@"stopped datasource:%@",dataSource);
-//    
-//    
-//}
-//
-//- (void)locationDisplayDataSource:(id<AGSLocationDisplayDataSource>)dataSource didFailWithError:(NSError *)error
-//{
-//    NSLog(@"err:%@  datasource:%@",error,dataSource);
-//    
-//    
-//}
-//
-//- (void)locationDisplayDataSource:(id<AGSLocationDisplayDataSource>)dataSource didUpdateWithHeading:(double)heading
-//{
-//    NSLog(@"heading:%f  datasource:%@",heading,dataSource);
-//    
-//    
-//}
+
+- (void)ForceBackField:(NSNotification *)sender
+{
+    __weak typeof(self) weakSelf = self;
+    if ([sender.userInfo[@"forceBack"] isEqualToString:@"1"]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        //
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [serverForceBackAlert show];
+            
+            [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
+        });
+        
+        
+    }
+}
+
 
 //
 -(BOOL)callout:(AGSCallout *)callout willShowForFeature:(id<AGSFeature>)feature layer:(AGSLayer<AGSHitTestable> *)layer mapPoint:(AGSPoint *)mapPoint
@@ -291,7 +266,7 @@ FixedPoint gpsScreenPoint;
 -(BOOL)mapView:(AGSMapView *)mapView shouldProcessClickAtPoint:(CGPoint)screen mapPoint:(AGSPoint *)mappoint
 {
     [self.graphicLayer removeAllGraphics];
-    AGSSimpleMarkerSymbol *markSymbol = [[AGSSimpleMarkerSymbol alloc] initWithColor:[UIColor redColor]];
+//    AGSSimpleMarkerSymbol *markSymbol = [[AGSSimpleMarkerSymbol alloc] initWithColor:[UIColor redColor]];
     //
 //    AGSSimpleLineSymbol *simpleLineSymbol = [[AGSSimpleLineSymbol alloc] initWithColor:[UIColor blueColor] width:1.0f];
     //添加标记点

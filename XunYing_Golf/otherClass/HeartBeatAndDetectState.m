@@ -14,7 +14,7 @@
 #import "HttpTools.h"
 #import "GetRequestIPAddress.h"
 
-extern BOOL allowDownCourt;
+//extern BOOL allowDownCourt;
 
 typedef enum eventType{
     changeCart = 1, //换球车
@@ -49,7 +49,8 @@ typedef enum eventOrder{
 @property (strong, nonatomic) CLLocation *getGPSLocation;
 @property (strong, nonatomic) GetGPSLocationData *gpsData;
 @property (strong, nonatomic) NSArray    *observerNameArray;
-@property (nonatomic)         BOOL      canEnterHeartBeat;
+@property                     BOOL      canEnterHeartBeat;
+@property (strong, nonatomic) CADisplayLink *displayLink;
 
 
 @end
@@ -71,7 +72,8 @@ typedef enum eventOrder{
     self.userData = [[DataTable alloc] init];
     self.groupInformation = [[DataTable alloc] init];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DisAbleTimer:) name:@"HeartBeat" object:nil];
+//    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(timelySend)];
+//    [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     
     //启动心跳功能
     [self enableHeartBeat];
@@ -79,14 +81,37 @@ typedef enum eventOrder{
 
 - (void)DisAbleTimer:(NSNotification *)sender
 {
-    if ([sender.userInfo[@"disableHeart"] isEqualToString:@"1"]) {
+    __weak typeof(self) weakSelf = self;
+    //
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 9.0) {
+        dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 1ull * NSEC_PER_SEC ) ;
+        dispatch_after(time,dispatch_get_main_queue(), ^{
+            if ([sender.userInfo[@"disableHeart"] isEqualToString:@"1"]) {
+                //3接收到了心跳信息之后，移除通知
+                [[NSNotificationCenter defaultCenter] removeObserver:self];
+                //1关闭心跳
+                [weakSelf.heartBeatTime invalidate];
+                weakSelf.canEnterHeartBeat = NO;
+                //
+                
+                
+                //2关闭GPS更新
+                [weakSelf.gpsData stopUpdateLocation];
+                
+            }
+        });
+    }
+    else
+    {
+        //3接收到了心跳信息之后，移除通知
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
         //1关闭心跳
         [self.heartBeatTime invalidate];
         self.canEnterHeartBeat = NO;
         //2关闭GPS更新
         [self.gpsData stopUpdateLocation];
+        
     }
-    
 }
 
 - (void)initAndGetGpsLocation
@@ -110,6 +135,8 @@ typedef enum eventOrder{
     self.canEnterHeartBeat = YES;
     //2开启GPS功能
     [self initAndGetGpsLocation];
+    //3添加通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DisAbleTimer:) name:@"HeartBeat" object:nil];
     
 }
 
@@ -124,362 +151,407 @@ typedef enum eventOrder{
     
 }
 
+- (void)disableHeart
+{
+    __weak typeof(self) weakSelf = self;
+    //
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 9.0) {
+        dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 1ull * NSEC_PER_SEC ) ;
+        dispatch_after(time,dispatch_get_main_queue(), ^{
+            //3接收到了心跳信息之后，移除通知
+            [[NSNotificationCenter defaultCenter] removeObserver:self];
+            //1关闭心跳
+            [weakSelf.heartBeatTime invalidate];
+            weakSelf.canEnterHeartBeat = NO;
+            //2关闭GPS更新
+            [weakSelf.gpsData stopUpdateLocation];
+            
+        });
+    }
+    else
+    {
+        //3接收到了心跳信息之后，移除通知
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        //1关闭心跳
+        [self.heartBeatTime invalidate];
+        self.canEnterHeartBeat = NO;
+        //2关闭GPS更新
+        [self.gpsData stopUpdateLocation];
+        
+    }
+}
+
 //
 -(void)timelySend
 {
-//    NSLog(@"心跳主程序");
-    if (!self.canEnterHeartBeat) {
-        return;
-    }
-    
-    //计算发送次数
-    static unsigned char SendGPStimes = 0;
-    static unsigned char startCount = 0;
-    
-    //
-    self.groupInformation = [self.lcDBCon ExecDataTable:@"select *from tbl_groupInf"];
-    self.userData = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
-    
-    self.allowDownStr = @"0";
-    self.finalDic = [[NSMutableDictionary alloc] init];
-    self.waitToAllow = @"0";
-//    self.allowDown = NO;
-    self.haveDetectedDownEnable = @"1";
-    //在这里发送心跳信息
-//    static unsigned int timeCounter = 0;
-//    timeCounter++;
-//    if(timeCounter > 9)
-    {
-//        timeCounter = 0;
-        NSLog(@"start send heartBeat");
-        //read the database to get what we want
-        //DBCon *dbCon = [DBCon instance];
-        //执行查询功能
-        //code text,job text,name text,number text,sex text
-        //        DataTable *table = [[DataTable alloc] init];
-        //        table = [self.dbCon ExecDataTable:@"select *from tbl_logPerson"];
+    __weak typeof(self) weakSelf = self;
+    dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 1ull * NSEC_PER_SEC ) ;
+    dispatch_after(time,dispatch_get_main_queue(), ^{
         
-        
-        //        NSLog(@"totalCount:%lu",(sizeof(simulateGPSData) / sizeof(locXY)));
-        //here we change the simulation GPS Data
-        if(SendGPStimes < GPSSendTimes)
-        {
-            SendGPStimes++;
+        if (!self.canEnterHeartBeat) {
+            return;
         }
-        else
+        
+        //计算发送次数
+        static unsigned char SendGPStimes = 0;
+        static unsigned char startCount = 0;
+        
+        //
+        weakSelf.groupInformation = [self.lcDBCon ExecDataTable:@"select *from tbl_groupInf"];
+        weakSelf.userData = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
+        
+        weakSelf.allowDownStr = @"0";
+        weakSelf.finalDic = [[NSMutableDictionary alloc] init];
+        weakSelf.waitToAllow = @"0";
+        //    self.allowDown = NO;
+        weakSelf.haveDetectedDownEnable = @"1";
+        //在这里发送心跳信息
+        //    static unsigned int timeCounter = 0;
+        //    timeCounter++;
+        //    if(timeCounter > 9)
         {
-            SendGPStimes = 0;
+            //        timeCounter = 0;
+            NSLog(@"start send heartBeat");
+            //read the database to get what we want
+            //DBCon *dbCon = [DBCon instance];
+            //执行查询功能
+            //code text,job text,name text,number text,sex text
+            //        DataTable *table = [[DataTable alloc] init];
+            //        table = [self.dbCon ExecDataTable:@"select *from tbl_logPerson"];
             
-            if(startCount < [self.simulationGPSData count])
-                startCount++;
-            else{
-                startCount = 0;
+            
+            //        NSLog(@"totalCount:%lu",(sizeof(simulateGPSData) / sizeof(locXY)));
+            //here we change the simulation GPS Data
+            if(SendGPStimes < GPSSendTimes)
+            {
+                SendGPStimes++;
             }
-        }
-        //NSLog(@"longitude:%.8f; latitude:%.8f",self.getGPSLocation.coordinate.longitude,self.getGPSLocation.coordinate.latitude);
-        //经度
-        //
-        //3、获取到GPS数据
-        self.getGPSLocation = [self.gpsData getCurLocation];
-        
-        NSString *locx = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.longitude];//self.simulationGPSData[startCount][0];模拟数据调用之
-        //纬度
-        NSString *locy = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.latitude];//self.simulationGPSData[startCount][1];模拟数据调用之
-        NSLog(@"current locx:%@; locy:%@",locx,locy);
-        //获取到mid号码
-        NSString *theMid;
-        theMid = [GetRequestIPAddress getUniqueID];
-        theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
-        //
-        //获取到当前系统的时间，并生成相应的格式
-        NSDateFormatter *dateFarmatter = [[NSDateFormatter alloc] init];
-        [dateFarmatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
-        //
-        NSString *timestampsStr;
-        if (self.groupInformation.Rows[0][@"timestamps"] != nil) {
-            timestampsStr = self.groupInformation.Rows[0][@"timestamps"];
-        }
-        else
-        {
-            timestampsStr = @"";
-        }
-        //使用模拟数据时，则在此组建地图界面的当前位置点
-        //start send and handle all what the server sends back
-        //巡场和球童这两个角色所传的参数不一样：主要是 组“grocod”不一致，球童需要传该参数，而巡场则不传该参数或者传空
-        //construct the parameters for the heartBeat
-        NSMutableDictionary *heartBeatParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.userData.Rows[0][@"job"],@"job",[NSDate date],@"loct",locx,@"locx",locy,@"locy",self.groupInformation.Rows[0][@"grocod"],@"grocod",@"1",@"gpsType",self.userData.Rows[0][@"code"],@"bandcode",curDateTime,@"loct",timestampsStr,@"timestamps", nil];
-        //
-        __weak HeartBeatAndDetectState *weakSelf = self;
-        //获取到IP地址
-        NSString *heartUrl;
-        heartUrl = [GetRequestIPAddress getHeartBeatURL];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //request
-            [HttpTools getHttp:heartUrl forParams:heartBeatParam success:^(NSData *nsData){
-                HeartBeatAndDetectState *strongSelf = weakSelf;
-                NSLog(@"success send HeartBeat");
+            else
+            {
+                SendGPStimes = 0;
                 
-//                NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-                NSDictionary *receiveDic;
-                receiveDic = (NSDictionary *)nsData;
-                NSLog(@"back to the field msg:%@",receiveDic[@"Msg"]);
-                //handle error
-                //            NSLog(@"Code:%@ and messege is:%@",receiveDic[@"Code"],receiveDic[@"Msg"]);
-                
-                if([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
-                {
-                    NSString *errStr;
-                    errStr = [NSString stringWithFormat:@"%@",receiveDic[@"Msg"]];
-                    UIAlertView *hasGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-                    [hasGrpFailAlert show];
-                    NSLog(@"fail");
+                if(startCount < [weakSelf.simulationGPSData count])
+                    startCount++;
+                else{
+                    startCount = 0;
                 }
-                
-                else if ([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
-                {
-                    [strongSelf.heartBeatTime invalidate];
-                    NSLog(@"param is null");
-                }
-                else if ([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
-                {
-                    NSString *errStr;
-                    errStr = [NSString stringWithFormat:@"%@",receiveDic[@"Msg"]];
-                    UIAlertView *hasGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-                    [hasGrpFailAlert show];
-                    NSLog(@"The mid is illegal");
-                }
-                
-                else
-                {
-                    //
-                    NSArray *eventInfo = receiveDic[@"Msg"][@"eveinfo"];
-                    //                NSLog(@"event:%@",eventInfo);
-                    if ([eventInfo count]) {
+            }
+            //NSLog(@"longitude:%.8f; latitude:%.8f",self.getGPSLocation.coordinate.longitude,self.getGPSLocation.coordinate.latitude);
+            //经度
+            //
+            //3、获取到GPS数据
+            weakSelf.getGPSLocation = [weakSelf.gpsData getCurLocation];
+            
+            NSString *locx = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.longitude];//self.simulationGPSData[startCount][0];模拟数据调用之
+            //纬度
+            NSString *locy = [NSString stringWithFormat:@"%.10f",weakSelf.getGPSLocation.coordinate.latitude];//self.simulationGPSData[startCount][1];模拟数据调用之
+            NSLog(@"current locx:%@; locy:%@",locx,locy);
+            //获取到mid号码
+            NSString *theMid;
+            theMid = [GetRequestIPAddress getUniqueID];
+            theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
+            //
+            //获取到当前系统的时间，并生成相应的格式
+            NSDateFormatter *dateFarmatter = [[NSDateFormatter alloc] init];
+            [dateFarmatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
+            //
+            NSString *timestampsStr;
+            if (weakSelf.groupInformation.Rows[0][@"timestamps"] != nil) {
+                timestampsStr = self.groupInformation.Rows[0][@"timestamps"];
+            }
+            else
+            {
+                timestampsStr = @"";
+            }
+            //使用模拟数据时，则在此组建地图界面的当前位置点
+            //start send and handle all what the server sends back
+            //巡场和球童这两个角色所传的参数不一样：主要是 组“grocod”不一致，球童需要传该参数，而巡场则不传该参数或者传空
+            //construct the parameters for the heartBeat
+            NSMutableDictionary *heartBeatParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.userData.Rows[0][@"job"],@"job",[NSDate date],@"loct",locx,@"locx",locy,@"locy",weakSelf.groupInformation.Rows[0][@"grocod"],@"grocod",@"1",@"gpsType",weakSelf.userData.Rows[0][@"code"],@"bandcode",curDateTime,@"loct",timestampsStr,@"timestamps", nil];
+            //获取到IP地址
+            NSString *heartUrl;
+            heartUrl = [GetRequestIPAddress getHeartBeatURL];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //request
+                [HttpTools getHttp:heartUrl forParams:heartBeatParam success:^(NSData *nsData){
+                    NSLog(@"success send HeartBeat");
+                    
+                    //                NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+                    NSDictionary *receiveDic;
+                    receiveDic = (NSDictionary *)nsData;
+                    //handle error
+                    //            NSLog(@"Code:%@ and messege is:%@",receiveDic[@"Code"],receiveDic[@"Msg"]);
+                    
+                    if([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
+                    {
+                        NSString *errStr;
+                        errStr = [NSString stringWithFormat:@"%@",receiveDic[@"Msg"]];
+                        UIAlertView *hasGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                        [hasGrpFailAlert show];
+                        NSLog(@"fail");
+                    }
+                    
+                    else if ([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
+                    {
+                        [weakSelf.heartBeatTime invalidate];
+                        NSLog(@"param is null");
+                    }
+                    else if ([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
+                    {
+                        NSString *errStr;
+                        errStr = [NSString stringWithFormat:@"%@",receiveDic[@"Msg"]];
+                        UIAlertView *hasGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                        [hasGrpFailAlert show];
+                        NSLog(@"The mid is illegal");
+                    }
+                    
+                    else
+                    {
                         //
-                        //                    [weakSelf.lcDBCon ExecNonQuery:@"delete from tbl_taskInfo"];
-                        //
-                        NSDictionary *eventDic = eventInfo[0];
-                        NSString *observerName = [[NSString alloc] init];
-                        //                    NSMutableArray *taskInfo = [[NSMutableArray alloc] init];
-                        //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,destintime text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
-                        
-                        NSLog(@"eventDic:%@",eventDic);
-                        NSDictionary *newCart;// = [[NSDictionary alloc] init];
-                        NSString *value;// = [[NSString alloc] init];
-                        NSString *cartValue;// = [[NSString alloc] init];
-                        NSString *decideValue;// = [[NSString alloc] init];
-                        value = [eventDic objectForKey:@"hantim"];
-                        //
-                        switch ([eventDic[@"evetyp"] intValue]) {
-                            case changeCaddy:
-                                observerName = self.observerNameArray[_caddy];
-                                //更新相应的数据
-                                //
-                                //                            value = [eventDic objectForKey:@"hantim"];
-                                if (value != nil) {
+                        NSArray *eventInfo = receiveDic[@"Msg"][@"eveinfo"];
+                        //                NSLog(@"event:%@",eventInfo);
+                        if ([eventInfo count]) {
+                            //
+                            //                    [weakSelf.lcDBCon ExecNonQuery:@"delete from tbl_taskInfo"];
+                            //
+                            NSDictionary *eventDic = eventInfo[0];
+                            NSString *observerName = [[NSString alloc] init];
+                            //                    NSMutableArray *taskInfo = [[NSMutableArray alloc] init];
+                            //tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,result text,everea text,hantim text,oldCaddyCode text,newCaddyCode text,oldCartCode text,newCartCode text,jumpHoleCode text,toHoleCode text,destintime text,reqBackTime text,reHoleCode text,mendHoleCode text,ratifyHoleCode text,ratifyinTime text,selectedHoleCode text)
+                            
+                            NSLog(@"eventDic:%@",eventDic);
+                            NSDictionary *newCart;// = [[NSDictionary alloc] init];
+                            NSString *value;// = [[NSString alloc] init];
+                            NSString *cartValue;// = [[NSString alloc] init];
+                            NSString *decideValue;// = [[NSString alloc] init];
+                            value = [eventDic objectForKey:@"hantim"];
+                            //
+                            switch ([eventDic[@"evetyp"] intValue]) {
+                                case changeCaddy:
+                                    observerName = weakSelf.observerNameArray[_caddy];
+                                    //更新相应的数据
                                     //
-                                    newCart = eventDic[@"everes"];
-                                    cartValue = [newCart objectForKey:@"newcad"];
-                                    if ((NSNull *)cartValue != [NSNull null]) {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET newCaddyCode = '%@' , result = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"newcad"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
-                                    }
-                                    else
-                                    {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
-                                    }
-                                    //
-                                    
-                                }
-                                
-                                break;
-                            case changeCart:
-                                observerName = self.observerNameArray[_cart];
-                                //更新相应的数据
-                                //                            value = [eventDic objectForKey:@"hantim"];
-                                if (value != nil) {
-                                    //
-                                    newCart = eventDic[@"everes"];
-                                    cartValue = [newCart objectForKey:@"newcar"];
-                                    if ((NSNull *)cartValue != [NSNull null]) {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET newCartCode = '%@' , result = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"newcar"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
-                                    }
-                                    else
-                                    {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
-                                    }
-                                    //
-                                    
-                                }
-                                //                            table12 = [weakSelf.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
-                                //                            NSLog(@"table12:%@",table12.Rows);
-                                
-                                break;
-                            case jumpHole:
-                                observerName = self.observerNameArray[_jump];
-                                //                            value = [eventDic objectForKey:@"hantim"];
-                                if (value != nil) {
-                                    //
-                                    newCart = eventDic[@"everes"];
-                                    cartValue = [newCart objectForKey:@"desthole"];
-                                    if ((NSNull *)cartValue != [NSNull null]) {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET toHoleCode = '%@' , result = '%@' , destintime = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"desthole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"everes"][@"destintime"],eventDic[@"hantim"],eventDic[@"evecod"]]];
-                                    }
-                                    else
-                                    {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
-                                    }
-                                    //
-                                    
-                                }
-                                
-                                break;
-                            case mendHole:
-                                observerName = self.observerNameArray[_mend];
-                                //                            value = [eventDic objectForKey:@"hantim"];
-                                if (value != nil) {
-                                    //
-                                    newCart = eventDic[@"everes"];
-                                    cartValue = [newCart objectForKey:@"ratifyhole"];
-                                    if ((NSNull *)cartValue != [NSNull null]) {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET ratifyHoleCode = '%@' , result = '%@' , ratifyinTime = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"ratifyhole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"everes"][@"ratifyintime"],eventDic[@"hantim"],eventDic[@"evecod"]]];
-                                    }
-                                    else
-                                    {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
-                                    }
-                                    //
-                                    decideValue = [newCart objectForKey:@"selectedhole"];
-                                    if ((NSNull *)decideValue != [NSNull null]) {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET selectedHoleCode = '%@' , result = '%@' where evecod = '%@'",eventDic[@"everes"][@"selectedhole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"evecod"]]];
+                                    //                            value = [eventDic objectForKey:@"hantim"];
+                                    if (value != nil) {
+                                        //
+                                        newCart = eventDic[@"everes"];
+                                        cartValue = [newCart objectForKey:@"newcad"];
+                                        if ((NSNull *)cartValue != [NSNull null]) {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET newCaddyCode = '%@' , result = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"newcad"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        else
+                                        {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        //
                                         
                                     }
                                     
-                                }
-                                
-                                break;
-                            case order:
-                                observerName = self.observerNameArray[_order];
-                                
-                                break;
-                            case leaveToRest:
-                                observerName = self.observerNameArray[_leave];
-                                //                            value = [eventDic objectForKey:@"hantim"];
-                                if (value != nil) {
-                                    //
-                                    newCart = eventDic[@"everes"];
-                                    cartValue = [newCart objectForKey:@"rehole"];
-                                    if ((NSNull *)cartValue != [NSNull null]) {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET reHoleCode = '%@' , reqBackTime = '%@' , result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"rehole"][@"holcod"],eventDic[@"everes"][@"retime2"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                    break;
+                                case changeCart:
+                                    observerName = weakSelf.observerNameArray[_cart];
+                                    //更新相应的数据
+                                    //                            value = [eventDic objectForKey:@"hantim"];
+                                    if (value != nil) {
+                                        //
+                                        newCart = eventDic[@"everes"];
+                                        cartValue = [newCart objectForKey:@"newcar"];
+                                        if ((NSNull *)cartValue != [NSNull null]) {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET newCartCode = '%@' , result = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"newcar"][@"carcod"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        else
+                                        {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        //
+                                        
                                     }
-                                    else
-                                    {
-                                        [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                    //                            table12 = [weakSelf.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
+                                    //                            NSLog(@"table12:%@",table12.Rows);
+                                    
+                                    break;
+                                case jumpHole:
+                                    observerName = weakSelf.observerNameArray[_jump];
+                                    //                            value = [eventDic objectForKey:@"hantim"];
+                                    if (value != nil) {
+                                        //
+                                        newCart = eventDic[@"everes"];
+                                        cartValue = [newCart objectForKey:@"desthole"];
+                                        if ((NSNull *)cartValue != [NSNull null]) {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET toHoleCode = '%@' , result = '%@' , destintime = '%@' , hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"desthole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"everes"][@"destintime"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        else
+                                        {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        //
+                                        
                                     }
-                                    //
                                     
+                                    break;
+                                case mendHole:
+                                    observerName = weakSelf.observerNameArray[_mend];
+                                    //                            value = [eventDic objectForKey:@"hantim"];
+                                    if (value != nil) {
+                                        //
+                                        newCart = eventDic[@"everes"];
+                                        cartValue = [newCart objectForKey:@"ratifyhole"];
+                                        if ((NSNull *)cartValue != [NSNull null]) {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET ratifyHoleCode = '%@' , result = '%@' , ratifyinTime = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"ratifyhole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"everes"][@"ratifyintime"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        else
+                                        {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        //
+                                        decideValue = [newCart objectForKey:@"selectedhole"];
+                                        if ((NSNull *)decideValue != [NSNull null]) {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET selectedHoleCode = '%@' , result = '%@' where evecod = '%@'",eventDic[@"everes"][@"selectedhole"][@"holcod"],eventDic[@"everes"][@"result"],eventDic[@"evecod"]]];
+                                            
+                                        }
+                                        
+                                    }
                                     
+                                    break;
+                                case order:
+                                    observerName = weakSelf.observerNameArray[_order];
                                     
-                                }
-                                
-                                break;
-                            default:
-                                break;
+                                    break;
+                                case leaveToRest:
+                                    observerName = weakSelf.observerNameArray[_leave];
+                                    //                            value = [eventDic objectForKey:@"hantim"];
+                                    if (value != nil) {
+                                        //
+                                        newCart = eventDic[@"everes"];
+                                        cartValue = [newCart objectForKey:@"rehole"];
+                                        if ((NSNull *)cartValue != [NSNull null]) {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET reHoleCode = '%@' , reqBackTime = '%@' , result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"rehole"][@"holcod"],eventDic[@"everes"][@"retime2"],eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        else
+                                        {
+                                            [weakSelf.lcDBCon ExecNonQuery:[NSString stringWithFormat:@"UPDATE tbl_taskInfo SET result = '%@' ,hantim = '%@' where evecod = '%@'",eventDic[@"everes"][@"result"],eventDic[@"hantim"],eventDic[@"evecod"]]];
+                                        }
+                                        //
+                                        
+                                        
+                                        
+                                    }
+                                    
+                                    break;
+                                default:
+                                    break;
+                            }
+                            
+                            
+                            //保存数据 tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,retime text,newCartNum text,rehole text)
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                //                        DataTable *table111 = [[DataTable alloc] init];
+                                //                        table111 = [weakSelf.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
+                                //                        NSLog(@"table111:%@",table111);
+                                //通过通知发送到相应的界面中去
+                                [[NSNotificationCenter defaultCenter] postNotificationName:observerName object:nil userInfo:eventDic];
+                                //发送到事务通讯主界面中去 displayTaskResult
+                                [[NSNotificationCenter defaultCenter] postNotificationName:@"displayTaskResult" object:nil userInfo:eventDic];
+                                //在详情视图界面也发送通知
+                                [[NSNotificationCenter defaultCenter] postNotificationName:@"detailRefresh" object:nil userInfo:eventDic];
+                            });
                         }
                         
-                        
-                        //保存数据 tbl_taskInfo(evecod text,evetyp text,evesta text,subtim text,retime text,newCartNum text,rehole text)
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            //                        DataTable *table111 = [[DataTable alloc] init];
-                            //                        table111 = [weakSelf.lcDBCon ExecDataTable:@"select *from tbl_taskInfo"];
-                            //                        NSLog(@"table111:%@",table111);
-                            //通过通知发送到相应的界面中去
-                            [[NSNotificationCenter defaultCenter] postNotificationName:observerName object:nil userInfo:eventDic];
-                            //发送到事务通讯主界面中去 displayTaskResult
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"displayTaskResult" object:nil userInfo:eventDic];
-                            //在详情视图界面也发送通知
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"detailRefresh" object:nil userInfo:eventDic];
-                        });
-                    }
-                    
-                    //
-                    NSDictionary *messegaDic = receiveDic[@"Msg"];
-                    NSLog(@"reason Notice:%@",messegaDic[@"makeV"]);
-                    //删除之前保存的数据
-                    [self.lcDBCon ExecNonQuery:@"delete from tbl_groupHeartInf"];
-                    [self.lcDBCon ExecNonQuery:@"delete from tbl_locHole"];
-                    [self.lcDBCon ExecNonQuery:@"delete from tbl_padInfo"];
-                    
-                    //从服务器中返回来的信息，在此处保存
-                    //组信息
-                    //tbl_groupHeartInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
-                    NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:messegaDic[@"groinfo"][@"grocod"],messegaDic[@"groinfo"][@"grosta"],messegaDic[@"groinfo"][@"nextgrodistime"],messegaDic[@"groinfo"][@"nowblocks"],messegaDic[@"groinfo"][@"nowholcod"],messegaDic[@"groinfo"][@"nowholnum"],messegaDic[@"groinfo"][@"pladur"],messegaDic[@"groinfo"][@"stahol"],messegaDic[@"groinfo"][@"statim"],messegaDic[@"groinfo"][@"stddur"], nil];
-                    [strongSelf.lcDBCon ExecNonQuery:@"insert into tbl_groupHeartInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
-                    //当前所在球洞的位置信息
-                    NSMutableArray *locHoleInf = [[NSMutableArray alloc] initWithObjects:messegaDic[@"lochole"][@"holcod"],messegaDic[@"lochole"][@"holnum"], nil];
-                    [strongSelf.lcDBCon ExecNonQuery:@"insert into tbl_locHole(holcod,holnum) values(?,?)" forParameter:locHoleInf];
-                    //移动设备的信息
-                    NSDictionary *padInfDic = messegaDic[@"padinfo"][0];
-                    //
-                    NSMutableArray *padInf = [[NSMutableArray alloc] initWithObjects:padInfDic[@"padcod"],padInfDic[@"padnum"],padInfDic[@"padtag"], nil];
-                    [strongSelf.lcDBCon ExecNonQuery:@"insert into tbl_padInfo(padcod,padnum,padtag) values(?,?,?)" forParameter:padInf];
-                    //
-                    if([messegaDic[@"make"] isEqualToNumber:[NSNumber numberWithInt:-1]])
-                    {
-                        NSLog(@"makev is:%@",messegaDic[@"makeV"]);
-                        NSLog(@"心跳异常");
-                        //                    strongSelf.haveDetectedDownEnable = @"1";
-                        //                    strongSelf.allowDownStr = @"1";
-                    }
-                    else if([messegaDic[@"make"] isEqualToNumber:[NSNumber numberWithInt:-2]])
-                    {
-                        [strongSelf.heartBeatTime invalidate];
-                        NSLog(@"小组已经回场");
                         //
-                        strongSelf.allowDownStr = @"0";
-                        strongSelf.haveDetectedDownEnable = @"0";
-                    }
-                    else if([messegaDic[@"make"] isEqualToNumber:[NSNumber numberWithInt:0]])
-                    {
-                        //if([messegaDic[@"departstatus"] isEqualToNumber:[NSNumber numberWithInt:1]])
-                        if([messegaDic[@"departstatus"] intValue] == 1)
+                        NSDictionary *messegaDic = receiveDic[@"Msg"];
+                        NSLog(@"reason Notice:%@",messegaDic[@"makeV"]);
+                        //删除之前保存的数据
+                        [self.lcDBCon ExecNonQuery:@"delete from tbl_groupHeartInf"];
+                        [self.lcDBCon ExecNonQuery:@"delete from tbl_locHole"];
+                        [self.lcDBCon ExecNonQuery:@"delete from tbl_padInfo"];
+                        
+                        //从服务器中返回来的信息，在此处保存
+                        //组信息
+                        //tbl_groupHeartInf(grocod text,grosta text,nextgrodistime text,nowblocks text,nowholcod text,nowholnum text,pladur text,stahol text,statim text,stddur text)
+                        NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:messegaDic[@"groinfo"][@"grocod"],messegaDic[@"groinfo"][@"grosta"],messegaDic[@"groinfo"][@"nextgrodistime"],messegaDic[@"groinfo"][@"nowblocks"],messegaDic[@"groinfo"][@"nowholcod"],messegaDic[@"groinfo"][@"nowholnum"],messegaDic[@"groinfo"][@"pladur"],messegaDic[@"groinfo"][@"stahol"],messegaDic[@"groinfo"][@"statim"],messegaDic[@"groinfo"][@"stddur"], nil];
+                        [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_groupHeartInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
+                        //当前所在球洞的位置信息
+                        NSMutableArray *locHoleInf = [[NSMutableArray alloc] initWithObjects:messegaDic[@"lochole"][@"holcod"],messegaDic[@"lochole"][@"holnum"], nil];
+                        [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_locHole(holcod,holnum) values(?,?)" forParameter:locHoleInf];
+                        //移动设备的信息
+                        NSDictionary *padInfDic = messegaDic[@"padinfo"][0];
+                        //
+                        NSMutableArray *padInf = [[NSMutableArray alloc] initWithObjects:padInfDic[@"padcod"],padInfDic[@"padnum"],padInfDic[@"padtag"], nil];
+                        [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_padInfo(padcod,padnum,padtag) values(?,?,?)" forParameter:padInf];
+                        //
+                        if([messegaDic[@"make"] isEqualToNumber:[NSNumber numberWithInt:-1]])
                         {
-                            strongSelf.allowDownStr = @"1";
-                            strongSelf.haveDetectedDownEnable = @"1";
+                            NSLog(@"makev is:%@",messegaDic[@"makeV"]);
+                            NSLog(@"心跳异常");
+                            //                    weakSelf.haveDetectedDownEnable = @"1";
+                            //                    weakSelf.allowDownStr = @"1";
                         }
-                        if ([messegaDic[@"departstatus"] intValue] == 0) {
-                            strongSelf.waitToAllow = @"1";
-                            strongSelf.allowDownStr = @"0";
-                            strongSelf.haveDetectedDownEnable = @"0";
+                        else if([messegaDic[@"make"] isEqualToNumber:[NSNumber numberWithInt:-2]])
+                        {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+//                                [weakSelf.heartBeatTime invalidate];
+                                [weakSelf disableHeart];
+                                weakSelf.allowDownStr = @"0";
+                                weakSelf.haveDetectedDownEnable = @"0";
+                                //发送通知，从当前界面跳回到建组界面（手动建组，二维码建组）
+                                [[NSNotificationCenter defaultCenter] postNotificationName:@"forceBackField" object:nil userInfo:@{@"forceBack":@"1"}];
+                            });
+//                            [weakSelf.heartBeatTime invalidate];
+//                            [[NSNotificationCenter defaultCenter] postNotificationName:@"forceBackField" object:nil userInfo:@{@"disableHeart":@"1"}];
+#ifdef DEBUG_MODE
+                            NSLog(@"小组已经回场");
+#endif
+                            //
+//                            weakSelf.allowDownStr = @"0";
+//                            weakSelf.haveDetectedDownEnable = @"0";
+//                            //发送通知，从当前界面跳回到建组界面（手动建组，二维码建组）
+//                            [[NSNotificationCenter defaultCenter] postNotificationName:@"forceBackField" object:nil userInfo:@{@"forceBack":@"1"}];
+                            
                         }
-                        //
-                        
-                        
-                        NSLog(@"correct heartbeat");
-                        
+                        else if([messegaDic[@"make"] isEqualToNumber:[NSNumber numberWithInt:0]])
+                        {
+                            //if([messegaDic[@"departstatus"] isEqualToNumber:[NSNumber numberWithInt:1]])
+                            if([messegaDic[@"departstatus"] intValue] == 1)
+                            {
+                                weakSelf.allowDownStr = @"1";
+                                weakSelf.haveDetectedDownEnable = @"1";
+                            }
+                            if ([messegaDic[@"departstatus"] intValue] == 0) {
+                                weakSelf.waitToAllow = @"1";
+                                weakSelf.allowDownStr = @"0";
+                                weakSelf.haveDetectedDownEnable = @"0";
+                            }
+                            //
+                            
+                            
+                            NSLog(@"correct heartbeat");
+                            
+                        }
+                        //组装需要发送的数据
+                        weakSelf.finalDic = [[NSMutableDictionary alloc] initWithObjectsAndKeys:self.allowDownStr,@"allowDown",weakSelf.waitToAllow,@"waitToAllow", nil];
+                        //发送通知到LogIn界面
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"allowDown" object:nil userInfo:weakSelf.finalDic];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"readyDown" object:nil userInfo:@{@"readyDown":weakSelf.haveDetectedDownEnable}];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"whereToGo" object:nil userInfo:weakSelf.finalDic];
                     }
-                    //组装需要发送的数据
-                    strongSelf.finalDic = [[NSMutableDictionary alloc] initWithObjectsAndKeys:self.allowDownStr,@"allowDown",self.waitToAllow,@"waitToAllow", nil];
+                    
+                }failure:^(NSError *err){
+                    NSLog(@"send heartBeat fail");
+                    weakSelf.allowDownStr = @"0";
+                    weakSelf.waitToAllow  = @"0";
+                    weakSelf.finalDic = [[NSMutableDictionary alloc] initWithObjectsAndKeys:self.allowDownStr,@"allowDown",weakSelf.waitToAllow,@"waitToAllow", nil];
                     //发送通知到LogIn界面
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"allowDown" object:nil userInfo:strongSelf.finalDic];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"readyDown" object:nil userInfo:@{@"readyDown":strongSelf.haveDetectedDownEnable}];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"whereToGo" object:nil userInfo:strongSelf.finalDic];
-                }
-                
-            }failure:^(NSError *err){
-                NSLog(@"send heartBeat fail");
-                weakSelf.allowDownStr = @"0";
-                weakSelf.waitToAllow  = @"0";
-                weakSelf.finalDic = [[NSMutableDictionary alloc] initWithObjectsAndKeys:self.allowDownStr,@"allowDown",self.waitToAllow,@"waitToAllow", nil];
-                //发送通知到LogIn界面
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"allowDown" object:nil userInfo:weakSelf.finalDic];
-                
-            }];
-        });
-        
-        
-    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"allowDown" object:nil userInfo:weakSelf.finalDic];
+                    
+                }];
+            });
+            
+            
+        }
+    });
+    
 }
 //
 -(BOOL)checkState

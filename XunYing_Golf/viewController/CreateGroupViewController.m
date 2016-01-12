@@ -84,6 +84,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 @property (strong, nonatomic) NSMutableArray         *allCaddiesViewArray;
 
 @property (strong, nonatomic) ViewController *mapViewController;
+@property (strong, nonatomic) UIActivityIndicatorView   *stateIndicator;
 
 @property (strong, nonatomic) IBOutlet UIView *subDetailView;
 @property (strong, nonatomic) IBOutlet UILabel *detailLabel;
@@ -159,7 +160,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 //    if([self.userData.Rows count])//如果有用户数据则对进行赋值，否则不做处理（处理会报错！）
 //        self.theCaddy.text = [NSString stringWithFormat:@"%@  %@",self.userData.Rows[0][@"number"],self.userData.Rows[0][@"name"]];
     //
-    allowDownCourt = NO;
+//    allowDownCourt = NO;
     //
 //    CustomerGroupInfViewController *cusGroupVC = [[CustomerGroupInfViewController alloc] init];
 //    cusGroupVC.delegate = self;
@@ -186,6 +187,22 @@ typedef NS_ENUM(NSInteger,holePosition) {
     self._cartOffset  = 0;
     //
     [self displayCurrentCaddies];
+    //
+    self.stateIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
+    self.stateIndicator.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
+    self.stateIndicator.layer.cornerRadius = 20;
+    [self.view addSubview:self.stateIndicator];
+    self.stateIndicator.hidden = YES;
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    //
+    [self.stateIndicator stopAnimating];
+    self.stateIndicator.hidden = YES;
+    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -491,6 +508,9 @@ typedef NS_ENUM(NSInteger,holePosition) {
     //
     NSString *createGrpURLStr;
     createGrpURLStr = [GetRequestIPAddress getcreateGroupURL];
+    //
+    [self.stateIndicator startAnimating];
+    self.stateIndicator.hidden = NO;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         //
@@ -575,8 +595,8 @@ typedef NS_ENUM(NSInteger,holePosition) {
                     [strongself.dbCon ExecNonQuery:@"insert into tbl_addCaddy(cadcod,cadnam,cadnum,cadsex,empcod) values(?,?,?,?,?)" forParameter:selectedCaddy];
                 }
                 
-                ucCusCounts = (unsigned char)self.theSelectedCusCounts;
-                ucHolePosition = (unsigned char)self.theSelectedHolePosition;
+//                ucCusCounts = (unsigned char)self.theSelectedCusCounts;
+//                ucHolePosition = (unsigned char)self.theSelectedHolePosition;
                 
                 if ([self.cusAndHoleDelegate respondsToSelector:@selector(getCustomerCounts:andHolePosition:)]) {
                     [self.cusAndHoleDelegate getCustomerCounts:self.theSelectedCusCounts andHolePosition:self.theSelectedHolePosition];

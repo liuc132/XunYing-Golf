@@ -21,7 +21,7 @@
 @property (strong, nonatomic) DataTable *cusGroupInf;
 @property (strong, nonatomic) DataTable *padInfTable;
 @property (strong, nonatomic) DataTable *locInfTable;
-@property (strong, nonatomic) DataTable *logPerson;
+@property (strong, nonatomic) DataTable *curGrpCaddies;
 @property (strong, nonatomic) DataTable *groupInfo;
 @property (strong, nonatomic) DataTable *allHoleInfo;
 @property (strong, nonatomic) DataTable *curSelectedCustomers;
@@ -103,7 +103,7 @@
         weakSelf.cusGroupInf = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_groupHeartInf"];
         weakSelf.padInfTable = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_padInfo"];
         weakSelf.locInfTable = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_locHole"];
-        weakSelf.logPerson   = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_logPerson"];
+        weakSelf.curGrpCaddies   = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_addCaddy"];
         weakSelf.groupInfo   = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_groupInf"];
         weakSelf.allHoleInfo = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_holeInf"];
         weakSelf.curSelectedCustomers = [weakSelf.cusGroupDBCon ExecDataTable:@"select *from tbl_CustomersInfo"];
@@ -114,16 +114,6 @@
         });
     });
     
-    /*
-     //init activityIndicatorView
-     self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
-     self.activityIndicatorView.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
-     self.activityIndicatorView.layer.cornerRadius = 20;
-     
-     [self.view addSubview:self.activityIndicatorView];
-     
-     self.activityIndicatorView.hidden = YES;
-     */
     self.stateIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
     self.stateIndicator.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
     self.stateIndicator.layer.cornerRadius = 20;
@@ -135,7 +125,25 @@
     NSLog(@"finish search");
 #endif
     
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
+}
+
+- (void)ForceBackField:(NSNotification *)sender
+{
+    __weak typeof(self) weakSelf = self;
+    if ([sender.userInfo[@"forceBack"] isEqualToString:@"1"]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        //
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [serverForceBackAlert show];
+            
+            [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
+        });
+        
+        
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -144,7 +152,8 @@
     //
     [self.stateIndicator stopAnimating];
     self.stateIndicator.hidden = YES;
-    
+    //
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
 }
 
@@ -221,7 +230,7 @@
         
     }
     //显示当前的球童的信息
-    switch ([self.logPerson.Rows count]) {
+    switch ([self.curGrpCaddies.Rows count]) {
         case 0:
             self.firstCaddyName.hidden = YES;
             self.firstCaddyNumber.hidden = YES;
@@ -230,8 +239,8 @@
             break;
             //
         case 1:
-            self.firstCaddyName.text = self.logPerson.Rows[0][@"name"];
-            self.firstCaddyNumber.text = self.logPerson.Rows[0][@"number"];
+            self.firstCaddyName.text = self.curGrpCaddies.Rows[0][@"cadnam"];
+            self.firstCaddyNumber.text = self.curGrpCaddies.Rows[0][@"cadnum"];
             //hide
             self.secondCaddyName.hidden = YES;
             self.secondCaddyNumber.hidden = YES;
@@ -239,10 +248,10 @@
             break;
             //
         case 2:
-            self.firstCaddyName.text = self.logPerson.Rows[0][@"name"];
-            self.firstCaddyNumber.text = self.logPerson.Rows[0][@"number"];
-            self.secondCaddyName.text = self.logPerson.Rows[0][@"name"];
-            self.secondCaddyNumber.text = self.logPerson.Rows[0][@"number"];
+            self.firstCaddyName.text = self.curGrpCaddies.Rows[0][@"cadnam"];
+            self.firstCaddyNumber.text = self.curGrpCaddies.Rows[0][@"cadnum"];
+            self.secondCaddyName.text = self.curGrpCaddies.Rows[1][@"cadnam"];
+            self.secondCaddyNumber.text = self.curGrpCaddies.Rows[1][@"cadnum"];
             break;
             
             
