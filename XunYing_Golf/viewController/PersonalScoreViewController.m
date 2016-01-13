@@ -64,7 +64,7 @@
     self.cusInfoTable   =   [self.scoreDBCon ExecDataTable:@"select *from tbl_CustomersInfo"];
     self.cusGrpTable    =   [self.scoreDBCon ExecDataTable:@"select *from tbl_groupInf"];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 

@@ -50,8 +50,8 @@ typedef enum eventOrder{
 @property (strong, nonatomic) GetGPSLocationData *gpsData;
 @property (strong, nonatomic) NSArray    *observerNameArray;
 @property                     BOOL      canEnterHeartBeat;
-@property (strong, nonatomic) CADisplayLink *displayLink;
-
+//@property (strong, nonatomic) CADisplayLink *displayLink;
+@property (strong, nonatomic) NSTimer *heartBeatTime;
 
 @end
 
@@ -76,29 +76,31 @@ typedef enum eventOrder{
 //    [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     
     //启动心跳功能
-    [self enableHeartBeat];
+//    [self enableHeartBeat];
 }
 
 - (void)DisAbleTimer:(NSNotification *)sender
 {
     __weak typeof(self) weakSelf = self;
+    NSLog(@"version:%f",[[[UIDevice currentDevice] systemVersion] floatValue]);
+    if (![sender.userInfo[@"disableHeart"] isEqualToString:@"1"] || sender == nil)
+    {
+        return;
+    }
     //
     if ([[[UIDevice currentDevice] systemVersion] floatValue] < 9.0) {
         dispatch_time_t time = dispatch_time ( DISPATCH_TIME_NOW , 1ull * NSEC_PER_SEC ) ;
         dispatch_after(time,dispatch_get_main_queue(), ^{
-            if ([sender.userInfo[@"disableHeart"] isEqualToString:@"1"]) {
-                //3接收到了心跳信息之后，移除通知
-                [[NSNotificationCenter defaultCenter] removeObserver:self];
-                //1关闭心跳
-                [weakSelf.heartBeatTime invalidate];
-                weakSelf.canEnterHeartBeat = NO;
-                //
-                
-                
-                //2关闭GPS更新
-                [weakSelf.gpsData stopUpdateLocation];
-                
-            }
+            //3接收到了心跳信息之后，移除通知
+            [[NSNotificationCenter defaultCenter] removeObserver:self];
+            //1关闭心跳
+            [weakSelf.heartBeatTime invalidate];
+            weakSelf.heartBeatTime = nil;
+            weakSelf.canEnterHeartBeat = NO;
+            
+            //2关闭GPS更新
+            [weakSelf.gpsData stopUpdateLocation];
+            
         });
     }
     else
@@ -107,6 +109,7 @@ typedef enum eventOrder{
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         //1关闭心跳
         [self.heartBeatTime invalidate];
+        self.heartBeatTime = nil;
         self.canEnterHeartBeat = NO;
         //2关闭GPS更新
         [self.gpsData stopUpdateLocation];
@@ -131,7 +134,7 @@ typedef enum eventOrder{
     NSTimeInterval heartBeatInterval = [intervalTimeStr doubleValue];
     //1开启心跳功能
     self.heartBeatTime = [NSTimer timerWithTimeInterval:heartBeatInterval target:self selector:@selector(timelySend) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.heartBeatTime forMode:NSDefaultRunLoopMode];
+    [[NSRunLoop mainRunLoop] addTimer:self.heartBeatTime forMode:NSRunLoopCommonModes];
     self.canEnterHeartBeat = YES;
     //2开启GPS功能
     [self initAndGetGpsLocation];
@@ -162,6 +165,7 @@ typedef enum eventOrder{
             [[NSNotificationCenter defaultCenter] removeObserver:self];
             //1关闭心跳
             [weakSelf.heartBeatTime invalidate];
+            weakSelf.heartBeatTime = nil;
             weakSelf.canEnterHeartBeat = NO;
             //2关闭GPS更新
             [weakSelf.gpsData stopUpdateLocation];
@@ -174,6 +178,7 @@ typedef enum eventOrder{
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         //1关闭心跳
         [self.heartBeatTime invalidate];
+        self.heartBeatTime = nil;
         self.canEnterHeartBeat = NO;
         //2关闭GPS更新
         [self.gpsData stopUpdateLocation];
@@ -295,7 +300,7 @@ typedef enum eventOrder{
                     
                     else if ([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
                     {
-                        [weakSelf.heartBeatTime invalidate];
+                        [weakSelf disableHeart];
                         NSLog(@"param is null");
                     }
                     else if ([receiveDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])

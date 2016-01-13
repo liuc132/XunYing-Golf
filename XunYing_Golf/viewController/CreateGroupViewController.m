@@ -511,7 +511,6 @@ typedef NS_ENUM(NSInteger,holePosition) {
     //
     [self.stateIndicator startAnimating];
     self.stateIndicator.hidden = NO;
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         //
         [HttpTools getHttp:createGrpURLStr forParams:createGroupParameters success:^(NSData *nsData){
@@ -608,7 +607,8 @@ typedef NS_ENUM(NSInteger,holePosition) {
                     //建组成功之后，进入心跳处理类中，开始心跳功能
                     HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
                     if (![heartBeat checkState]) {
-                        [heartBeat initHeartBeat];//1、开启心跳功能
+                        [heartBeat initHeartBeat];//1、心跳功能
+                        [heartBeat enableHeartBeat];//2、开启
                     }
                 });
                 

@@ -59,7 +59,7 @@
     [self.view addSubview:self.stateIndicator];
     self.stateIndicator.hidden = YES;
     //
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 
@@ -208,7 +208,8 @@
     //删除本地的登录人信息以及组信息
     [self._dbCon ExecNonQuery:@"delete from tbl_logPerson"];
     [self._dbCon ExecNonQuery:@"delete from tbl_groupInf"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:@{@"disableHeart":@"1"}];
+    NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:@"1",@"disableHeart", nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HeartBeat" object:nil userInfo:dic];
     //执行跳转
     [weakSelf performSegueWithIdentifier:@"backToLogInterface" sender:nil];
     

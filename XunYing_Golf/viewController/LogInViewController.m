@@ -109,6 +109,16 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     self.requestManager = [[AFHTTPRequestOperationManager alloc] init];
     //
     [self settingNetWork];
+    //
+    NSTimeInterval period = 1.0;
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, period * NSEC_PER_SEC, 1 * NSEC_PER_SEC);
+    dispatch_source_set_event_handler(timer, ^{
+        NSLog(@"enter dispatch_timer test");
+    });
+    dispatch_resume(timer);
+    
 }
 
 - (void)settingNetWork
@@ -138,9 +148,9 @@ extern NSString *CTSettingCopyMyPhoneNumber();
         [self.activityIndicatorView stopAnimating];
         self.activityIndicatorView.hidden = YES;
         //检查心跳是否在继续
-        HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc]init];
-        [heartBeat initHeartBeat];
-        [heartBeat enableHeartBeat];
+//        HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc]init];
+//        [heartBeat initHeartBeat];
+//        [heartBeat enableHeartBeat];
         //
         [self performSegueWithIdentifier:@"ToMainMapView" sender:nil];
     }

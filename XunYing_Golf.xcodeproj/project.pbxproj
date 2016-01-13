@@ -64,6 +64,8 @@
 		5B63E1181BAFB10C0034C577 /* logInPassword.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B63E10E1BAFB10C0034C577 /* logInPassword.png */; };
 		5B63E1191BAFB10C0034C577 /* logInSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B63E10F1BAFB10C0034C577 /* logInSelected.png */; };
 		5B63E11A1BAFB10C0034C577 /* logInUnselected.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B63E1101BAFB10C0034C577 /* logInUnselected.png */; };
+		5B7748951C45FDF800E5AAC9 /* ic_launcher120*120.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7748941C45FDF800E5AAC9 /* ic_launcher120*120.png */; };
+		5B7748971C46005A00E5AAC9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7748961C46005A00E5AAC9 /* Default-568h@2x.png */; };
 		5B7AC44B1C0DC38E0027BAD1 /* CaddyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7AC44A1C0DC38E0027BAD1 /* CaddyView.m */; };
 		5B93C8091BBB938A0081FBAF /* MoreInterfaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B93C8081BBB938A0081FBAF /* MoreInterfaceViewController.m */; };
 		5B93C80D1BBBB39A0081FBAF /* BackMainInterfaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B93C80C1BBBB39A0081FBAF /* BackMainInterfaceViewController.m */; };
@@ -245,6 +247,8 @@
 		5B63E10E1BAFB10C0034C577 /* logInPassword.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logInPassword.png; path = image/logInPassword.png; sourceTree = "<group>"; };
 		5B63E10F1BAFB10C0034C577 /* logInSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logInSelected.png; path = image/logInSelected.png; sourceTree = "<group>"; };
 		5B63E1101BAFB10C0034C577 /* logInUnselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logInUnselected.png; path = image/logInUnselected.png; sourceTree = "<group>"; };
+		5B7748941C45FDF800E5AAC9 /* ic_launcher120*120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_launcher120*120.png"; path = "image/ic_launcher120*120.png"; sourceTree = "<group>"; };
+		5B7748961C46005A00E5AAC9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5B7AC4491C0DC38E0027BAD1 /* CaddyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CaddyView.h; path = viewController/CaddyView.h; sourceTree = "<group>"; };
 		5B7AC44A1C0DC38E0027BAD1 /* CaddyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CaddyView.m; path = viewController/CaddyView.m; sourceTree = "<group>"; };
 		5B93C8071BBB938A0081FBAF /* MoreInterfaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MoreInterfaceViewController.h; path = viewController/MoreInterfaceViewController.h; sourceTree = "<group>"; };
@@ -818,6 +822,8 @@
 		5BB922851B9D593C00B7C936 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				5B7748961C46005A00E5AAC9 /* Default-568h@2x.png */,
+				5B7748941C45FDF800E5AAC9 /* ic_launcher120*120.png */,
 				5B4E33E01BAFE415000693B3 /* ic_launcher.png */,
 				5B63E1071BAFB10C0034C577 /* createGroup_Check.png */,
 				5B63E1081BAFB10C0034C577 /* createGroup_Main.png */,
@@ -1207,6 +1213,7 @@
 				5B63E1121BAFB10C0034C577 /* createGroup_Main.png in Resources */,
 				5B63E11A1BAFB10C0034C577 /* logInUnselected.png in Resources */,
 				5B63E1171BAFB10C0034C577 /* logInLogo.png in Resources */,
+				5B7748971C46005A00E5AAC9 /* Default-568h@2x.png in Resources */,
 				5B11C5321B8EDD4700382C9B /* LaunchScreen.xib in Resources */,
 				5B63E1111BAFB10C0034C577 /* createGroup_Check.png in Resources */,
 				5B3B66A71C19819600C4D557 /* beep.wav in Resources */,
@@ -1222,6 +1229,7 @@
 				5B63E1181BAFB10C0034C577 /* logInPassword.png in Resources */,
 				5BF0ECA51C21698A00945877 /* noResult.xib in Resources */,
 				5B63E1131BAFB10C0034C577 /* createGroup_Mannual.png in Resources */,
+				5B7748951C45FDF800E5AAC9 /* ic_launcher120*120.png in Resources */,
 				5B4E33E11BAFE415000693B3 /* ic_launcher.png in Resources */,
 				5BEA92711BB1077200EAC9BE /* FontAwesome.ttf in Resources */,
 			);
@@ -1500,7 +1508,7 @@
 					"c++",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "HongDing.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hongding.XunYing-Golf";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1529,7 +1537,7 @@
 					"c++",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "HongDing.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hongding.XunYing-Golf";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
