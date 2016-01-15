@@ -196,9 +196,13 @@ typedef enum jobType{
         
     });
     //load data
-//    [self loadData];
+    [self loadData];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+    [self.allEmpCommunicate reloadData];
+    
+    [self clickHeadView];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 

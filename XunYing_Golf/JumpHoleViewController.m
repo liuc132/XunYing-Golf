@@ -37,6 +37,7 @@
 
 @property (strong, nonatomic) UIButton *theOldSelectedBtn;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
+@property (nonatomic)           BOOL        toTaskDetailEnable;
 
 
 
@@ -89,6 +90,8 @@
     self.holePlanInfo   = [[DataTable alloc] init];
     self.cusGroInfEmp   = [[DataTable alloc] init];
     //
+    self.toTaskDetailEnable =   NO;
+    //
     self.whetherSelectHole = NO;
     self.jumpHoleNum.text  = nil;
     //查询申请跳洞的登录人的信息，以及所创建的组信息
@@ -110,7 +113,7 @@
     //init all holebutton's color
     [self initAllHolesColor];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 
@@ -121,8 +124,8 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         //
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [serverForceBackAlert show];
+//            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//            [serverForceBackAlert show];
             
             [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
         });
@@ -406,7 +409,8 @@
                 //
                 NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"3",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",weakSelf.holesInf.Rows[weakSelf.selectedJumpNum][@"holcod"],@"",@"",@"",@"",@"",@"",@"",@"", nil];
                 [weakSelf.locDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
-                
+                //
+                self.toTaskDetailEnable =   YES;
                 //执行跳转
                 [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
             }
@@ -490,6 +494,9 @@
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    if (!self.toTaskDetailEnable) {
+        return;
+    }
     __weak typeof(self) weakSelf = self;
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"跳洞详情";

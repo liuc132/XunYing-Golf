@@ -51,6 +51,25 @@
     //2.工具栏
     [self addToolBar];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+    
+}
+
+- (void)ForceBackField:(NSNotification *)sender
+{
+    __weak typeof(self) weakSelf = self;
+    if ([sender.userInfo[@"forceBack"] isEqualToString:@"1"]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        //
+        dispatch_async(dispatch_get_main_queue(), ^{
+//            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//            [serverForceBackAlert show];
+            
+            [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
+        });
+        
+        
+    }
 }
 /**
  *  加载数据

@@ -23,7 +23,7 @@
     self.slowBallTableView.dataSource = self;
     self.slowBallTableView.delegate   = self;
     //
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 

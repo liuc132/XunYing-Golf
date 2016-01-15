@@ -36,6 +36,7 @@ typedef enum ChangeReason{
 @property (strong, nonatomic) DataTable *curGrpCarts;
 @property (strong, nonatomic) NSString  *changeReasonStr;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
+@property (nonatomic)         BOOL      toTaskDetailEnable;
 
 
 @property (strong, nonatomic) IBOutlet UIView *firstChangeCartView;
@@ -79,11 +80,13 @@ typedef enum ChangeReason{
     self.changeCartResult = [[DataTable alloc] init];
     self.curGrpCarts    = [[DataTable alloc] init];
     //
+    self.toTaskDetailEnable =   NO;
+    //
     self.changeReasonStr = [NSString stringWithFormat:@"%d",LowPowerRequest];
     //init a notificationcenter
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"changeCart" object:nil];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 
@@ -94,8 +97,8 @@ typedef enum ChangeReason{
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         //
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [serverForceBackAlert show];
+//            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//            [serverForceBackAlert show];
             
             [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
         });
@@ -282,6 +285,8 @@ typedef enum ChangeReason{
                 NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"1",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.logPerson.Rows[0][@"code"],@"",weakSelf.cartInfo.Rows[0][@"carcod"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
                 [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
                 //
+                self.toTaskDetailEnable =   YES;
+                //
                 [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
                 
             }
@@ -296,7 +301,9 @@ typedef enum ChangeReason{
 }
 
 - (IBAction)changeCartReason:(UIButton *)sender {
+#ifdef DEBUG_MODE
     NSLog(@"change Reason:%@",sender.titleLabel.text);
+#endif
     //
     __weak typeof(self) weakSelf = self;
     //
@@ -427,6 +434,9 @@ typedef enum ChangeReason{
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    if (!self.toTaskDetailEnable) {
+        return;
+    }
     __weak typeof(self) weakSelf = self;
     TaskDetailViewController *taskViewController = segue.destinationViewController;
     taskViewController.taskTypeName = @"更换球车详情";

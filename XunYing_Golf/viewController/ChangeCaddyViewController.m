@@ -53,6 +53,8 @@ typedef enum ChangeReason{
 @property (strong, nonatomic) DataTable *groInfo;
 @property (strong, nonatomic) DataTable *changeCaddyResult;
 @property (strong, nonatomic) DataTable *allCaddyInfo;
+@property (nonatomic)         BOOL      toTaskDetailEnable;
+
 
 @property (nonatomic) NSString *changeReasonStr;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
@@ -79,11 +81,13 @@ typedef enum ChangeReason{
     self.groInfo       = [[DataTable alloc] init];
     self.changeCaddyResult  = [[DataTable alloc] init];
     self.allCaddyInfo       = [[DataTable alloc] init];
+    //
+    self.toTaskDetailEnable =   NO;
     //setting the initial state
     self.changeReasonStr = [NSString stringWithFormat:@"%d",CaddyRequest];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getEventFromHeart:) name:@"changeCaddy" object:nil];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 
@@ -100,8 +104,8 @@ typedef enum ChangeReason{
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         //
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [serverForceBackAlert show];
+//            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//            [serverForceBackAlert show];
             
             [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
         });
@@ -334,7 +338,7 @@ typedef enum ChangeReason{
     NSLog(@"提交申请");
     __weak typeof(self) weakSelf = self;
     
-    NSLog(@"requestPerson:%@",self.curGrpCaddies);
+    NSLog(@"requestPerson:%@",self.curGrpCaddies.Rows);
     //判断当前所读取到的数据是否为空，为空则返回（可以给予提示）
     if(![self.curGrpCaddies.Rows count])
     {
@@ -359,7 +363,7 @@ typedef enum ChangeReason{
     NSString *curDateTime = [dateFarmatter stringFromDate:[NSDate date]];
     //构建参数
     NSString *reasonStr = [NSString stringWithFormat:@"%@;",self.changeReasonStr];
-    NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.curGrpCaddies.Rows[0][@"code"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",reasonStr,@"reason",caddyCode,@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
+    NSMutableDictionary *changeCaddyParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.curGrpCaddies.Rows[0][@"empcod"],@"empcod",self.groInfo.Rows[0][@"grocod"],@"grocod",reasonStr,@"reason",self.curGrpCaddies.Rows[0][@"cadcod"],@"cadcod",curDateTime,@"subtim", nil];//[[NSDictionary alloc ] initWithObjectsAndKeys:MIDCODE,@"mid", nil];
     //
     NSString *changeCaddyURLStr;
     changeCaddyURLStr = [GetRequestIPAddress getChangeCaddyURL];
@@ -377,13 +381,21 @@ typedef enum ChangeReason{
                 
                 NSDictionary *allMsg = recDic[@"Msg"];
                 //
-                NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"2",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.curGrpCaddies.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
+                NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"2",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.curGrpCaddies.Rows[0][@"cadcod"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
                 [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
                 
-                
+                self.toTaskDetailEnable =   YES;
                 //执行跳转程序
                 [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
                 
+            }
+            else
+            {
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
+                
+                UIAlertView *errAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                [errAlert show];
             }
             
             
@@ -403,6 +415,10 @@ typedef enum ChangeReason{
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    if (!self.toTaskDetailEnable) {
+        return;
+    }
+    //
     __weak typeof(self) weakSelf = self;
     //
     TaskDetailViewController *taskViewController = segue.destinationViewController;
@@ -428,7 +444,7 @@ typedef enum ChangeReason{
             taskViewController.whichInterfaceFrom = 1;
             
             taskViewController.taskStatus = resultStr;
-            taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCaddies.Rows[0][@"number"],weakSelf.curGrpCaddies.Rows[0][@"name"]];
+            taskViewController.taskRequestPerson = [NSString stringWithFormat:@"%@ %@",weakSelf.curGrpCaddies.Rows[0][@"cadnum"],weakSelf.curGrpCaddies.Rows[0][@"cadnam"]];
             NSString *subtime = weakSelf.changeCaddyResult.Rows[[weakSelf.changeCaddyResult.Rows count] - 1][@"subtim"];
             taskViewController.taskRequstTime = [subtime substringFromIndex:11];
             taskViewController.taskDetailName = @"待更换球童";

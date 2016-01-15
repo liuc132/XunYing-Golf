@@ -57,6 +57,7 @@
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
 @property (strong, nonatomic) NSMutableArray   *needMendHoleInfoArray;
 @property (nonatomic)         BOOL             mendHoleReqSuccess;
+@property (nonatomic)         BOOL             toTaskDetailEnable;
 
 
 @end
@@ -71,7 +72,8 @@
     self.logPerson = [[DataTable alloc] init];
     self.holesInf  = [[DataTable alloc] init];
     self.mendHoleResult = [[DataTable alloc] init];
-    
+    //
+    self.toTaskDetailEnable =   NO;
     //在本地数据库中查询数据
     self.logPerson = [self.lcDBCon ExecDataTable:@"select *from tbl_logPerson"];
     self.holesInf  = [self.lcDBCon ExecDataTable:@"select *from tbl_holeInf"];
@@ -87,7 +89,7 @@
     //
     self.mendHoleReqSuccess = YES;
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 
@@ -104,8 +106,8 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         //
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [serverForceBackAlert show];
+//            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//            [serverForceBackAlert show];
             
             [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
         });
@@ -330,16 +332,20 @@
                 
                 NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"4",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],weakSelf.logPerson.Rows[0][@"code"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
                 [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
-                
+                //
+                self.toTaskDetailEnable =   YES;
+                //
                 [strongSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
             }
-            else if([recDictionary[@"Code"] intValue] == -5)
+            else
             {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"正常球洞还未完成，不能补洞" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",recDictionary[@"Msg"]];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
                 [alert show];
                 //
                 self.mendHoleReqSuccess = NO;
-                //            [strongSelf performSegueWithIdentifier:@"mendHoleToList" sender:nil];
             }
             
             
@@ -361,6 +367,9 @@
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    if (!self.toTaskDetailEnable) {
+        return;
+    }
     __weak typeof(self) weakSelf = self;
     if (!self.mendHoleReqSuccess) {
         return;

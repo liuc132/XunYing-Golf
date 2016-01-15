@@ -30,6 +30,7 @@
 @property (strong, nonatomic) DataTable *cusGrpInfo;
 @property (strong, nonatomic) DataTable *grpInfo;
 @property (strong, nonatomic) NSDictionary *eventInfoDic;
+@property (nonatomic)         BOOL         toTaskDetailEnable;
 
 
 @property (strong, nonatomic) IBOutlet UILabel *requestPerson;
@@ -60,6 +61,8 @@
     self.cusGrpInfo      = [[DataTable alloc] init];
     self.grpInfo         = [[DataTable alloc] init];
     //
+    self.toTaskDetailEnable =   NO;
+    //
     hourString = @[@"00",@"01",@"02",@"03",@"04",@"05",@"06",@"07",@"08",@"09",@"10",@"11",@"12",@"13",@"14",@"15",@"16",@"17",@"18",@"19",@"20",@"21",@"22",@"23"];
     minString = @[@"00",@"01",@"02",@"03",@"04",@"05",@"06",@"07",@"08",@"09",@"10",@"11",@"12",@"13",@"14",@"15",@"16",@"17",@"18",@"19",@"20",@"21",@"22",@"23",@"24",@"25",@"26",@"27",@"28",@"29",@"30",@"31",@"32",@"33",@"34",@"35",@"36",@"37",@"38",@"39",@"40",@"41",@"42",@"43",@"44",@"45",@"46",@"47",@"48",@"49",@"50",@"51",@"52",@"53",@"54",@"55",@"56",@"57",@"58",@"59"];
     separateString = @":";
@@ -89,7 +92,7 @@
     //
     [self GetPlayProcess];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForceBackField:) name:@"forceBackField" object:nil];
     
 }
 
@@ -100,8 +103,8 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         //
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [serverForceBackAlert show];
+//            UIAlertView *serverForceBackAlert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的小组已回场" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//            [serverForceBackAlert show];
             
             [weakSelf performSegueWithIdentifier:@"serVerBackField" sender:nil];
         });
@@ -212,11 +215,16 @@
                 NSMutableArray *changeCaddyBackInfo = [[NSMutableArray alloc] initWithObjects:allMsg[@"evecod"],@"6",allMsg[@"evesta"],allMsg[@"subtim"],allMsg[@"everes"][@"result"],allMsg[@"everes"][@"everea"],allMsg[@"hantim"],@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil];
                 [weakSelf.lcDBCon ExecNonQuery:@"insert into tbl_taskInfo(evecod,evetyp,evesta,subtim,result,everea,hantim,oldCaddyCode,newCaddyCode,oldCartCode,newCartCode,jumpHoleCode,toHoleCode,destintime,reqBackTime,reHoleCode,mendHoleCode,ratifyHoleCode,ratifyinTime,selectedHoleCode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:changeCaddyBackInfo];
                 //
+                self.toTaskDetailEnable =   YES;
+                //
                 [weakSelf performSegueWithIdentifier:@"toTaskDetail" sender:nil];
             }
-            else if([recDic[@"Code"] intValue] == -7)
+            else
             {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"你已经发起过离场休息申请" delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                NSString *errStr;
+                errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
                 [alert show];
             }
             
@@ -301,6 +309,10 @@
 //将相应的信息传到相应的界面中
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    if (!self.toTaskDetailEnable) {
+        return;
+    }
+    
     __weak typeof(self) weakSelf = self;
     
     TaskDetailViewController *taskViewController = segue.destinationViewController;
