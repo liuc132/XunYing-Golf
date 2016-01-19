@@ -215,18 +215,10 @@ typedef enum eventOrder{
         //    timeCounter++;
         //    if(timeCounter > 9)
         {
-            //        timeCounter = 0;
+#ifdef DEBUG_MODE
             NSLog(@"start send heartBeat");
-            //read the database to get what we want
-            //DBCon *dbCon = [DBCon instance];
-            //执行查询功能
-            //code text,job text,name text,number text,sex text
-            //        DataTable *table = [[DataTable alloc] init];
-            //        table = [self.dbCon ExecDataTable:@"select *from tbl_logPerson"];
+#endif
             
-            
-            //        NSLog(@"totalCount:%lu",(sizeof(simulateGPSData) / sizeof(locXY)));
-            //here we change the simulation GPS Data
             if(SendGPStimes < GPSSendTimes)
             {
                 SendGPStimes++;
@@ -250,7 +242,9 @@ typedef enum eventOrder{
             NSString *locx = [NSString stringWithFormat:@"%.10f",self.getGPSLocation.coordinate.longitude];//self.simulationGPSData[startCount][0];模拟数据调用之
             //纬度
             NSString *locy = [NSString stringWithFormat:@"%.10f",weakSelf.getGPSLocation.coordinate.latitude];//self.simulationGPSData[startCount][1];模拟数据调用之
+#ifdef DEBUG_MODE
             NSLog(@"current locx:%@; locy:%@",locx,locy);
+#endif
             //获取到mid号码
             NSString *theMid;
             theMid = [GetRequestIPAddress getUniqueID];
@@ -466,7 +460,9 @@ typedef enum eventOrder{
                         
                         //
                         NSDictionary *messegaDic = receiveDic[@"Msg"];
+#ifdef DEBUG_MODE
                         NSLog(@"reason Notice:%@",messegaDic[@"makeV"]);
+#endif
                         //删除之前保存的数据
                         [self.lcDBCon ExecNonQuery:@"delete from tbl_groupHeartInf"];
                         [self.lcDBCon ExecNonQuery:@"delete from tbl_locHole"];
@@ -530,8 +526,9 @@ typedef enum eventOrder{
                             }
                             //
                             
-                            
+#ifdef DEBUG_MODE
                             NSLog(@"correct heartbeat");
+#endif
                             
                         }
                         //组装需要发送的数据

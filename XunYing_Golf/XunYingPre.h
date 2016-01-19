@@ -70,7 +70,7 @@
 //#define testChangeInterface                 1
 
 
-//#define DEBUD_MODE                            1
+//#define DEBUG_MODE                            1
 //IMEI code
 #define TESTMIDCODE                         @"A_IMEI_864505021764438"
 #define MIDCODE                             @"A_IMEI_864505021764438"//@"A_IMEI_15000204330"

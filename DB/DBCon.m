@@ -198,7 +198,7 @@ static DBCon * myInstance;
         
         NSInteger result  =sqlite3_step(stmt);
         if (result != SQLITE_DONE){
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
             NSLog(@"执行出错%@",sql);
 #endif
         }
@@ -219,12 +219,12 @@ static DBCon * myInstance;
     char * errmg;
     int result = sqlite3_exec(db, [sql UTF8String], nil, nil, &errmg);
     if (result==SQLITE_OK) {
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
         NSLog(@"\n执行SQL: %@ 成功。",sql);
 #endif
     }
     else{
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
         NSLog(@"\n执行SQL: %@  出错 \n错误信息：%s",sql,errmg);
 #endif
     }

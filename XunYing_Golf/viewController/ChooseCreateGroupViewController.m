@@ -530,13 +530,14 @@
                     HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
                     if (![heartBeat checkState]) {
                         [heartBeat initHeartBeat];//1、开启心跳功能
+                        [heartBeat enableHeartBeat];//1、使能心跳
                     }
                     //跳转页面
                     [weakSelf performSegueWithIdentifier:@"QRCodeToWait" sender:nil];
                     //执行通知
                     dispatch_async(dispatch_get_main_queue(), ^{
                         NSDictionary *QRCodeNotice = [[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",(long)weakSelf.cusCount],@"customerCount",@"十八洞",@"holetype", nil];
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                         NSLog(@"%@",QRCodeNotice);
 #endif
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"QRCodeResult" object:nil userInfo:QRCodeNotice];

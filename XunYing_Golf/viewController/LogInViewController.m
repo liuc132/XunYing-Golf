@@ -89,8 +89,8 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     self.logInPerson = [[DataTable alloc] init];
     self.logPersonInf = [[DataTable alloc] init];
     //
-    self.logPersonInf = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
-#ifdef DEBUD_MODE
+//    self.logPersonInf = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
+#ifdef DEBUG_MODE
     NSLog(@"logPersonInf:%@",self.logInPerson);
 #endif
     //
@@ -242,7 +242,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     //
     [self.view removeGestureRecognizer:self.tap];
     //
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
     NSLog(@"holeType:%@  holeCount:%ld",self.curHoleName,(long)self.customerCount);
 #endif
 }
@@ -334,7 +334,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
 //            NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
             NSDictionary *receiveDic;
             receiveDic = (NSDictionary *)nsData;
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
             NSLog(@"caddy count:%ld",[receiveDic[@"Msg"][@"caddys"] count]);
 #endif
             //获取到当前的球车
@@ -372,7 +372,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
             
             
         }failure:^(NSError *err){
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
             NSLog(@"caddyCartInf request failed");
 #endif
             
@@ -402,7 +402,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     dispatch_after(time, dispatch_get_main_queue(), ^{
         //start request
         [HttpTools getHttp:customURLStr forParams:nil success:^(NSData *nsData){
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
             NSLog(@"request successfully");
 #endif
 //            NSDictionary *receiveDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
@@ -420,7 +420,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
             
             
         }failure:^(NSError *err){
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
             NSLog(@"request fail");
 #endif
             
@@ -443,12 +443,14 @@ extern NSString *CTSettingCopyMyPhoneNumber();
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     __weak LogInViewController *weakSelf = self;
+    
+    NSString *theMid;
     //
     if(alertView.tag == 1)
     {
         switch (buttonIndex) {
             case 0:
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                 NSLog(@"取消强制登录");
 #endif
                 //关闭activityIndicator
@@ -457,22 +459,25 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                 
                 break;
             case 1:
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                 NSLog(@"执行强制登录");
 #endif
                 //调用强制登录接口
+                //获取到mid号码
+                theMid = [GetRequestIPAddress getUniqueID];
+                theMid = [NSString stringWithFormat:@"%@",theMid];
                 //修改强制登录的参数为1
-                [self.logInParams setObject:@"1" forKey:@"forceLogin"];
+                NSMutableDictionary *forceLogInParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"0",@"panmull",@"1",@"forceLogin", nil];
                 //调用接口进行传参数
-                [HttpTools getHttp:[self getTheSettingIP] forParams:self.logInParams success:^(NSData *nsData){
-#ifdef DEBUD_MODE
+                [HttpTools getHttp:[self getTheSettingIP] forParams:forceLogInParam success:^(NSData *nsData){
+#ifdef DEBUG_MODE
                     NSLog(@"成功强制登录");
 #endif
                     //
 //                    NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
                     NSDictionary *recDic;
                     recDic = (NSDictionary *)nsData;
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                     NSLog(@"msg:%@",recDic[@"Msg"]);
 #endif
                     //创建登录人信息数组
@@ -489,24 +494,86 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                             //获取客户信息
                             [weakSelf getCustomInf];
                             //关闭activityIndicator
-                            [weakSelf.activityIndicatorView stopAnimating];
-                            weakSelf.activityIndicatorView.hidden = YES;
+//                            [weakSelf.activityIndicatorView stopAnimating];
+//                            weakSelf.activityIndicatorView.hidden = YES;
                             //
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 NSString *value;
                                 NSDictionary *msgDic = recDic[@"Msg"];
                         
-                                value = [msgDic objectForKey:@"group"];
+                                value = [NSString stringWithFormat:@"%@",[msgDic objectForKey:@"group"]];
                                 
-                                if(((NSNull *)value == [NSNull null]) || ([value isEqualToString:@"null"]))
+                                if([value isEqualToString:@"null"])
                                     [weakSelf performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];
                                 else
                                 {
-                                    HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
-                                    if(![heartBeat checkState])
+                                    //获取到球洞信息，并将相应的信息保存到内存中
+                                    NSArray *allHolesInfo = recDic[@"Msg"][@"holes"];
+                                    for (NSDictionary *eachHole in allHolesInfo) {
+                                        NSMutableArray *eachHoleParam = [[NSMutableArray alloc] initWithObjects:eachHole[@"forecasttime"],eachHole[@"gronum"],eachHole[@"holcod"],eachHole[@"holcue"],eachHole[@"holfla"],eachHole[@"holgro"],eachHole[@"holind"],eachHole[@"hollen"],eachHole[@"holnam"],eachHole[@"holnum"],eachHole[@"holspe"],eachHole[@"holsta"],eachHole[@"nowgroups"],eachHole[@"stan1"],eachHole[@"stan2"],eachHole[@"stan3"],eachHole[@"stan4"],eachHole[@"usestatus"],eachHole[@"x"],eachHole[@"y"], nil];
+                                        [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_holeInf(forecasttime,gronum,holcod,holcue,holfla,holgro,holind,hollen,holnam,holenum,holspe,holsta,nowgroups,stan1,stan2,stan3,stan4,usestatus,x,y) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleParam];
+                                    }
+                                    
+                                    //保存组信息相关的参数
+                                    [self.dbCon ExecDataTable:@"delete from tbl_selectCart"];
+                                    //获取到登录小组的所有客户的信息
+                                    NSArray *allCustomers = recDic[@"Msg"][@"group"][@"cuss"];
+                                    for (NSDictionary *eachCus in allCustomers) {
+                                        NSMutableArray *eachCusParam = [[NSMutableArray alloc] initWithObjects:eachCus[@"bansta"],eachCus[@"bantim"],eachCus[@"cadcod"],eachCus[@"carcod"],eachCus[@"cuscod"],eachCus[@"cuslev"],eachCus[@"cusnam"],eachCus[@"cusnum"],eachCus[@"cussex"],eachCus[@"depsta"],eachCus[@"endtim"],eachCus[@"grocod"],eachCus[@"memnum"],eachCus[@"padcod"],eachCus[@"phone"],eachCus[@"statim"], nil];
+                                        [weakSelf.dbCon ExecNonQuery:@"insert into tbl_CustomersInfo(bansta,bantim,cadcod,carcod,cuscod,cuslev,cusnam,cusnum,cussex,depsta,endtim,grocod,memnum,padcod,phone,statim) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachCusParam];
+                                    }
+                                    //将所选择的球车的信息保存下来
+                                    //保存添加的球车的信息 tbl_selectCart(carcod text,carnum text,carsea text)
+                                    NSArray *allSelectedCartsArray = recDic[@"Msg"][@"group"][@"cars"];
+                                    for (NSDictionary *eachCart in allSelectedCartsArray) {
+                                        NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
+                                        [weakSelf.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
+                                    }
+                                    //此处的数据还没有传递到需要的地方去
+                                    self.customerCount = [recDic[@"Msg"][@"group"][@"cuss"] count] - 1;
+                                    self.curHoleName = recDic[@"Msg"][@"group"][@"hgcod"];
+                                    //
+                                    if(recDic[@"Msg"][@"group"][@"grocod"] != nil)
                                     {
-                                        [heartBeat initHeartBeat];//启动心跳服务
-                                        [heartBeat enableHeartBeat];
+                                        NSMutableArray *logPersonInf = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"logemp"][@"empcod"],recDic[@"Msg"][@"logemp"][@"empjob"],recDic[@"Msg"][@"logemp"][@"empnam"],recDic[@"Msg"][@"logemp"][@"empnum"],recDic[@"Msg"][@"logemp"][@"empsex"],recDic[@"Msg"][@"logemp"][@"cadShowNum"], nil];
+                                        //将数据加载到创建的数据库中
+                                        [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
+                                        //组建获取到的组信息的数组
+                                        NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"groind"],recDic[@"Msg"][@"group"][@"grolev"],recDic[@"Msg"][@"group"][@"gronum"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"hgcod"],recDic[@"Msg"][@"group"][@"onlinestatus"],recDic[@"Msg"][@"group"][@"createdate"],recDic[@"Msg"][@"group"][@"timestamps"], nil];
+                                        //将数据加载到创建的数据库中
+                                        //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
+                                        [weakSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate,timestamps)values(?,?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
+                                        //
+                                        //                    DataTable *table;// = [[DataTable alloc] init];
+                                        //
+                                        //                    table = [strongSelf.dbCon ExecDataTable:@"select *from tbl_groupInf"];
+                                        //                    NSLog(@"table:%@",table);
+                                        //
+                                        HeartBeatAndDetectState *heartBeat = [[HeartBeatAndDetectState alloc] init];
+                                        if(![heartBeat checkState])
+                                        {
+                                            [heartBeat initHeartBeat];//启动心跳服务
+                                            [heartBeat enableHeartBeat];
+                                        }
+                                        //                    [[NSNotificationCenter defaultCenter] postNotificationName:@"allowDown" object:nil userInfo:@{@"allowDown":@"1"}];
+                                        
+                                        weakSelf.haveGroupNotDown = YES;
+                                        //获取到球洞信息，并将相应的信息保存到内存中
+                                        NSArray *allHolesInfo = recDic[@"Msg"][@"holes"];
+                                        for (NSDictionary *eachHole in allHolesInfo) {
+                                            NSMutableArray *eachHoleParam = [[NSMutableArray alloc] initWithObjects:eachHole[@"forecasttime"],eachHole[@"gronum"],eachHole[@"holcod"],eachHole[@"holcue"],eachHole[@"holfla"],eachHole[@"holgro"],eachHole[@"holind"],eachHole[@"hollen"],eachHole[@"holnam"],eachHole[@"holnum"],eachHole[@"holspe"],eachHole[@"holsta"],eachHole[@"nowgroups"],eachHole[@"stan1"],eachHole[@"stan2"],eachHole[@"stan3"],eachHole[@"stan4"],eachHole[@"usestatus"],eachHole[@"x"],eachHole[@"y"], nil];
+                                            [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_holeInf(forecasttime,gronum,holcod,holcue,holfla,holgro,holind,hollen,holnam,holenum,holspe,holsta,nowgroups,stan1,stan2,stan3,stan4,usestatus,x,y) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleParam];
+                                        }
+                                        //
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [weakSelf getCaddyCartInf];
+                                            [weakSelf getCustomInf];
+                                        });
+                                        
+                                    }
+                                    else
+                                    {
+                                        [self.dbCon ExecNonQuery:@"delete from tbl_taskInfo"];
                                     }
 //                                    [weakSelf performSegueWithIdentifier:@"directToWaitingDown" sender:nil];
                                 }
@@ -521,7 +588,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                     }
                     
                 }failure:^(NSError *err){
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                     NSLog(@"强制登录失败");
 #endif
                     
@@ -547,7 +614,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     addDeviceURLStr = [GetRequestIPAddress getRequestAddDeviceURL];
     //
     [HttpTools getHttp:addDeviceURLStr forParams:addDeviceParam success:^(NSData *nsData){
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
         NSLog(@"successfully requested");
         NSDictionary *recDic1 = [[NSDictionary alloc] init];// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         recDic1 = (NSDictionary *)nsData;
@@ -556,7 +623,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
 #endif
 //        NSLog(@"recDic:%@",recDic1);
     }failure:^(NSError *err){
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
         NSLog(@"request failled");
 #endif
         NSLog(@"request failled");
@@ -604,45 +671,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     }
     else{
         __weak LogInViewController *weakSelf = self;
-        //
-//        [self.activityIndicatorView startAnimating];
-//        self.activityIndicatorView.hidden = NO;
-        //判读输入帐号
-        if(![self.logInPerson.Rows count])
-        {
-            //构建登录人参数，并且将数据给存储到内存中
-            NSMutableArray *logInPersonInf = [[NSMutableArray alloc] initWithObjects:self.account.text,self.password.text,@"1", nil];
-            [self.dbCon ExecNonQuery:@"insert into tbl_NamePassword(user,password,logOutOrNot) values(?,?,?)" forParameter:logInPersonInf];
-        }
-        else
-        {
-            BOOL whetherAdd;
-            whetherAdd = NO;
-            for(unsigned char i = 0;i < [self.logInPerson.Rows count];i++)
-            {
-                if(self.logInPerson.Rows[i][@"user"] != self.account.text)
-                {
-                    whetherAdd = YES;
-                }
-                else if (![self.logInPerson.Rows[i][@"logOutOrNot"] boolValue])
-                {
-                    whetherAdd = YES;
-                }
-                else //有相同的出现时，立马推出查询循环
-                {
-                    whetherAdd = NO;
-                    break;
-                }
-            }
-            //通过查询比较发现没有相同的账号在，故此添加帐号
-            if(whetherAdd)
-            {
-                //构建登录人参数，并且将数据给存储到内存中
-                NSMutableArray *logInPersonInf = [[NSMutableArray alloc] initWithObjects:self.account.text,self.password.text,@"1", nil];
-                [self.dbCon ExecNonQuery:@"insert into tbl_NamePassword(user,password,logOutOrNot) values(?,?,?)" forParameter:logInPersonInf];
-            }
-        }
-        [self.dbCon ExecNonQuery:@"delete from tbl_NamePassword where user = 036"];
+//        [self.dbCon ExecNonQuery:@"delete from tbl_NamePassword where user = 036"];
         //获取到mid号码
         NSString *theMid;
         theMid = [GetRequestIPAddress getUniqueID];
@@ -663,7 +692,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
             NSDictionary *reDic;
             reDic = (NSDictionary *)nsData;
             //handle error
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
             NSLog(@"Code:%@",reDic[@"Code"]);
             NSLog(@"message is:%@",reDic[@"Msg"]);
 #endif
@@ -695,7 +724,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
             }
             else if ([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]])
             {
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                 NSLog(@"message is:%@",reDic[@"Msg"]);
 #endif
                 //是否强制登录，显示
@@ -712,7 +741,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                 [self.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
                 
                 //执行查询功能
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                 DataTable *table;// = [[DataTable alloc] init];
                 table = [self.dbCon ExecDataTable:@"select *from tbl_logPerson"];
                 NSLog(@"Table.Rows[0]:%@",table.Rows[0][@"code"]);
@@ -778,12 +807,60 @@ extern NSString *CTSettingCopyMyPhoneNumber();
 
 -(void)checkCurStateOnServer
 {
+    __weak typeof(self) weakSelf = self;
+    //
     [self.activityIndicatorView startAnimating];
     self.activityIndicatorView.hidden = NO;
     //
     self.haveGroupNotDown = NO;
     //
-//    [self settingNetWork];
+    if(![self.logInPerson.Rows count])
+    {
+        //构建登录人参数，并且将数据给存储到内存中
+        NSMutableArray *logInPersonInf = [[NSMutableArray alloc] initWithObjects:self.account.text,self.password.text,@"1", nil];
+        [self.dbCon ExecNonQuery:@"insert into tbl_NamePassword(user,password,logOutOrNot) values(?,?,?)" forParameter:logInPersonInf];
+    }
+    else
+    {
+        BOOL whetherAdd;
+        whetherAdd = NO;
+        for(unsigned char i = 0;i < [self.logInPerson.Rows count];i++)
+        {
+            if(self.logInPerson.Rows[i][@"user"] != self.account.text)
+            {
+                whetherAdd = YES;
+            }
+            else if (![self.logInPerson.Rows[i][@"logOutOrNot"] boolValue])
+            {
+                whetherAdd = YES;
+            }
+            else //有相同的出现时，立马推出查询循环
+            {
+                whetherAdd = NO;
+                break;
+            }
+        }
+        //通过查询比较发现没有相同的账号在，故此添加帐号
+        if(whetherAdd)
+        {
+            //构建登录人参数，并且将数据给存储到内存中
+            NSMutableArray *logInPersonInf = [[NSMutableArray alloc] initWithObjects:self.account.text,self.password.text,@"1", nil];
+            [self.dbCon ExecNonQuery:@"insert into tbl_NamePassword(user,password,logOutOrNot) values(?,?,?)" forParameter:logInPersonInf];
+        }
+    }
+    //查询数据
+    self.logInPerson = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
+    //判断当前所登录的账号与保存的账号是否一致不一致则更新
+    NSString *oldAccountName;
+    oldAccountName = [NSString stringWithFormat:@"%@",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"]];
+    if (![self.account.text isEqualToString:oldAccountName]) {
+        //
+        [self.dbCon ExecNonQuery:[NSString stringWithFormat:@"delete from tbl_NamePassword where user = '%@'",self.logInPerson.Rows[[self.logInPerson.Rows count] - 1][@"user"]]];
+        //
+        //构建登录人参数，并且将数据给存储到内存中
+        NSMutableArray *logInPersonInf = [[NSMutableArray alloc] initWithObjects:self.account.text,self.password.text,@"1", nil];
+        [self.dbCon ExecNonQuery:@"insert into tbl_NamePassword(user,password,logOutOrNot) values(?,?,?)" forParameter:logInPersonInf];
+    }
     
     //
     if(([self.account.text isEqual: @""]) || ([self.password.text isEqual: @""]))
@@ -810,21 +887,17 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     //
     self.checkCreatGroupState = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",logCaddyStr,@"username",password,@"pwd",@"0",@"panmull",@"0",@"forceLogin", nil];
     //
-    __weak LogInViewController *weakSelf = self;
-    //
     NSString *downFieldURLStr;
     downFieldURLStr = [GetRequestIPAddress getDecideCreateGrpAndDownFieldURL];
     //request
     [HttpTools getHttp:downFieldURLStr forParams:self.checkCreatGroupState success:^(NSData *nsData){
         //
         self.canReceiveNotification = YES;
-        //
-        LogInViewController *strongSelf = weakSelf;
 //        NSLog(@"request successfully");
         NSDictionary *recDic;// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
         recDic = (NSDictionary *)nsData;
         
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
         NSLog(@"code:%@\n msg:%@",recDic[@"Code"],recDic[@"Msg"]);
         NSLog(@"124");
 #endif
@@ -857,7 +930,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
         else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]])
         {
             //现实需要强制登录
-            [strongSelf.forceLogInAlert show];
+            [weakSelf.forceLogInAlert show];
         }
         else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:1]])
         {
@@ -866,7 +939,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
             [self.dbCon ExecDataTable:@"delete from tbl_CustomersInfo"];
             //
             //获取到球洞信息，并将相应的信息保存到内存中
-            NSArray *allHolesInfo = recDic[@"holes"];
+            NSArray *allHolesInfo = recDic[@"Msg"][@"holes"];
             for (NSDictionary *eachHole in allHolesInfo) {
                 NSMutableArray *eachHoleParam = [[NSMutableArray alloc] initWithObjects:eachHole[@"forecasttime"],eachHole[@"gronum"],eachHole[@"holcod"],eachHole[@"holcue"],eachHole[@"holfla"],eachHole[@"holgro"],eachHole[@"holind"],eachHole[@"hollen"],eachHole[@"holnam"],eachHole[@"holnum"],eachHole[@"holspe"],eachHole[@"holsta"],eachHole[@"nowgroups"],eachHole[@"stan1"],eachHole[@"stan2"],eachHole[@"stan3"],eachHole[@"stan4"],eachHole[@"usestatus"],eachHole[@"x"],eachHole[@"y"], nil];
                 [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_holeInf(forecasttime,gronum,holcod,holcue,holfla,holgro,holind,hollen,holnam,holenum,holspe,holsta,nowgroups,stan1,stan2,stan3,stan4,usestatus,x,y) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleParam];
@@ -891,7 +964,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                 NSArray *allSelectedCartsArray = recDic[@"Msg"][@"group"][@"cars"];
                 for (NSDictionary *eachCart in allSelectedCartsArray) {
                     NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
-                    [strongSelf.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
+                    [weakSelf.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
                 }
                 //此处的数据还没有传递到需要的地方去
                 self.customerCount = [recDic[@"Msg"][@"group"][@"cuss"] count] - 1;
@@ -914,12 +987,12 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                 {
                     NSMutableArray *logPersonInf = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"logemp"][@"empcod"],recDic[@"Msg"][@"logemp"][@"empjob"],recDic[@"Msg"][@"logemp"][@"empnam"],recDic[@"Msg"][@"logemp"][@"empnum"],recDic[@"Msg"][@"logemp"][@"empsex"],recDic[@"Msg"][@"logemp"][@"cadShowNum"], nil];
                     //将数据加载到创建的数据库中
-                    [strongSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
+                    [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
                     //组建获取到的组信息的数组
                     NSMutableArray *groupInfArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"groind"],recDic[@"Msg"][@"group"][@"grolev"],recDic[@"Msg"][@"group"][@"gronum"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"hgcod"],recDic[@"Msg"][@"group"][@"onlinestatus"],recDic[@"Msg"][@"group"][@"createdate"],recDic[@"Msg"][@"group"][@"timestamps"], nil];
                     //将数据加载到创建的数据库中
                     //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
-                    [strongSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate,timestamps)values(?,?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
+                    [weakSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate,timestamps)values(?,?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
                     //
 //                    DataTable *table;// = [[DataTable alloc] init];
 //                    
@@ -934,7 +1007,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                     }
 //                    [[NSNotificationCenter defaultCenter] postNotificationName:@"allowDown" object:nil userInfo:@{@"allowDown":@"1"}];
                     
-                    strongSelf.haveGroupNotDown = YES;
+                    weakSelf.haveGroupNotDown = YES;
                     //获取到球洞信息，并将相应的信息保存到内存中
                     NSArray *allHolesInfo = recDic[@"Msg"][@"holes"];
                     for (NSDictionary *eachHole in allHolesInfo) {
@@ -957,7 +1030,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
         }
         
     }failure:^(NSError *err){
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
         NSLog(@"request failled");
 #endif
         [self.activityIndicatorView stopAnimating];

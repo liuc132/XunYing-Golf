@@ -550,7 +550,7 @@
             NSDictionary *recDic;
             recDic = (NSDictionary *)nsData;
             
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
             NSLog(@"recDic:%@ and Msg:%@ Code:%@",recDic,recDic[@"Msg"],recDic[@"Code"]);
 #endif
             if ([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]]) {

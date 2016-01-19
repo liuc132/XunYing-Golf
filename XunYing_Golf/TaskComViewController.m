@@ -75,7 +75,7 @@ typedef enum jobType{
     //
     dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         weakSelf.empInfo = [weakSelf.comDbCon ExecDataTable:@"select *from tbl_EmployeeInf"];
-#ifdef  DEBUD_MODE
+#ifdef  DEBUG_MODE
         NSLog(@"empInfo:%@",weakSelf.empInfo.Rows);
 #endif
         //这里还要分各个职位进行参数的添加 所有职位，管理员，调度，巡场，球童，前台，餐厅
@@ -189,7 +189,7 @@ typedef enum jobType{
             //
             [self.employeesArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:partInfoEmprestaurant,@"friends",@"餐厅",@"name",restaurantOnlineCount,@"online", nil]];
             //
-#ifdef  DEBUD_MODE
+#ifdef  DEBUG_MODE
             NSLog(@"all emps:%@",weakSelf.employeesArray);
 #endif
         }
@@ -326,7 +326,7 @@ typedef enum jobType{
 }
 
 - (IBAction)msgDisWays:(UISegmentedControl *)sender {
-#ifdef  DEBUD_MODE
+#ifdef  DEBUG_MODE
     NSLog(@"sender:%ld",(long)sender.selectedSegmentIndex);
 #endif
     NSDictionary *dict = [[NSDictionary alloc] init];

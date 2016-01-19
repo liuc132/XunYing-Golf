@@ -378,7 +378,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
     }
     self.theSelectedCusCounts = (cusNumbers)numbers;
     //
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
     NSLog(@"cusCounts:%ld",(long)self.theSelectedCusCounts);
 #endif
 }
@@ -402,7 +402,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 -(NSString *)constructCustomers:(cusNumbers)cusNum andAllCustomers:(DataTable *)allCusData
 {
     NSString *customers = [[NSString alloc] init];
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
     NSLog(@"%@",customers);
 #endif
     //
@@ -451,7 +451,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
     self.customFourNum = [self.dbCon ExecDataTable:@"select *from tbl_CustomerNumbers"];
     //组建客户卡号
     NSString *selectedCus = [[NSString alloc] init];
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
     NSLog(@"cusCount:%ld;cusFourNum:%@",(long)self.theSelectedCusCounts,self.customFourNum);
 #endif
     if(![self.customFourNum.Rows count])
@@ -461,7 +461,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
         return;
     }
     selectedCus = [self constructCustomers:self.theSelectedCusCounts andAllCustomers:self.customFourNum];
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
     NSLog(@"selectedCUS:%@",selectedCus);
 #endif
     
@@ -563,7 +563,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
                 [self.dbCon ExecDataTable:@"delete from tbl_selectCart"];
                 [self.dbCon ExecDataTable:@"delete from tbl_addCaddy"];
                 //tbl_addCaddy
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                 NSLog(@"grpcod:%@  ;groind:%@  ;grolev:%@  ;gronum:%@  ;grosta:%@",receiveCreateGroupDic[@"Msg"][@"grocod"],receiveCreateGroupDic[@"Msg"][@"groind"],receiveCreateGroupDic[@"Msg"][@"grolev"],receiveCreateGroupDic[@"Msg"][@"gronum"],receiveCreateGroupDic[@"Msg"][@"grosta"]);
 #endif
                 //组建获取到的组信息的数组
@@ -572,7 +572,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
                 //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
                 
                 [self.dbCon ExecNonQuery:@"insert into tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate,timestamps)values(?,?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
                 NSLog(@"successfully create group and the recDic:%@  code:%@",receiveCreateGroupDic[@"Msg"],receiveCreateGroupDic[@"code"]);
 #endif
                 //获取到登录小组的所有客户的信息
@@ -674,7 +674,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
             break;
     }
     self.theSelectedHolePosition = (holePosition)holeNum;
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
     NSLog(@"position:%ld",(long)self.theSelectedHolePosition);
 #endif
 }
@@ -827,7 +827,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 
 #pragma -mark add and display current carts
 - (IBAction)addCart:(UIButton *)sender {
-#ifdef DEBUD_MODE
+#ifdef DEBUG_MODE
     NSLog(@"inputCart:%@",self.inputCartNum.text);
 #endif
     if (![self.inputCartNum.text boolValue] ) {

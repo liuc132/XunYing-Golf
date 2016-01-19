@@ -288,7 +288,9 @@ wasOrderedState
     //
     self.groupInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_groupInf"];
 //    self.holesInfo = [self.lcDbcon ExecDataTable:@"select *from tbl_holeInf"];
+#ifdef DEBUG_MODE
     NSLog(@"groupInfo:%@",self.groupInfo.Rows);
+#endif
     //将相应的数据显示出来
     dispatch_async(dispatch_get_main_queue(), ^{
         //
