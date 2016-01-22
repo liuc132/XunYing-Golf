@@ -20,10 +20,35 @@
 }
 - (instancetype)initWithDict:(NSDictionary *)dict
 {
+    NSArray *values = [[NSArray alloc] init];
+    NSArray *keys = [[NSArray alloc] init];
+    //
+    values = [dict allValues];
+    keys   = [dict allKeys];
+    
     if (self = [super init]) {
-        [self setValuesForKeysWithDictionary:dict];
+//        [self setValuesForKeysWithDictionary:dict];
+        if ([[dict objectForKey:@"vip"] boolValue]) {
+            [dict setValue:[NSNumber numberWithBool:YES] forKeyPath:@"vip"];
+        }
+        else
+        {
+            [dict setValue:[NSNumber numberWithBool:NO] forKeyPath:@"vip"];
+        }
+        [dict setValue:[NSNumber numberWithBool:YES] forKey:@"vip"];
+        //
+//        for (unsigned char i = 0; i < [values count]; i++) {
+//            [self setValue:values[i] forKeyPath:[NSString stringWithFormat:@"%@",keys[i]]];
+//        }
     }
     return self;
+}
+
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key
+{
+    if ([key isEqualToString:@"id"]) {
+        self.vip = YES;
+    }
 }
 
 @end

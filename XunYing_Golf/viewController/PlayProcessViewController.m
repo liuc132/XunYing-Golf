@@ -572,6 +572,11 @@ wasOrderedState
         return;
     }
     
+    if ((sender.tag + 1) > [self.holePlanInfo.Rows count]) {
+        UIAlertView *errAlert = [[UIAlertView alloc] initWithTitle:@"当前球洞不可操作" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [errAlert show];
+        return;
+    }
     
     //
     NSString *curSelectHoleName = [NSString stringWithFormat:@"%ld号球洞",sender.tag + 1];//当前所在球洞提示

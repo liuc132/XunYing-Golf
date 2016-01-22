@@ -632,6 +632,22 @@ typedef NS_ENUM(NSInteger,holePosition) {
 //
 - (IBAction)createGroupAndDownCourt:(UIButton *)sender {
     //
+    if ([self.inputCartNum.text boolValue]) {//有输入才判断
+        if (![self whetherCanAddCart]) {
+            return;
+        }
+        //
+        [self displayCurrentCarts];
+    }
+    //
+    if ([self.inputCaddyNum.text boolValue]) {//有输入才判断
+        if (![self whetherCanAddCaddy]) {
+            return;
+        }
+        //
+        [self displayCurrentCaddies];
+    }
+    
 #ifdef testChangeInterface
     [self performSegueWithIdentifier:@"toWaitInterface" sender:nil];
 #else
@@ -704,21 +720,24 @@ typedef NS_ENUM(NSInteger,holePosition) {
     }];
 }
 
-#pragma -mark addCaddy and addCart
-- (IBAction)addCaddy:(UIButton *)sender {
-//    NSLog(@"inputNum:%@",self.inputCaddyNum.text);
+
+- (BOOL)whetherCanAddCaddy
+{
+    BOOL canAdd;
+    canAdd = YES;
+    //
     if (![self.inputCaddyNum.text boolValue] ) {
         self.inputCaddyNum.text = @"";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入要添加的球童编号" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
-        return;
+        canAdd = NO;
     }
     //
     if ([self.addcaddiesArray count] > 3) {//最多只能添加四个球车
         self.inputCaddyNum.text = @"";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"最多只能添加4个球童" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
-        return;
+        canAdd = NO;
     }
     
     //
@@ -733,7 +752,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
         if ([eachResult[@"cadnum"] isEqualToString:theInputCaddyNum]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该组中已有该球童" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
             [alert show];
-            return;
+            canAdd = NO;
         }
     }
     //
@@ -751,11 +770,25 @@ typedef NS_ENUM(NSInteger,holePosition) {
     if (!hasTheData) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:displayErr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
+        canAdd = NO;
+    }
+    
+    return canAdd;
+}
+
+#pragma -mark addCaddy and addCart
+
+- (void)addCaddies
+{
+    if (![self whetherCanAddCaddy]) {
         return;
     }
     //
     [self displayCurrentCaddies];
-    
+}
+
+- (IBAction)addCaddy:(UIButton *)sender {
+    [self addCaddies];
 }
 //
 - (void)displayCurrentCaddies
@@ -816,8 +849,6 @@ typedef NS_ENUM(NSInteger,holePosition) {
         }
     }
     
-    
-    
     //
     self.inputCaddyNum.transform = CGAffineTransformMakeTranslation(self._caddyOffset, 0);
     self.addCaddyButton.transform = CGAffineTransformMakeTranslation(self._caddyOffset, 0);
@@ -825,8 +856,12 @@ typedef NS_ENUM(NSInteger,holePosition) {
     self.inputCaddyNum.text = @"";
 }
 
-#pragma -mark add and display current carts
-- (IBAction)addCart:(UIButton *)sender {
+
+- (BOOL)whetherCanAddCart
+{
+    BOOL canAdd;
+    canAdd = YES;
+    //
 #ifdef DEBUG_MODE
     NSLog(@"inputCart:%@",self.inputCartNum.text);
 #endif
@@ -834,14 +869,14 @@ typedef NS_ENUM(NSInteger,holePosition) {
         self.inputCartNum.text = @"";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入要添加的球车编号" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
-        return;
+        canAdd = NO;
     }
     //
     if ([self.addCartsArray count] > 3) {//最多只能添加四个球车
         self.inputCartNum.text = @"";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"最多只能添加4个球车" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
-        return;
+        canAdd = NO;
     }
     //
     BOOL hasTheData;
@@ -855,7 +890,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
         if ([eachResult[@"carnum"] isEqualToString:theInputCartNum]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该组中已有该球车" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
             [alert show];
-            return;
+            canAdd = NO;
         }
     }
     //
@@ -874,10 +909,25 @@ typedef NS_ENUM(NSInteger,holePosition) {
         self.inputCartNum.text = @"";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:displayCartErr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
+        canAdd = NO;
+    }
+    
+    return canAdd;
+}
+
+#pragma -mark add and display current carts
+
+- (void)addCarts
+{
+    if (![self whetherCanAddCart]) {
         return;
     }
     //
     [self displayCurrentCarts];
+}
+
+- (IBAction)addCart:(UIButton *)sender {
+    [self addCarts];
 }
 //
 - (void)displayCurrentCarts

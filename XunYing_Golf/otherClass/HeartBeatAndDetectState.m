@@ -485,7 +485,9 @@ typedef enum eventOrder{
                         if([messegaDic[@"make"] isEqualToNumber:[NSNumber numberWithInt:-1]])
                         {
                             NSLog(@"makev is:%@",messegaDic[@"makeV"]);
-                            NSLog(@"心跳异常");
+//                            NSLog(@"心跳异常");
+                            //
+                            weakSelf.allowDownStr = @"1";
                             //                    weakSelf.haveDetectedDownEnable = @"1";
                             //                    weakSelf.allowDownStr = @"1";
                         }

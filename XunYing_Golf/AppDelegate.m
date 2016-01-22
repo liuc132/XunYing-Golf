@@ -103,10 +103,7 @@
         });
         
     }
-    
-    
-//    DataTable *table = [[DataTable alloc] init];
-//    table = [self.dbCon ExecDataTable:@"select *from tbl_uniqueID"];
+    //登录的时候请求登录是否可建组、可下场接口，如果已经有了球洞组，则启动心跳，在第一个界面中进行判断并跳转
     
     return YES;
 }
@@ -301,8 +298,9 @@
             //重启心跳服务
             HeartBeatAndDetectState *backGroundHeartbeat = [[HeartBeatAndDetectState alloc] init];
 //            [backGroundHeartbeat disableHeartBeat];
-            [HeartBeatAndDetectState disableHeartBeat];
+//            [HeartBeatAndDetectState disableHeartBeat];
             [backGroundHeartbeat initHeartBeat];
+            [backGroundHeartbeat enableHeartBeat];
             
         });
         

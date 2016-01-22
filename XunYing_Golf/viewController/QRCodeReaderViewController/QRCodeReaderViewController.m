@@ -96,7 +96,7 @@
 {
     [super viewDidLoad];
     
-     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(clickRightBarButton:)];
+//     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(clickRightBarButton:)];
 }
 
 - (void)viewWillAppear:(BOOL)animated

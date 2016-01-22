@@ -64,29 +64,41 @@
     //
     self.QRCodeWay  = NO;
     //
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"navBarBack.png"] style:UIBarButtonItemStyleDone target:self action:@selector(navBack)];
-    self.navigationItem.leftBarButtonItem.tintColor = [UIColor HexString:@"454545"];
-    
     self.backOrNext = YES;
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(whereToGo:) name:@"whereToGo" object:nil];
     //
     self.QRCodeReader = [[QRCodeReaderViewController alloc] initWithCancelButtonTitle:@"取消"];
     self.QRCodeReader.modalPresentationStyle = UIModalPresentationFormSheet;
-//    self.QRCodeReader = [QRCodeReaderViewController readerWithCancelButtonTitle:@"取消"];
     self.QRCodeReader.delegate = self;
+    [QRCodeReaderViewController readerWithCancelButtonTitle:@"取消"];
     //
     self.stateIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
     self.stateIndicator.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
     self.stateIndicator.layer.cornerRadius = 20;
     [self.view addSubview:self.stateIndicator];
     self.stateIndicator.hidden = YES;
+    //
+    self.navigationItem.leftBarButtonItem  = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"navBarBack"] style:UIBarButtonItemStylePlain target:self action:@selector(backToLogInView)];
+    self.navigationItem.leftBarButtonItem.tintColor = [UIColor blackColor];
+    self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     
 }
+
+- (void)backToLogInView
+{
+    self.backOrNext = NO;
+    [self performSegueWithIdentifier:@"backToLogInSegue" sender:nil];
+    
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    //
+    [self.stateIndicator stopAnimating];
+    self.stateIndicator.hidden = YES;
     
 }
 
@@ -122,12 +134,6 @@
     
 }
 
-#pragma -mark navBack
--(void)navBack
-{
-    NSLog(@"enter navBack");
-    [self.navigationController popViewControllerAnimated:YES];
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -146,21 +152,6 @@
 {
     [super viewDidDisappear:animated];
     
-//    //
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        if ([self.logPerson.Rows count] && !self.backOrNext) {
-//            NSMutableArray *reConstructLogPersonInf = [[NSMutableArray alloc] initWithObjects:self.loggedPersonInf[@"user"],self.loggedPersonInf[@"password"],@"0", nil];
-//            //[self.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
-//            [self.LogDbcon ExecNonQuery:@"INSERT INTO tbl_NamePassword(user,password,logOutOrNot) VALUES(?,?,?)" forParameter:reConstructLogPersonInf];
-//        }
-//        NSLog(@"did disappear");
-//
-//        self.logPerson = [self.LogDbcon ExecDataTable:@"select *from tbl_NamePassword"];
-//        NSLog(@"finish and logPerson:%@",self.logPerson);
-//        
-//    });
-    
-    
 }
 /*
 #pragma mark - Navigation
@@ -176,22 +167,6 @@
     
     
     self.backOrNext = NO;
-    //
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        self.logPerson = [self.LogDbcon ExecDataTable:@"select *from tbl_NamePassword"];
-//        if ([self.logPerson.Rows count]) {
-//            self.loggedPersonInf = [[NSDictionary alloc] initWithObjectsAndKeys:self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"user"],@"user",self.logPerson.Rows[[self.logPerson.Rows count] - 1][@"password"],@"password", nil];
-//            [self.LogDbcon ExecNonQuery:@"delete from tbl_NamePassword"];
-//        }
-//        NSLog(@"backToLogIn");
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            //[self dismissViewControllerAnimated:YES completion:nil];
-//            [self performSegueWithIdentifier:@"backToLogInSegue" sender:nil];
-//        });
-//        
-//    });
-    //
     dispatch_async(dispatch_get_main_queue(), ^{
         //[self dismissViewControllerAnimated:YES completion:nil];
         [self performSegueWithIdentifier:@"backToLogInSegue" sender:nil];
@@ -381,11 +356,13 @@
     //tbl_CustomerNumbers
     self.cusNumbers = [self.LogDbcon ExecDataTable:@"select *from tbl_CustomerNumbers"];
     //
+    [self.stateIndicator startAnimating];
+    self.stateIndicator.hidden = NO;
+    //
     [self.QRCodeReader setCompletionWithBlock:^(NSString *resultAsString){
 #ifdef DEBUD_MODE
         NSLog(@"result:%@",resultAsString);
 #endif
-        [weakSelf.QRCodeReader dismissViewControllerAnimated:YES completion:nil];
         //定义球车，球童，消费卡号的字符数组
         NSString *cusCards = [[NSString alloc] init];
         NSString *caddies  = [[NSString alloc] init];
@@ -421,6 +398,9 @@
         if (!hasTheLogCaddy) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该组中无此球童" message:nil delegate:weakSelf cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
             [alert show];
+            //
+            [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+            
             return;
         }
 //        NSLog(@"%@",QRCodeReadResult);
@@ -435,9 +415,6 @@
 #ifdef DEBUD_MODE
         NSLog(@"allcuscards:%@",allCuscards);
 #endif
-//        [weakSelf.LogDbcon ExecNonQuery:@"insert into tbl_CustomerNumbers(first,second,third,fourth) values(?,?,?,?)" forParameter:allCuscards];
-//        DataTable *table = [[DataTable alloc] init];
-//        table = [weakSelf.LogDbcon ExecDataTable:@"select *from tbl_CustomerNumbers"];
         
         weakSelf.cusCount = [allCusCards count];
         weakSelf.QRCodeWay = YES;
@@ -454,8 +431,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             //请求接口（建组下场的接口），并进行相应的跳转
             [HttpTools getHttp:createGrpURLStr forParams:createGrpParam success:^(NSData *nsData){
-//                NSDictionary *recDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-                NSDictionary *recDic;// = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
+                
+                NSDictionary *recDic;
                 recDic = (NSDictionary *)nsData;
 #ifdef DEBUD_MODE
                 NSLog(@"recDic:%@",recDic);
@@ -532,6 +509,10 @@
                         [heartBeat initHeartBeat];//1、开启心跳功能
                         [heartBeat enableHeartBeat];//1、使能心跳
                     }
+                    //
+//                    [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+                    [weakSelf.stateIndicator stopAnimating];
+                    weakSelf.stateIndicator.hidden = YES;
                     //跳转页面
                     [weakSelf performSegueWithIdentifier:@"QRCodeToWait" sender:nil];
                     //执行通知
@@ -553,7 +534,8 @@
         
     }];
     //
-    [self presentViewController:self.QRCodeReader animated:YES completion:nil];
+//    [self presentViewController:self.QRCodeReader animated:YES completion:nil];
+    [self.navigationController pushViewController:self.QRCodeReader animated:YES];
 }
 //
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

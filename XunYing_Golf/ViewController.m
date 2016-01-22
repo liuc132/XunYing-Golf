@@ -409,8 +409,10 @@ FixedPoint gpsScreenPoint;
     //
     [self.graphicLayer removeAllGraphics];
     //construct query SQL
-    NSString *querySQL;
+    __block NSString *querySQL;
     querySQL = [NSString stringWithFormat:@"QCM = '%ld'",[sender.titleLabel.text integerValue]];
+    //测试状态
+    querySQL = [NSString stringWithFormat:@"QCM"];
     //
     self.query = [AGSQuery query];
     self.query.whereClause = querySQL;
@@ -418,12 +420,24 @@ FixedPoint gpsScreenPoint;
     __block NSDictionary *curDic = [[NSDictionary alloc] init];
     __weak ViewController *weakSelf = self;
     [self.localHoleFeatureTable queryResultsWithParameters:self.query completion:^(NSArray *results, NSError *error){
-        AGSGDBFeature *curFeatrue = results[0];
-        curDic = [curFeatrue allAttributes];
+        if ([sender.titleLabel.text integerValue] > [results count]) {
+            UIAlertView *errAlert = [[UIAlertView alloc] initWithTitle:@"当前球场无此球洞" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [errAlert show];
+            return;
+        }
+        querySQL = [NSString stringWithFormat:@"QCM = '%ld'",[sender.titleLabel.text integerValue]];
+        weakSelf.query.whereClause = querySQL;
+        //
+        [weakSelf.localHoleFeatureTable queryResultsWithParameters:self.query completion:^(NSArray *results, NSError *error){
+            AGSGDBFeature *curFeatrue = results[0];
+            curDic = [curFeatrue allAttributes];
+            
+            AGSSimpleFillSymbol *fillSymbolView = [[AGSSimpleFillSymbol alloc] initWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15] outlineColor:[UIColor blueColor]];
+            AGSGraphic *holeGraphic = [[AGSGraphic alloc] initWithGeometry:curDic[@"Shape"] symbol:fillSymbolView attributes:nil];
+            [weakSelf.graphicLayer addGraphic:holeGraphic];
+            
+        }];
         
-        AGSSimpleFillSymbol *fillSymbolView = [[AGSSimpleFillSymbol alloc] initWithColor:[[UIColor whiteColor] colorWithAlphaComponent:0.15] outlineColor:[UIColor blueColor]];
-        AGSGraphic *holeGraphic = [[AGSGraphic alloc] initWithGeometry:curDic[@"Shape"] symbol:fillSymbolView attributes:nil];
-        [weakSelf.graphicLayer addGraphic:holeGraphic];
     }];
     
 }

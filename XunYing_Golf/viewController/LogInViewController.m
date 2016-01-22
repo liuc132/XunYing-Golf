@@ -54,6 +54,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
 @property (strong, nonatomic) IBOutlet UITextField *password;
 
 @property (nonatomic) BOOL haveGroupNotDown;
+@property (nonatomic) BOOL showNetWorkErr;
 
 
 - (IBAction)logInButton:(UIButton *)sender;
@@ -89,7 +90,8 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     self.logInPerson = [[DataTable alloc] init];
     self.logPersonInf = [[DataTable alloc] init];
     //
-//    self.logPersonInf = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
+    self.showNetWorkErr = YES;
+    //
 #ifdef DEBUG_MODE
     NSLog(@"logPersonInf:%@",self.logInPerson);
 #endif
@@ -185,7 +187,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
 #pragma -mark checkNetworkState
 -(void)checkNetworkState:(Reachability *)reachability
 {
-//    NSLog(@"reachability:%@",reachability);
+    
     //wifi state
     Reachability *wifiState = [Reachability reachabilityForLocalWiFi];
     //监测手机上能否上网络（wifi/3G/2.5G）
@@ -193,11 +195,13 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     //判断网络状态
     if([wifiState currentReachabilityStatus] != NotReachable)
     {
+//        self.showNetWorkErr = NO;
         NSLog(@"连接上了WI-FI");
         self.curNetworkStatus = ReachableViaWiFi;
     }
     else if([connectState currentReachabilityStatus] != NotReachable)
     {
+//        self.showNetWorkErr = NO;
         NSLog(@"使用自己的手机上的蜂窝网络进行上网");
         self.curNetworkStatus = ReachableViaWWAN;
     }
@@ -206,8 +210,12 @@ extern NSString *CTSettingCopyMyPhoneNumber();
         NSLog(@"没有网络");
         self.curNetworkStatus = NotReachable;
         //
-        UIAlertView *netWorkAlert = [[UIAlertView alloc] initWithTitle:@"网络连接异常,请检查网络设置" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-        [netWorkAlert show];
+        if (self.showNetWorkErr) {
+            self.showNetWorkErr = NO;
+            //
+            UIAlertView *netWorkAlert = [[UIAlertView alloc] initWithTitle:@"网络连接异常,请检查网络设置" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [netWorkAlert show];
+        }
     }
 }
 #pragma -mark updateInterfaceWithReachability
@@ -465,9 +473,9 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                 //调用强制登录接口
                 //获取到mid号码
                 theMid = [GetRequestIPAddress getUniqueID];
-                theMid = [NSString stringWithFormat:@"%@",theMid];
+                theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
                 //修改强制登录的参数为1
-                NSMutableDictionary *forceLogInParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"0",@"panmull",@"1",@"forceLogin", nil];
+                NSMutableDictionary *forceLogInParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"mid",self.account.text,@"username",self.password.text,@"pwd",@"1",@"panmull",@"1",@"forceLogin", nil];
                 //调用接口进行传参数
                 [HttpTools getHttp:[self getTheSettingIP] forParams:forceLogInParam success:^(NSData *nsData){
 #ifdef DEBUG_MODE
@@ -484,6 +492,34 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                     //1sex cadShowNum 1empcod 1empnam 1empnum 1empjob
                     //code text,job text,name text,number text,sex text,caddyLogIn text
                     if ([recDic[@"Code"] intValue] > 0) {
+                        
+                        //
+                        [self.dbCon ExecDataTable:@"delete from tbl_CustomersInfo"];
+                        [self.dbCon ExecDataTable:@"delete from tbl_selectCart"];
+                        [self.dbCon ExecDataTable:@"delete from tbl_addCaddy"];
+                        //获取到登录小组的所有客户的信息
+                        NSString *value;
+                        value = [NSString stringWithFormat:@"%@",recDic[@"Msg"][@"group"]];
+                        if (![value isEqualToString:@"null"]) {
+                            NSArray *allCustomers = recDic[@"Msg"][@"group"][@"cuss"];
+                            for (NSDictionary *eachCus in allCustomers) {
+                                NSMutableArray *eachCusParam = [[NSMutableArray alloc] initWithObjects:eachCus[@"bansta"],eachCus[@"bantim"],eachCus[@"cadcod"],eachCus[@"carcod"],eachCus[@"cuscod"],eachCus[@"cuslev"],eachCus[@"cusnam"],eachCus[@"cusnum"],eachCus[@"cussex"],eachCus[@"depsta"],eachCus[@"endtim"],eachCus[@"grocod"],eachCus[@"memnum"],eachCus[@"padcod"],eachCus[@"phone"],eachCus[@"statim"], nil];
+                                [weakSelf.dbCon ExecNonQuery:@"insert into tbl_CustomersInfo(bansta,bantim,cadcod,carcod,cuscod,cuslev,cusnam,cusnum,cussex,depsta,endtim,grocod,memnum,padcod,phone,statim) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachCusParam];
+                            }
+                            //保存添加的球车的信息 tbl_selectCart(carcod text,carnum text,carsea text)
+                            NSArray *allSelectedCartsArray = recDic[@"Msg"][@"group"][@"cars"];
+                            for (NSDictionary *eachCart in allSelectedCartsArray) {
+                                NSMutableArray *selectedCart = [[NSMutableArray alloc] initWithObjects:eachCart[@"carcod"],eachCart[@"carnum"],eachCart[@"carsea"], nil];
+                                [weakSelf.dbCon ExecNonQuery:@"insert into tbl_selectCart(carcod,carnum,carsea) values(?,?,?)" forParameter:selectedCart];
+                            }
+                            //保存添加的球童的信息 tbl_addCaddy(cadcod text,cadnam text,cadnum text,cadsex text,empcod text)
+                            NSArray *allSelectedCaddiesArray = recDic[@"Msg"][@"group"][@"cads"];
+                            for (NSDictionary *eachCaddy in allSelectedCaddiesArray) {
+                                NSMutableArray *selectedCaddy = [[NSMutableArray alloc] initWithObjects:eachCaddy[@"cadcod"],eachCaddy[@"cadnam"],eachCaddy[@"cadnum"],eachCaddy[@"cadsex"],eachCaddy[@"empcod"], nil];
+                                [weakSelf.dbCon ExecNonQuery:@"insert into tbl_addCaddy(cadcod,cadnam,cadnum,cadsex,empcod) values(?,?,?,?,?)" forParameter:selectedCaddy];
+                            }
+                        }
+                        //
                         NSMutableArray *logPersonInf = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"logemp"][@"empcod"],recDic[@"Msg"][@"logemp"][@"empjob"],recDic[@"Msg"][@"logemp"][@"empnam"],recDic[@"Msg"][@"logemp"][@"empnum"],recDic[@"Msg"][@"logemp"][@"empsex"],recDic[@"Msg"][@"logemp"][@"cadShowNum"], nil];
                         //将数据加载到创建的数据库中
                         [weakSelf.dbCon ExecNonQuery:@"INSERT INTO tbl_logPerson(code,job,name,number,sex,caddyLogIn) VALUES(?,?,?,?,?,?)" forParameter:logPersonInf];
@@ -544,6 +580,12 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                                         //grocod text,groind text,grolev text,gronum text,grosta text,hgcod text,onlinestatus text
                                         [weakSelf.dbCon ExecNonQuery:@"insert into  tbl_groupInf(grocod,groind,grolev,gronum,grosta,hgcod,onlinestatus,createdate,timestamps)values(?,?,?,?,?,?,?,?,?)" forParameter:groupInfArray];
                                         //
+                                        //删除之前保存的数据
+                                        [self.dbCon ExecNonQuery:@"delete from tbl_groupHeartInf"];
+                                        //
+                                        NSMutableArray *cusGrpArray = [[NSMutableArray alloc] initWithObjects:recDic[@"Msg"][@"group"][@"grocod"],recDic[@"Msg"][@"group"][@"grosta"],recDic[@"Msg"][@"group"][@"nextgrodistime"],recDic[@"Msg"][@"group"][@"nowblocks"],recDic[@"Msg"][@"group"][@"nowholcod"],recDic[@"Msg"][@"group"][@"nowholnum"],recDic[@"Msg"][@"group"][@"pladur"],recDic[@"Msg"][@"group"][@"stahol"],recDic[@"Msg"][@"group"][@"statim"],recDic[@"Msg"][@"group"][@"stddur"], nil];
+                                        [weakSelf.dbCon ExecNonQuery:@"insert into tbl_groupHeartInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGrpArray];
+                                        
                                         //                    DataTable *table;// = [[DataTable alloc] init];
                                         //
                                         //                    table = [strongSelf.dbCon ExecDataTable:@"select *from tbl_groupInf"];
@@ -606,7 +648,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     //获取到mid号码
     NSString *theMid;
     theMid = [GetRequestIPAddress getUniqueID];
-    theMid = [NSString stringWithFormat:@"%@",theMid];
+    theMid = [NSString stringWithFormat:@"I_IMEI_%@",theMid];
     //组装数据
     NSMutableDictionary *addDeviceParam = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theMid,@"padtag",@"",@"phoneNum", nil];
     //
