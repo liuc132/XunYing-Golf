@@ -38,7 +38,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
 //
 #define offset  100
 
-@interface CreateGroupViewController ()<UIGestureRecognizerDelegate,UIScrollViewDelegate,UIAlertViewDelegate>
+@interface CreateGroupViewController ()<UIGestureRecognizerDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UIButton *oneCustomer;
@@ -144,6 +144,9 @@ typedef NS_ENUM(NSInteger,holePosition) {
     
     self.allCaddiesViewArray = [[NSMutableArray alloc] init];
     self.allCartsViewArray   = [[NSMutableArray alloc] init];
+    //
+    self.inputCaddyNum.delegate = self;
+    self.inputCartNum.delegate  = self;
     
     //组建客户组，默认的客户人数(1人)以及球洞位置（十八洞）
     self.theSelectedCusCounts = OneCustomer;
@@ -174,7 +177,7 @@ typedef NS_ENUM(NSInteger,holePosition) {
     //
     self.holePosName = @"十八洞";
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
     //
     self.creatGrpTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(DissMissKeyBoard:)];
     self.creatGrpTap.delegate = self;
@@ -705,20 +708,58 @@ typedef NS_ENUM(NSInteger,holePosition) {
 /**
  *  键盘发生改变执行
  */
-- (void)keyboardWillChange:(NSNotification *)note
+//- (void)keyboardWillChange:(NSNotification *)note
+//{
+////    NSLog(@"%@", note.userInfo);
+//    NSDictionary *userInfo = note.userInfo;
+//    CGFloat duration = [userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
+//    
+//    CGRect keyFrame = [userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
+//    CGFloat moveY = keyFrame.origin.y - self.view.frame.size.height;
+//    
+//    
+//    [UIView animateWithDuration:duration animations:^{
+//        self.createGrpScrollView.transform = CGAffineTransformMakeTranslation(0, moveY);
+//    }];
+//}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-//    NSLog(@"%@", note.userInfo);
-    NSDictionary *userInfo = note.userInfo;
-    CGFloat duration = [userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] doubleValue];
+    CGRect frame = textField.frame;
     
-    CGRect keyFrame = [userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-    CGFloat moveY = keyFrame.origin.y - self.view.frame.size.height;
+    int _offset = frame.origin.y + 230 - (self.view.frame.size.height - 216.0);//iPhone键盘高度216，iPad的为352
+    NSLog(@"_offset:%d",_offset);
+    
+    if (_offset <= 0) {
+        [UIView animateWithDuration:0.3 animations:^{
+            CGRect frame = self.view.frame;
+            frame.origin.y = _offset;
+            self.view.frame = frame;
+        }];
+        
+    }
     
     
-    [UIView animateWithDuration:duration animations:^{
-        self.createGrpScrollView.transform = CGAffineTransformMakeTranslation(0, moveY);
-    }];
+    return YES;
 }
+
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    [UIView animateWithDuration:0.3 animations:^{
+        CGRect frame = self.view.frame;
+        frame.origin.y = 0.0;
+        self.view.frame = frame;
+    }];
+    
+    return YES;
+}
+
+
+
+
+
+
 
 
 - (BOOL)whetherCanAddCaddy

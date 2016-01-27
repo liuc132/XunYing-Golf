@@ -694,6 +694,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
     [self.dbCon ExecNonQuery:@"delete from tbl_logPerson"];
     [self.dbCon ExecNonQuery:@"delete from tbl_holeInf"];
     [self.dbCon ExecNonQuery:@"delete from tbl_EmployeeInf"];
+    [self.dbCon ExecNonQuery:@"delete from tbl_taskInfo"];
     
     //start request from the server
 //    NSLog(@"username:%@,password:%@",self.account.text,self.password.text);
@@ -712,7 +713,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
         [alert show];
     }
     else{
-        __weak LogInViewController *weakSelf = self;
+        __weak typeof(self) weakSelf = self;
 //        [self.dbCon ExecNonQuery:@"delete from tbl_NamePassword where user = 036"];
         //获取到mid号码
         NSString *theMid;
@@ -723,7 +724,6 @@ extern NSString *CTSettingCopyMyPhoneNumber();
         
         //
         [HttpTools getHttp:[self getTheSettingIP] forParams:self.logInParams success:^(NSData *nsData){
-            LogInViewController *strongSelf = weakSelf;
 //            NSLog(@"success login");
             
             self.canReceiveNotification = YES;
@@ -731,49 +731,53 @@ extern NSString *CTSettingCopyMyPhoneNumber();
             self.logInPerson = [self.dbCon ExecDataTable:@"select *from tbl_NamePassword"];
             //store data from server
 //            NSDictionary *reDic = [NSJSONSerialization JSONObjectWithData:nsData options:NSJSONReadingMutableLeaves error:nil];
-            NSDictionary *reDic;
-            reDic = (NSDictionary *)nsData;
+            NSDictionary *recDic;
+            recDic = (NSDictionary *)nsData;
             //handle error
 #ifdef DEBUG_MODE
             NSLog(@"Code:%@",reDic[@"Code"]);
             NSLog(@"message is:%@",reDic[@"Msg"]);
 #endif
+            if ([recDic[@"Code"] integerValue] < 0) {
+                [self.activityIndicatorView stopAnimating];
+                self.activityIndicatorView.hidden = YES;
+            }
             
-            if([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
+            if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
             {
                 NSString *errStr;
-                errStr = [NSString stringWithFormat:@"%@",reDic[@"Msg"]];
+                errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
                 UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
                 [createGrpFailAlert show];
                 NSLog(@"fail");
             }
-            else if([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
+            else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
             {
                 NSString *errStr;
-                errStr = [NSString stringWithFormat:@"%@",reDic[@"Msg"]];
+                errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
                 UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
                 [createGrpFailAlert show];
                 NSLog(@"parameter is null");
             }
             
-            else if ([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
+            else if ([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-3]])
             {
                 NSString *errStr;
-                errStr = [NSString stringWithFormat:@"%@",reDic[@"Msg"]];
+                errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
                 UIAlertView *createGrpFailAlert = [[UIAlertView alloc] initWithTitle:errStr message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
                 [createGrpFailAlert show];
                 NSLog(@"The Mid id illegal");
             }
-            else if ([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]])
+            else if ([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-4]])
             {
 #ifdef DEBUG_MODE
                 NSLog(@"message is:%@",reDic[@"Msg"]);
 #endif
                 //是否强制登录，显示
-                [strongSelf.forceLogInAlert show];
+                [weakSelf.forceLogInAlert show];
             }
-            else if ([reDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:1]]){
-                NSDictionary *recDictionary = [[NSDictionary alloc] initWithDictionary:reDic[@"Msg"]];
+            else if ([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:1]]){
+                NSDictionary *recDictionary = [[NSDictionary alloc] initWithDictionary:recDic[@"Msg"]];
                 
                 //创建登录人信息数组
                 //1sex cadShowNum 1empcod 1empnam 1empnum 1empjob
@@ -814,16 +818,16 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                 //
                 dispatch_async(dispatch_get_main_queue(), ^{
                     //进入建组界面，发送获取参数（球童，球车，球场的球洞），之后发送
-                    [strongSelf getCaddyCartInf];
+                    [weakSelf getCaddyCartInf];
                     //获取客户信息
-                    [strongSelf getCustomInf];
+                    [weakSelf getCustomInf];
                     //关闭activityIndicator
                     [self.activityIndicatorView stopAnimating];
                     self.activityIndicatorView.hidden = YES;
                     //
                     dispatch_async(dispatch_get_main_queue(), ^{
                         //执行跳转
-                        [strongSelf performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];
+                        [weakSelf performSegueWithIdentifier:@"jumpToCreateGroup" sender:nil];
                     });
                 });
                 
@@ -944,6 +948,11 @@ extern NSString *CTSettingCopyMyPhoneNumber();
         NSLog(@"124");
 #endif
         //
+        if ([recDic[@"Code"] integerValue] < 0) {
+            [self.activityIndicatorView stopAnimating];
+            self.activityIndicatorView.hidden = YES;
+        }
+        //
         if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-1]])
         {
             NSString *errStr;
@@ -953,8 +962,6 @@ extern NSString *CTSettingCopyMyPhoneNumber();
         }
         else if([recDic[@"Code"] isEqualToNumber:[NSNumber numberWithInt:-2]])
         {
-            [self.activityIndicatorView stopAnimating];
-            self.activityIndicatorView.hidden = YES;
             //
             NSString *errStr;
             errStr = [NSString stringWithFormat:@"%@",recDic[@"Msg"]];
@@ -1065,7 +1072,7 @@ extern NSString *CTSettingCopyMyPhoneNumber();
                 }
                 else
                 {
-                    [self.dbCon ExecNonQuery:@"delete from tbl_taskInfo"];
+                    [weakSelf.dbCon ExecNonQuery:@"delete from tbl_taskInfo"];
                 }
                 
             }

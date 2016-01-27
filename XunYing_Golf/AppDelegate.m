@@ -27,12 +27,13 @@
     BOOL                       m_bRun;
 }
 @property (strong, nonatomic) DBCon *dbCon;
-//@property (strong, nonatomic) DataTable *dataTable;
 @property (nonatomic)         BOOL  changeState;
 
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) KeychainItemWrapper *keychainWrapper;
+//
+@property (strong, nonatomic) UIImageView   *launchAnimateImage;
 
 @end
 
@@ -56,7 +57,6 @@
     
     NSLog(@"%@",launchOptions);
     self.changeState = NO;
-    
     
     if(ScreenHeight > 480)
     {
@@ -105,6 +105,32 @@
     }
     //登录的时候请求登录是否可建组、可下场接口，如果已经有了球洞组，则启动心跳，在第一个界面中进行判断并跳转
     
+    //启动时的动画
+//    self.launchAnimateImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
+//    [self.launchAnimateImage setImage:[UIImage imageNamed:@"enterBackImage"]];
+//    //添加动画
+////    [self performSelector:@selector(scale_1) withObject:nil afterDelay:0.0f];
+//    [self.window addSubview:self.launchAnimateImage];
+////    [self.window bringSubviewToFront:self.launchAnimateImage];
+//    UIImageView *allIconImage = [[UIImageView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 120, ScreenHeight/2 - 120, 240, 240)];
+//    [allIconImage setImage:[UIImage imageNamed:@"enter_icon"]];
+//    [self.launchAnimateImage addSubview:allIconImage];
+//    //
+//    UIImageView *circleImage = [[UIImageView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 120, ScreenHeight/2 - 120, 240, 240)];
+//    [circleImage setImage:[UIImage imageNamed:@"enter_circle"]];
+//    [allIconImage addSubview:circleImage];
+//    //
+//    CGAffineTransform endAngle = CGAffineTransformMakeRotation(M_PI);
+//    [UIView animateWithDuration:9.6f animations:^{
+//        circleImage.transform = endAngle;
+//        
+//    }completion:^(BOOL finished){
+//        NSLog(@"finish animate");
+//        
+//    }];
+//    //
+//    [self.launchAnimateImage removeFromSuperview];
+    
     return YES;
 }
 
@@ -119,51 +145,58 @@
     return uuid;
 }
 
-/*
- //storyBoard view自动适配
- + (void)storyBoradAutoLay:(UIView *)allView
- {
- for (UIView *temp in allView.subviews) {
- temp.frame = CGRectMake1(temp.frame.origin.x, temp.frame.origin.y, temp.frame.size.width, temp.frame.size.height);
- for (UIView *temp1 in temp.subviews) {
- temp1.frame = CGRectMake1(temp1.frame.origin.x, temp1.frame.origin.y, temp1.frame.size.width, temp1.frame.size.height);
- }
- }
- }
- 
- //修改CGRectMake
- CG_INLINE CGRect
- CGRectMake1(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
- {
- AppDelegate *myDelegate = [[UIApplication sharedApplication] delegate];
- CGRect rect;
- rect.origin.x = x * myDelegate.autoSizeScaleX; rect.origin.y = y * myDelegate.autoSizeScaleY;
- rect.size.width = width * myDelegate.autoSizeScaleX; rect.size.height = height * myDelegate.autoSizeScaleY;
- return rect;
- }
- */
-//#pragma -mark Storyboard view自动适配
-//+(void)storyBoardAutoLay:(UIView *)allView
-//{
-//    for (UIView *temp in allView.subviews) {
-//        temp.frame = CGRectMake1(temp.frame.origin.x, temp.frame.origin.y, temp.frame.size.width, temp.frame.size.height);
-//        for (UIView *temp1 in temp.subviews) {
-//            temp1.frame = CGRectMake1(temp1.frame.origin.x, temp1.frame.origin.y, temp1.frame.size.width, temp1.frame.size.height);
-//        }
-//    }
-//}
-//修改CGRectMake
-//CG_INLINE CGRect
-//CGRectMake1(CGFloat x,CGFloat y,CGFloat width,CGFloat height)
-//{
-//    AppDelegate *myDelegate = [[UIApplication sharedApplication] delegate];
-//    CGRect rect;
-//    rect.origin.x = x*myDelegate.autoSizeScaleX;
-//    rect.origin.y = y*myDelegate.autoSizeScaleY;
-//    rect.size.width = width*myDelegate.autoSizeScaleX;
-//    rect.size.height = height*myDelegate.autoSizeScaleY;
-//    return rect;
-//}
+- (void)scale_1
+{
+    UIImageView *round_1 = [[UIImageView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 120, ScreenHeight/2 - 120, ScreenWidth, ScreenHeight)];
+    round_1.image = [UIImage imageNamed:@""];
+    [self.launchAnimateImage addSubview:round_1];
+}
+
+- (void)scale_2
+{
+    UIImageView *round_1 = [[UIImageView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 120, ScreenHeight/2 - 120, ScreenWidth, ScreenHeight)];
+    round_1.image = [UIImage imageNamed:@""];
+    [self.launchAnimateImage addSubview:round_1];
+}
+
+- (void)scale_3
+{
+    UIImageView *round_1 = [[UIImageView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 120, ScreenHeight/2 - 120, ScreenWidth, ScreenHeight)];
+    round_1.image = [UIImage imageNamed:@""];
+    [self.launchAnimateImage addSubview:round_1];
+}
+
+- (void)setAnimation:(UIImageView *)nowView
+{
+//    [UIView animateWithDuration:0.6f animations:^{
+//        // 执行的动画code
+//        [nowView setFrame:CGRectMake(nowView.frame.origin.x- nowView.frame.size.width*0.1, nowView.frame.origin.y-nowView.frame.size.height*0.1, nowView.frame.size.width*1.2, nowView.frame.size.height*1.2)];
+//        
+//    }completion:^(BOOL isFinished){
+//       //执行完成之后
+//        [nowView removeFromSuperview];
+//    }];
+    //
+    CGAffineTransform endAngle = CGAffineTransformMakeRotation(M_PI / 180.0f);
+    
+    [UIView animateWithDuration:0.01 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        nowView.transform = endAngle;
+        
+        
+    } completion:^(BOOL finished) {
+        if (finished) {
+            
+        }
+        
+    }];
+    //
+    [UIView animateWithDuration:0.6f animations:^{
+        nowView.transform = endAngle;
+    }completion:^(BOOL finished){
+        
+    }];
+    
+}
 
 /**
  *  初始化本地数据库,数据库文件及列表
@@ -282,7 +315,7 @@
 //    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:20 target:self selector:@selector(timer) userInfo:nil repeats:YES];
 //    [[NSRunLoop currentRunLoop] addTimer:backgroundTimer forMode: NSRunLoopCommonModes];
     //实现方案二（目前还在试验中20151030）
-    
+    __weak typeof(self) weakSelf = self;
     
 //    [self registerBackgroundTask];
     self.changeState = YES;
@@ -293,12 +326,17 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if(bgTask != UIBackgroundTaskInvalid)
                 bgTask = UIBackgroundTaskInvalid;
+            //通过判断是否还有组信息来确定是否已经下场，若没有组信息则不启动心跳
+            DataTable *grpInf = [[DataTable alloc] init];
+            grpInf = [weakSelf.dbCon ExecDataTable:@"select *from tbl_groupInf"];
             
             NSLog(@"background1,baIdentifier:%lu",(unsigned long)bgTask);
+            if (![grpInf.Rows count]) {
+                return ;
+            }
+            
             //重启心跳服务
             HeartBeatAndDetectState *backGroundHeartbeat = [[HeartBeatAndDetectState alloc] init];
-//            [backGroundHeartbeat disableHeartBeat];
-//            [HeartBeatAndDetectState disableHeartBeat];
             [backGroundHeartbeat initHeartBeat];
             [backGroundHeartbeat enableHeartBeat];
             

@@ -72,7 +72,7 @@
 	<key>UILaunchImageFile~iphone</key>
 	<string>Default-568h@2x.png</string>
 	<key>UILaunchStoryboardName</key>
-	<string></string>
+	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

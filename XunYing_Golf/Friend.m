@@ -27,19 +27,7 @@
     keys   = [dict allKeys];
     
     if (self = [super init]) {
-//        [self setValuesForKeysWithDictionary:dict];
-        if ([[dict objectForKey:@"vip"] boolValue]) {
-            [dict setValue:[NSNumber numberWithBool:YES] forKeyPath:@"vip"];
-        }
-        else
-        {
-            [dict setValue:[NSNumber numberWithBool:NO] forKeyPath:@"vip"];
-        }
-        [dict setValue:[NSNumber numberWithBool:YES] forKey:@"vip"];
-        //
-//        for (unsigned char i = 0; i < [values count]; i++) {
-//            [self setValue:values[i] forKeyPath:[NSString stringWithFormat:@"%@",keys[i]]];
-//        }
+        [self setValuesForKeysWithDictionary:dict];
     }
     return self;
 }

@@ -48,6 +48,7 @@ typedef enum holeState{
 @property (strong, nonatomic) NSArray   *holePositionArray;
 @property (nonatomic)         NSInteger theSelectNum;
 @property (strong, nonatomic) NSArray   *holeStateArray;
+@property (strong, nonatomic) UIActivityIndicatorView *stateIndicator;
 
 
 @property (strong, nonatomic) IBOutlet UIScrollView *playProcessScrollView;
@@ -110,6 +111,13 @@ typedef enum holeState{
     self.cusGroInfEmp = [[DataTable alloc] init];
     self.holePlanInfo = [[DataTable alloc] init];
     self.holesInfo    = [[DataTable alloc] init];
+    //
+    self.stateIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(ScreenWidth/2 - 100, ScreenHeight/2 - 100, 200, 200)];
+    self.stateIndicator.backgroundColor = [UIColor HexString:@"0a0a0a" andAlpha:0.2];
+    self.stateIndicator.layer.cornerRadius = 20;
+    [self.view addSubview:self.stateIndicator];
+    
+    self.stateIndicator.hidden = YES;
     //
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf GetPlayProcess];
@@ -304,6 +312,10 @@ wasOrderedState
     //
     if ([sender.userInfo[@"hasRefreshed"] intValue] == 1) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                //
+                self.stateIndicator.hidden = YES;
+                [self.stateIndicator stopAnimating];
+                //
                 weakSelf.cusGroInfEmp = [weakSelf.lcDbcon ExecDataTable:@"select *from tbl_CusGroInf"];
                 weakSelf.holePlanInfo = [weakSelf.lcDbcon ExecDataTable:@"select *from tbl_holePlanInfo"];
                 //将相应的有用信息显示到当前界面中
@@ -441,6 +453,9 @@ wasOrderedState
         [alert show];
         return;
     }
+    //
+    self.stateIndicator.hidden = NO;
+    [self.stateIndicator startAnimating];
     //获取到mid号码
     NSString *theMid;
     theMid = [GetRequestIPAddress getUniqueID];
@@ -471,10 +486,13 @@ wasOrderedState
                     [self.lcDbcon ExecNonQuery:@"insert into tbl_CusGroInf(grocod,grosta,nextgrodistime,nowblocks,nowholcod,nowholnum,pladur,stahol,statim,stddur) values(?,?,?,?,?,?,?,?,?,?)" forParameter:cusGroInfPart];
                     //球洞规划组对象
                     NSArray *allGroHoleList = latestDataDic[@"Msg"][@"groholelist"];
-                    for (NSDictionary *eachHoleInf in allGroHoleList) {
-                        NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadur"], nil];
-                        //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
-                        [weakSelf.lcDbcon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
+                    //
+                    if ((NSNull *)allGroHoleList != [NSNull null]) {
+                        for (NSDictionary *eachHoleInf in allGroHoleList) {
+                            NSMutableArray *eachHoleInfParam = [[NSMutableArray alloc] initWithObjects:eachHoleInf[@"ghcod"],eachHoleInf[@"ghind"],eachHoleInf[@"ghsta"],eachHoleInf[@"grocod"],eachHoleInf[@"gronum"],eachHoleInf[@"holcod"],eachHoleInf[@"holnum"],eachHoleInf[@"pintim"],eachHoleInf[@"pladur"],eachHoleInf[@"poutim"],eachHoleInf[@"rintim"],eachHoleInf[@"routim"],eachHoleInf[@"stadur"], nil];
+                            //tbl_holePlanInfo(ghcod text,ghind text,ghsta text,grocod text,gronum text,holcod text,holnum text,pintim text,pladur text,poutim text,rintim text,routim text,stadur text)
+                            [weakSelf.lcDbcon ExecNonQuery:@"insert into tbl_holePlanInfo(ghcod,ghind,ghsta,grocod,gronum,holcod,holnum,pintim,pladur,poutim,rintim,routim,stadur) values(?,?,?,?,?,?,?,?,?,?,?,?,?)" forParameter:eachHoleInfParam];
+                        }
                     }
                     //通知数据已经更新了
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshSuccess" object:nil userInfo:@{@"hasRefreshed":@"1"}];
@@ -484,8 +502,11 @@ wasOrderedState
             
         }failure:^(NSError *err){
             NSLog(@"refresh failled and err:%@",err);
-            
-            
+            self.stateIndicator.hidden = YES;
+            [self.stateIndicator stopAnimating];
+            //
+            UIAlertView *errAlert = [[UIAlertView alloc] initWithTitle:@"网络请求异常" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [errAlert show];
         }];
     });
     

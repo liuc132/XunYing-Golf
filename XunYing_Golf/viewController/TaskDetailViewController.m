@@ -106,6 +106,8 @@
     self.allCaddiesInfo = [self.lcDbCon ExecDataTable:@"select *from tbl_caddyInf"];
     self.allCartsInfo   = [self.lcDbCon ExecDataTable:@"select *from tbl_cartInf"];
     self.allHolesInfo   = [self.lcDbCon ExecDataTable:@"select *from tbl_holeInf"];
+    //
+    self.jumpHoleDetailView.frame = CGRectMake(0, self.theNav.frame.origin.y + self.theNav.frame.size.height, ScreenWidth, ScreenHeight - (self.theNav.frame.origin.y + self.theNav.frame.size.height));
     
     //0.加载数据
     [self loadData];

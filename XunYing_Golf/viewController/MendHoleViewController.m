@@ -286,7 +286,11 @@
     NSLog(@"requestMendHole");
     //通过代理，读取到总共跳过了哪些球洞，NSMutableArray类型的数据来存储数据
     NSString *mendHoles = [[NSString alloc] init];
-//    NSMutableArray *theseHoles = [[NSMutableArray alloc] init];
+    //
+//    if (self.needMendHoles) {
+//        <#statements#>
+//    }
+    //
     if([self.needMendHoles count] > 1)
     {
         //先添加第一个
